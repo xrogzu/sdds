@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>jeecms-left</title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("li").each(function(i){
+		$(this).removeClass("leftCurr");
+		if(i==0){
+			$(this).addClass("leftCurr");
+		}else{
+			$(this).addClass("leftNol");
+		}
+		$(this).click( function () {
+			$("li").each(function(){
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$(".h3").each(function(){
+				$(this).next().hide();
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$(this).removeClass("leftNol");
+			$(this).addClass("leftCurr");
+		});
+	});
+	$(".h3").each(function(){
+		$(this).next().hide();
+		$(this).addClass("leftNol");
+		$(this).click( function () {
+			$(".h3").each(function(){
+				$(this).next().hide();
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$("li").each(function(){
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$(this).removeClass("leftNol");
+			$(this).addClass("leftCurr");
+		    $(this).next().show(); 
+		});
+	});
+	$(".h3-child div").each(function(i){
+		$(this).click( function () {
+			$(".h3-child div").each(function(){
+				$(this).removeClass();
+				$(this).addClass("leftmenuBG");
+			});
+			$(this).removeClass();
+			$(this).addClass("leftmenuBGCurr");
+		});
+	});
+});
+</script>
+</head>
+<body>
+<div class="w230 f_l ove">
+	 <div class="fresh" style="font-size:12px; text-indent:36px;">
+	       <#include "/jeecms_sys/date.html"/>
+	 </div>
+	 <div class="w229">
+	    <ol>
+			<!-- <li><a href="/thirdparty/dfjs/duescalculator.html" target="normalizeorgRightFrame">党费计算器</a></li> -->
+			<li><a href="../changeremind/changeRemind_main.do" target="normalizeorgRightFrame">组织换届</a></li>
+		</ol>
+			<#if isSub=="no">
+			<h3 class="h3">组织生活日历</h3>
+			<div class="h3-child" style="margin:0; padding:0;" >
+				<div class="leftmenuBG"><a href="../member/assess.do" target="normalizeorgRightFrame">民主评议</a></div>
+				<div class="leftmenuBG"><a href="../risenOrgLifeCalendar/v_list.do?type=1" target="normalizeorgRightFrame">党员大会</a></div>
+				<div class="leftmenuBG"><a href="../risenOrgLifeCalendar/v_list.do?type=2" target="normalizeorgRightFrame">党小组会议</a></div>
+				<div class="leftmenuBG"><a href="../risenOrgLifeCalendar/v_list.do?type=4" target="normalizeorgRightFrame">党支部委员会</a></div>
+				<div class="leftmenuBG"><a href="../risenOrgLifeCalendar/v_list.do?type=3" target="normalizeorgRightFrame">党课</a></div>
+				<div class="leftmenuBG"><a href="../risenOrgLifeCalendar/v_list.do?type=6" target="normalizeorgRightFrame">主题党日活动</a></div>
+				<div class="leftmenuBG"><a href="../risenOrgLifeCalendar/v_list.do?type=5" target="normalizeorgRightFrame">党支部组织生活会</a></div>
+			</div>
+			<#else></#if>
+			
+			<@cms_perm url="/acquisition">
+			<h3 class="h3">党建绩效</h3>
+			</@cms_perm>
+			<div class="h3-child" style="margin:0; padding:0;" >
+			<#if isSub=="yes">
+				<div class="leftmenuBG"><a href="../partyBuild/shareContent.do" target="normalizeorgRightFrame">共享内容</a></div>
+				<div class="leftmenuBG"><a href="../partyBuild/shareContenths.do" target="normalizeorgRightFrame">已采纳内容</a></div>
+				<#if user?? && (("省局机关党委,admin")?index_of(user)==-1)>
+					<div class="leftmenuBG"><a href="../risenReject/v_list.do" target="normalizeorgRightFrame">被驳回文章</a></div>
+					<div class="leftmenuBG"><a href="../risenReject/v_ylist.do" target="normalizeorgRightFrame">已驳回文章</a></div>
+					<!-- <div class="leftmenuBG"><a href="../partyBuild/partybuild_main.do" target="normalizeorgRightFrame">积分记录</a></div>-->
+					<!-- <div class="leftmenuBG"><a href="../department/v_list_xt.do" target="normalizeorgRightFrame">积分记录</a></div> -->
+					<div class="leftmenuBG"><a href="../department/v_list_xt.do" target="normalizeorgRightFrame">查看所有积分</a></div> 
+					<div class="leftmenuBG"><a href="../partyBuild/baseScore.do" target="normalizeorgRightFrame">设置绩效规则</a></div>
+				<#else>
+				    <div class="leftmenuBG"><a href="../risenReject/v_ylist.do" target="normalizeorgRightFrame">已驳回文章</a></div>
+					<!-- <div class="leftmenuBG"><a href="../partyBuild/partybuild_main.do" target="normalizeorgRightFrame">积分记录</a></div>-->
+					<!-- <div class="leftmenuBG"><a href="../department/v_list_xt.do" target="normalizeorgRightFrame">积分记录</a></div> -->
+					<div class="leftmenuBG"><a href="../department/v_list_xt.do" target="normalizeorgRightFrame">查看所有积分</a></div> 
+					<!-- <div class="leftmenuBG"><a href="../partyBuild/report.do" target="normalizeorgRightFrame">绩效统计</a></div> 
+					<div class="leftmenuBG"><a href="../risenIntegral/range.do" target="normalizeorgRightFrame">绩效排行</a></div>-->
+					<div class="leftmenuBG"><a href="../partyBuild/baseScore.do" target="normalizeorgRightFrame">设置绩效规则</a></div>
+					<div class="leftmenuBG"><a href="../partyBuild/jxjfassess.do" target="normalizeorgRightFrame">设置绩效评估</a></div>
+				</#if>
+				
+			<#else>
+				<div class="leftmenuBG"><a href="../risenReject/v_list.do" target="normalizeorgRightFrame">被驳回文章</a></div>
+			</#if>
+			</div>
+			
+			<@cms_perm url="/acquisition">
+			<!-- 
+			<h3 class="h3">发展党员</h3>
+			</@cms_perm>
+			<div class="h3-child" style="margin:0; padding:0;" >
+				<div class="leftmenuBG"><a href="../development_partymembers/list.do" target="normalizeorgRightFrame">发展党员流程管理</a></div>
+				<div class="leftmenuBG"><a href="../development_partymembers/development_main.do" target="normalizeorgRightFrame">发展党员流程展示</a></div>
+			</div>
+			 -->
+			<ol>
+				<li><a href="../risenDevparty/v_list.do" target="normalizeorgRightFrame">发展党员</a></li>
+			</ol>
+			<#if isSub=="yes">
+			<@cms_perm url="/acquisition">
+			<h3 class="h3">E票通</h3>
+			</@cms_perm>
+			<div class="h3-child" style="margin:0; padding:0;" >
+				  <div class="leftmenuBG"><a href="../ballot/v_list.do" target="normalizeorgRightFrame">在线投票</a></div>
+             	  <div class="leftmenuBG"><a href="../vote_topic/v_list.do"  target="normalizeorgRightFrame">在线调查</a></div>
+             	  <div class="leftmenuBG"><a href="../appealMail/v_list.do"  target="normalizeorgRightFrame">留言管理</a></div>
+			</div>
+			</#if>
+			<@cms_perm url="/acquisition">
+			<h3 class="h3">目标管理</h3>
+			</@cms_perm>
+			<!-- 设定目标 20161231 raoxq -->
+			<div class="h3-child" style="margin:0; padding:0;" >
+				<#if isSub=="yes">
+				  <div class="leftmenuBG"><a href="../risenTarget/v_list.do" target="normalizeorgRightFrame">制定目标</a></div>
+             	  <div class="leftmenuBG"><a href="../risenTarget/v_mylist.do"  target="normalizeorgRightFrame">我的目标</a></div>
+             	  <div class="leftmenuBG"><a href="../risenTarget/report.do"  target="normalizeorgRightFrame">目标统计</a></div>
+				<#else>
+				 <div class="leftmenuBG"><a href="../risenTarget/v_mylist.do"  target="normalizeorgRightFrame">我的目标</a></div>
+             	</#if>
+			</div>
+			<#if isSub=="no">
+			<h3 class="h3">先锋指分</h3>
+				<!-- <div style="margin:0; padding:0;">
+					<div class="leftmenuBG">民主评议</div>
+					<div class="leftmenuBG">组织生活会</div>
+				</div> -->
+			<div class="h3-child" style="margin:0; padding:0;" >
+				  <div class="leftmenuBG"><a href="../risenQuota/v_list.do?risenType=1" target="normalizeorgRightFrame">基础分管理</a></div>
+				  <div class="leftmenuBG"><a href="../risenQuota/v_list.do?risenType=2" target="normalizeorgRightFrame">附加分管理</a></div>
+             	  <div class="leftmenuBG"><a href="../scoreuserxf/scoreUserXFmain.do" target="normalizeorgRightFrame">党员评分</a></div>
+			</div>
+			</#if>
+	 </div>
+</div>
+</body>
+</html>

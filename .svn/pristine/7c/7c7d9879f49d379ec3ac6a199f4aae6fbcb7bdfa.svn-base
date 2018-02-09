@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+var arrayObj = [];
+var arr=[2,3,4,5,6];
+$(function() {
+
+
+	<#if risenOrgLifeCalendar.risenlcLd1??>
+	var risenlcSm="暂无说明";
+	document.getElementById("risenlcLd1").value ="${risenOrgLifeCalendar.risenlcLd1!''}";
+	<#if risenOrgLifeCalendar.risenlcYn1??&&risenOrgLifeCalendar.risenlcYn1=="0">
+		shuom(1,0);
+	<#if risenOrgLifeCalendar.risenlcYn1??&&risenOrgLifeCalendar.risenlcSm1??>
+		risenlcSm="${risenOrgLifeCalendar.risenlcSm1!''}";
+	</#if>
+	document.getElementById("risenlcSm1").value =risenlcSm;
+	</#if>
+	</#if>
+	
+	<#if risenOrgLifeCalendar.risenlcLd2??>
+	var risenlcSm="暂无说明";
+	$("#ld2").show();
+	removeByValue(arr, 2);
+	document.getElementById("risenlcLd2").value ="${risenOrgLifeCalendar.risenlcLd2!''}";
+	<#if risenOrgLifeCalendar.risenlcYn2??&&risenOrgLifeCalendar.risenlcYn2=="0">
+		shuom(2,0);
+	<#if risenOrgLifeCalendar.risenlcYn2??&&risenOrgLifeCalendar.risenlcSm2??>
+		risenlcSm="${risenOrgLifeCalendar.risenlcSm2!''}";
+	</#if>
+	document.getElementById("risenlcSm2").value =risenlcSm;
+	</#if>
+	</#if>
+	
+	<#if risenOrgLifeCalendar.risenlcLd3??>
+	var risenlcSm="暂无说明";
+	$("#ld3").show();
+	removeByValue(arr, 3);
+	document.getElementById("risenlcLd3").value ="${risenOrgLifeCalendar.risenlcLd3!''}";
+	<#if risenOrgLifeCalendar.risenlcYn3??&&risenOrgLifeCalendar.risenlcYn3=="0">
+		shuom(3,0);
+	<#if risenOrgLifeCalendar.risenlcYn3??&&risenOrgLifeCalendar.risenlcSm3??>
+		risenlcSm="${risenOrgLifeCalendar.risenlcSm3!''}";
+	</#if>
+	document.getElementById("risenlcSm3").value =risenlcSm;
+	</#if>
+	</#if>
+	<#if risenOrgLifeCalendar.risenlcLd4??>
+	var risenlcSm="暂无说明";
+	$("#ld4").show();
+	removeByValue(arr, 4);
+	document.getElementById("risenlcLd4").value ="${risenOrgLifeCalendar.risenlcLd4!''}";
+	<#if risenOrgLifeCalendar.risenlcYn4??&&risenOrgLifeCalendar.risenlcYn4=="0">
+		shuom(4,0);
+	<#if risenOrgLifeCalendar.risenlcYn4??&&risenOrgLifeCalendar.risenlcSm4??>
+		risenlcSm="${risenOrgLifeCalendar.risenlcSm4!''}";
+	</#if>
+	document.getElementById("risenlcSm4").value =risenlcSm;
+	</#if>
+	</#if>
+	<#if risenOrgLifeCalendar.risenlcLd5??>
+	var risenlcSm="暂无说明";
+	$("#ld5").show();
+	removeByValue(arr, 5);
+	document.getElementById("risenlcLd5").value ="${risenOrgLifeCalendar.risenlcLd5!''}";
+	<#if risenOrgLifeCalendar.risenlcYn5??&&risenOrgLifeCalendar.risenlcYn5=="0">
+		shuom(5,0);
+	<#if risenOrgLifeCalendar.risenlcYn5??&&risenOrgLifeCalendar.risenlcSm5??>
+		risenlcSm="${risenOrgLifeCalendar.risenlcSm5!''}";
+	</#if>
+	document.getElementById("risenlcSm5").value =risenlcSm;
+	</#if>
+	</#if>
+	<#if risenOrgLifeCalendar.risenlcLd6??>
+	var risenlcSm="暂无说明";
+	$("#ld6").show();
+	removeByValue(arr, 6);
+	document.getElementById("risenlcLd6").value ="${risenOrgLifeCalendar.risenlcLd6!''}";
+	<#if risenOrgLifeCalendar.risenlcYn6??&&risenOrgLifeCalendar.risenlcYn6=="0">
+		shuom(6,0);
+	<#if risenOrgLifeCalendar.risenlcYn6??&&risenOrgLifeCalendar.risenlcSm6??>
+		risenlcSm="${risenOrgLifeCalendar.risenlcSm6!''}";
+	</#if>
+	document.getElementById("risenlcSm6").value =risenlcSm;
+	</#if>
+	</#if>
+});
+
+
+function addLd(){
+	
+	if(arr.length>0){
+		arrayObj.push(arr.shift());	
+		for(x in arrayObj){
+		$("#ld" + arrayObj[x]).show();
+		}
+	}else{
+		alert("最大只为6个");
+	}
+}
+function shuom(num,stype){
+	if(stype==0){
+		$("#nrisenlcYn"+num).attr("checked",true);
+		$("#beizhu" + num).show();
+		$("#risenlcSm" + num).show();
+	}else{
+		$("#risenlcYn"+num).prop("checked",true)
+		$("#beizhu" + num).hide();
+		$("#risenlcSm" + num).hide();
+		$("#risenlcSm"+num).val("");
+	}
+}
+function removeLd(num){
+	$("#risenlcLd"+num).val("");
+	 shuom(num,1);
+	$("#ld" + num).hide();
+	removeByValue(arrayObj,num);
+	arr.push(num);
+	
+	
+}
+
+function removeByValue(arr, val) {
+  for(var i=0; i<arr.length; i++) {
+    if(arr[i] == val) {
+      arr.splice(i, 1);
+      break;
+    }
+  }
+}
+
+</script>
+</head>
+<body>
+<#assign name="党员大会">
+<#if type??&& type!="1">
+	<#if type=="2">
+	<#assign name="党小组会议">
+	</#if>
+	<#if type=="3">
+	<#assign name="党课会议">
+	</#if>
+	<#if type=="4">
+	<#assign name="党支部委员会">
+	</#if>
+	<#if type=="5">
+	<#assign name="党支部组织生活会">
+	</#if>
+</#if>
+<div class="box-positon ove">
+	<div class="position-div"><@s.m "global.position"/>: <@s.m "risenOrgLifeCalendar.function"/> -${name}<@s.m "global.add"/></div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input type="hidden" name="type" value="${type!}"/>
+		<input class="return-button" type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_update.do">
+<input type="hidden" name="risenlcUuid" value="${risenOrgLifeCalendar.risenlcUuid!''}"/>
+<input type="hidden" name="risenlcOrgid" value="${risenOrgLifeCalendar.risenlcOrgid!''}"/>
+<input type="hidden" name="risenlcOrgname" value="${risenOrgLifeCalendar.risenlcOrgname!''}"/>
+<input type="hidden" name="risenlcHolderid" value="${risenOrgLifeCalendar.risenlcHolderid!''}"/>
+<#if type??&& type=="2"|| type=="3">
+<@p.text label="组织名称" colspan="4" width="50" required="true" name="risenlcZuzhiname" maxlength="100" value="${risenOrgLifeCalendar.risenlcZuzhiname!''}"/><@p.tr/>
+</#if>
+<@p.text label="举办时间" value="${risenOrgLifeCalendar.risenlcOdate?string('yyyy-MM-dd')}" colspan="1" width="50" name="risenlcOdate" required="true" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="required" maxlength="100"/>
+<@p.text label="risenOrgLifeCalendar.risenlcAddress" value="${risenOrgLifeCalendar.risenlcAddress!''}" colspan="1" width="50" name="risenlcAddress" required="true" class="required" maxlength="100"/><@p.tr/>
+
+<#assign risenlcParticipant="主持人">
+<#if type??&& type=="3">
+<#assign risenlcParticipant="主讲人">
+</#if>
+<@p.text label=risenlcParticipant  colspan="1" width="50" name="risenlcParticipant" value= "${risenOrgLifeCalendar.risenlcParticipant!''}" required="true" class="required" maxlength="100"/>
+<@p.text label="记录人" colspan="1" width="50" value= "${risenOrgLifeCalendar.risenlcContactor!''}"  name="risenlcContactor" maxlength="100"/><@p.tr/>
+<#assign content="主要议题">
+<#if type??&& type=="1">
+<#assign content="会议内容">
+</#if>
+<#if type??&& type=="3">
+<#assign content="党课内容">
+</#if>
+<@p.textarea label=content style="width:70%;height:100px;" colspan="3" name="risenlcContent" value= "${risenOrgLifeCalendar.risenlcContent!''}"  required="true" class="required" maxlength="100"/><@p.tr/>
+<#if type??&& type!="3">
+<@p.text label="应到人数" colspan="1" width="50" name="risenlcYdrs" value= "${risenOrgLifeCalendar.risenlcYdrs!'0'}" maxlength="100"/>
+<@p.text label="实到人数"  colspan="1" width="50" name="risenlcSdrs" value= "${risenOrgLifeCalendar.risenlcYdrs!'0'}" maxlength="100"/><@p.tr/>
+<#assign risenlcRemark="暂无缺席">
+<#if risenOrgLifeCalendar.risenlcRemark??>
+	<#assign risenlcRemark=risenOrgLifeCalendar.risenlcRemark>
+</#if>
+<@p.textarea label="缺席名单及原因" style="width:70%;height:100px;" colspan="3" name="risenlcRemark" value= "${risenlcRemark!''}"  maxlength="100"/><@p.tr/>
+</#if>
+<@p.td colspan="4">
+
+<div style="width: 15%; height: auto; float: left;">
+	<span style="display: block; float: left;">党员领导干部参会情况</span>
+	<span onclick="addLd();" style="display: block; float: left; width: 60px; height: 20px; line-height: 20px; text-align: center; background: #3694D7; color: #fff;cursor: pointer; margin-left: 20px;">增加</span>
+</div>
+<div style="float: left; width: 80%">
+	<div id="ld1">
+		姓名：<input type="text" id="risenlcLd1" name="risenlcLd1"/>&nbsp;&nbsp;是否参加：<input type="radio" id="risenlcYn1" name="risenlcYn1" value="1" checked="checked" onclick="shuom(1,1);"/>是<input type="radio" id="nrisenlcYn1"  name="risenlcYn1" value="0" onclick="shuom(1,0);"/>否&nbsp;&nbsp;<span id="beizhu1" style="display: none;">缺席原因：</span><input type="text" id="risenlcSm1" name="risenlcSm1" style="width: 42%; display: none;"/>
+	</div>
+	<div id="ld2" style="margin-top: 5px; display: none;">
+		姓名：<input type="text" id="risenlcLd2" name="risenlcLd2"/>&nbsp;&nbsp;是否参加：<input type="radio" id="risenlcYn2" name="risenlcYn2" value="1" checked="checked" onclick="shuom(2,1);"/>是<input type="radio" id="nrisenlcYn2" name="risenlcYn2" value="0" onclick="shuom(2,0);"/>否&nbsp;&nbsp;<span id="beizhu2" style="display: none;">缺席原因：</span><input type="text" id="risenlcSm2" name="risenlcSm2" style="width: 42%; display: none;"/>
+		<button type="button" onclick="removeLd(2);">删除</button>
+	</div>
+	<div id="ld3" style="margin-top: 5px; display: none;">
+		姓名：<input type="text" id="risenlcLd3" name="risenlcLd3"/>&nbsp;&nbsp;是否参加：<input type="radio" id="risenlcYn3" name="risenlcYn3" value="1" checked="checked" onclick="shuom(3,1);"/>是<input type="radio" id="nrisenlcYn3" name="risenlcYn3" value="0"  onclick="shuom(3,0)";/>否&nbsp;&nbsp;<span id="beizhu3" style="display: none;">缺席原因：</span><input type="text" id="risenlcSm3" name="risenlcSm3" style="width: 42%; display: none"/>
+		<button type="button" onclick="removeLd(3);">删除</button>
+	</div>
+	<div id="ld4" style="margin-top: 5px; display: none;">
+		姓名：<input type="text" id="risenlcLd4" name="risenlcLd4"/>&nbsp;&nbsp;是否参加：<input type="radio" id="risenlcYn4" name="risenlcYn4" value="1" checked="checked" onclick="shuom(4,1);"/>是<input type="radio" id="nrisenlcYn4" name="risenlcYn4" value="0"  onclick="shuom(4,0)";/>否&nbsp;&nbsp;<span id="beizhu4" style="display: none;">缺席原因：</span><input type="text" id="risenlcSm4" name="risenlcSm4" style="width: 42%; display: none"/>
+		<button type="button" onclick="removeLd(4);">删除</button>
+	</div>
+	<div id="ld5" style="margin-top: 5px; display: none;">
+		姓名：<input type="text" id="risenlcLd5" name="risenlcLd5"/>&nbsp;&nbsp;是否参加：<input type="radio" id="risenlcYn5" name="risenlcYn5" value="1" checked="checked" onclick="shuom(5,1);"/>是<input type="radio" id="nrisenlcYn5" name="risenlcYn5" value="0"  onclick="shuom(5,0)";/>否&nbsp;&nbsp;<span id="beizhu5" style="display: none;">缺席原因：</span><input type="text" id="risenlcSm5" name="risenlcSm5" style="width: 42%; display: none"/>
+		<button type="button" onclick="removeLd(5);">删除</button>
+	</div>
+	<div id="ld6" style="margin-top: 5px; display: none;">
+		姓名：<input type="text" id="risenlcLd6" name="risenlcLd6"/>&nbsp;&nbsp;是否参加：<input type="radio" id="risenlcYn6" name="risenlcYn6" value="1" checked="checked" onclick="shuom(6,1);"/>是<input type="radio" id="nrisenlcYn6" name="risenlcYn6" value="0"  onclick="shuom(6,0)";/>否&nbsp;&nbsp;<span id="beizhu6" style="display: none;">缺席原因：</span><input type="text" id="risenlcSm6" name="risenlcSm6" style="width: 42%; display: none"/>
+		<button type="button" onclick="removeLd(6);">删除</button>
+	</div>
+</div>
+</@p.td>
+<@p.tr/>
+<@p.editor colspan="2" label="risenOrgLifeCalendar.risenlcComment" name="risenlcComment" value=risenOrgLifeCalendar.risenlcComment/><@p.tr/>
+<input type="hidden" name="risenlcMeetingtype" value="${type!}"/>
+<@p.td colspan="2"> <@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td><@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

@@ -1,0 +1,675 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="renderer" content="webkit|ie-comp|ie-stand"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script src="${base}/res/jeecms/js/admin.js" type="text/javascript"></script>
+<script src="${base}/res/echarts/echarts.js" type="text/javascript"></script>
+<script src="${base}/res/jeecms/js/jquery-1.4.4.min.js"></script>
+<script src="${base}/res/jeecms/layui/layui.js"></script>
+<link rel="stylesheet" href="${base}/res/jeecms/layui/css/layui.css" type="text/css">
+<link rel="stylesheet" href="${base}/res/jeecms/css/css.css" type="text/css">
+<style>
+	.abtn{
+		height: 28px;
+		width:55px;
+        background: #3694d7;
+        text-decoration: none;
+        display:block;
+        line-height:28px;
+        text-align:center;
+        float:right;
+        color:#fff;
+	}
+</style>
+<!-- 此功能屏蔽
+<script type="text/javascript">
+var names=[];
+var scores=[];
+$(function(){  
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    // 指定图表的配置项和数据
+    var option = {
+	    title: {
+	        x: 'center',
+	        text: '党建绩效积分统计'
+	       
+	    },
+	    tooltip: {
+	        trigger: 'item'
+	    },
+	    toolbox: {
+	        show: true,
+	        feature: {
+	            dataView: {show: false, readOnly: false},
+	            restore: {show: false},
+	            saveAsImage: {show: true}
+	        }
+	    },
+	    calculable: true,
+	    grid: {
+	        borderWidth: 0,
+	        y: 80,
+	        y2: 60
+	    },
+	    grid:{bottom:150},
+	    xAxis: [
+	        {
+	            type: 'category',
+	            data:${xs!},
+	            axisLabel:{
+	              interval:0,  //类目全显
+	              formatter:function(val){
+	              //debugger;
+	              	var s=val.replace("市局机关党委","");
+					return s;
+				    },
+	              rotate:-45   //顺时针旋转45度
+	            }
+	        }
+	    ],
+	    yAxis: [
+	        {
+	            type: 'value'
+	        }
+	    ],
+	    series: [
+	        {
+	            name: '党建绩效积分统计',
+	            type: 'bar',
+	            itemStyle: {
+	                normal: {
+	                    color: function(params) {
+	                        // build a color map as your need.
+	                        var colorList = [
+	                          '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+	                           '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+	                           '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+	                        ];
+	                        return colorList[params.dataIndex]
+	                    },
+	                    label: {
+	                        show: true,
+	                        position: 'top'
+	                    }
+	                }
+	            },
+	            data: ${datas!},
+	            markPoint: {
+	                tooltip: {
+	                    trigger: 'item'
+	                },
+	                 data : [
+	                    {type : 'max', name: '最高积分'},
+	                    {type : 'min', name: '最低积分'}
+	                ]
+	            }
+	        }
+	    ]
+	};
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);   
+    
+    //给ul->tals下面的li设置click事件
+    $(".layui-tab-title li").click(function(){
+    	if ($(this).text() == '总分') {
+    		var root=$("#root").val();
+    		if(root==1){
+    		window.location.href = '../department/v_list_xtIndex.do?root=1';
+    		}else{
+    		window.location.href = '../department/v_list_xtIndex.do?';
+    		}
+    	} else if ($(this).text() == '图片新闻') {
+    		window.location.href = '../department/v_list_xtIndex.do?channelId=1';
+    	} else if ($(this).text() == '党建动态'){
+    		window.location.href = '../department/v_list_xtIndex.do?channelId=2';
+    	} else if ($(this).text() == '经验交流'){
+    		window.location.href = '../department/v_list_xtIndex.do?channelId=3';
+    	} else if ($(this).text() == '媒体宣传'){
+    		window.location.href = '../department/v_list_xtIndex.do?channelId=4';
+    	} else if ($(this).text() == '理论研讨'){
+    		window.location.href = '../department/v_list_xtIndex.do?channelId=5';
+    	} else if ($(this).text() == '网上荣誉室'){
+    		window.location.href = '../department/v_list_xtIndex.do?channelId=6';
+    	} else if ($(this).text()==  '支部动态'){
+    		window.location.href = '../department/v_list_xtIndex.do?channelId=7&root=1';
+    	} else if ($(this).text()==  '党费缴纳'){
+    		window.location.href = '../department/v_list_xtIndex.do?channelId=8&root=1';
+    	} else if ($(this).text()==  '党务公开'){
+    		window.location.href = '../department/v_list_xtIndex.do?channelId=9&root=1';
+    	} else if ($(this).text()==  '特色工作'){
+    		window.location.href = '../department/v_list_xtIndex.do?channelId=10&root=1';
+    	}
+    	$(".layui-tab-title li").removeClass();
+    	$(this).addClass("layui-this");
+    });
+    
+    $(".layui-tab-title li").removeClass();
+    var channelId = ${channelId!"0"};
+    if(channelId>6){
+        $(".layui-tab-title").children().eq(channelId-6).addClass("layui-this");
+    }else{
+   		$(".layui-tab-title").children().eq(channelId).addClass("layui-this");
+   	}
+});  
+</script>  
+ 此功能屏蔽end -->
+<script type="text/javascript">
+var names=[];
+var scores=[];
+function exportData(){
+	var f = document.forms[0];
+	var startTime =  $("[name='startDate']").val();
+	var endTime = $("[name='endDate']").val();
+	if(endTime < startTime){
+		alert("结束时间不能小于开始时间");
+	}else{
+		var root = '${parentId!}';
+		var url = "exportData.do?startDate="+startTime+"&endDate="+endTime;
+		if(root==null || root==""){
+			url = "exportData.do?startDate="+startTime+"&endDate="+endTime;
+		}else{
+			url += "&root=1";
+		}
+		f.action=url;
+		f.submit();
+	}
+}
+function selectXT(){
+	// 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    // 指定图表的配置项和数据
+    var option = {
+	    title: {
+	        x: 'center', 	 	
+	        text: '党建绩效(本月积分统计)'
+	       
+	    },
+	    tooltip: {
+	        trigger: 'item'
+	    },
+	    toolbox: {
+	        show: true,
+	        feature: {
+	            dataView: {show: false, readOnly: false},
+	            restore: {show: false},
+	            saveAsImage: {show: true}
+	        }
+	    },
+	    calculable: true,
+	    grid: {
+	        borderWidth: 0,
+	        y: 80,
+	        y2: 60
+	    },
+	    grid:{bottom:150},
+	    xAxis: [
+	        {
+	            type: 'category',
+	            data:${xs!''},
+	            axisLabel:{
+	              interval:0,  //类目全显
+	              formatter:function(val){
+	              //debugger;
+	              	var s=val.replace("市局机关党委","").replace("党支部","");
+				    return s;
+				    },
+				  <#if (user.username?? && user.username !='省局机关党委') && (user.username?? && user.username !='admin') >
+	              	rotate:-45   //顺时针旋转45度<此处设置文字倾斜度>
+	              </#if>
+	            }
+	        }
+	    ],
+	    yAxis: [
+	        {
+	            type: 'value'
+	        }
+	    ],
+	    series: [
+	        {
+	            name: '党建绩效(本月积分统计)',
+	            type: 'bar',
+	            itemStyle: {
+	                normal: {
+	                    color: function(params) {
+	                        // build a color map as your need.
+	                        var colorList = [
+	                          '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+	                           '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+	                           '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+	                        ];
+	                        return colorList[params.dataIndex]
+	                    },
+	                    label: {
+	                        show: true,
+	                        position: 'top'
+	                    }
+	                }
+	            },
+	            data: ${datas!''},
+	            markPoint: {
+	                tooltip: {
+	                    trigger: 'item'
+	                },
+	                 data : [
+	                    {type : 'max', name: '最高积分'},
+	                    {type : 'min', name: '最低积分'}
+	                ]
+	            }
+	        }
+	    ]
+	};
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+}
+$(function(){ 
+       var root=$("#root").val();
+       if(root==1){//机关
+	       $("#main").css("display","none");
+	       $("#main2").css("display","block");
+	       selectJG();
+       }else{
+       		$("#main").css("display","block");
+       		$("#main2").css("display","none");
+       		selectXT();
+       }
+     $("#jg").click(function(){
+           $("#main").css("display","none");
+           $("#main2").css("display","block");
+     });
+    	//显示机关图表结束 
+    //给ul->tals下面的li设置click事件
+    /*栏目细分点击事件后台取《已被屏蔽掉》
+    $(".layui-tab-title li").click(function(){
+//    	alert($(this).text());
+    	if ($(this).text() == '总分') {
+    		if(root==1){
+    		window.location.href = '../department/v_list_xt.do?root=1';
+    		}else{
+    		window.location.href = '../department/v_list_xt.do?';
+    		}
+    	} else if ($(this).text() == '图片新闻') {
+    		window.location.href = '../department/v_list_xt.do?channelId=1';
+    	} else if ($(this).text() == '党建动态'){
+    		window.location.href = '../department/v_list_xt.do?channelId=2';
+    	} else if ($(this).text() == '经验交流'){
+    		window.location.href = '../department/v_list_xt.do?channelId=3';
+    	} else if ($(this).text() == '媒体宣传'){
+    		window.location.href = '../department/v_list_xt.do?channelId=4';
+    	} else if ($(this).text() == '理论研讨'){
+    		window.location.href = '../department/v_list_xt.do?channelId=5';
+    	} else if ($(this).text() == '网上荣誉室'){
+    		window.location.href = '../department/v_list_xt.do?channelId=6';
+    	} else if ($(this).text()==  '支部动态'){
+    		window.location.href = '../department/v_list_xt.do?channelId=7&root=1';
+    	} else if ($(this).text()==  '党费缴纳'){
+    		window.location.href = '../department/v_list_xt.do?channelId=8&root=1';
+    	} else if ($(this).text()==  '党务公开'){
+    		window.location.href = '../department/v_list_xt.do?channelId=9&root=1';
+    	} else if ($(this).text()==  '特色工作'){
+    		window.location.href = '../department/v_list_xt.do?channelId=10&root=1';
+    	}
+    	$(".layui-tab-title li").removeClass();
+    	$(this).addClass("layui-this");
+    });
+    
+    $(".layui-tab-title li").removeClass();
+    var channelId = ${channelId!"0"};
+    if(channelId>6){
+        $(".layui-tab-title").children().eq(channelId-6).addClass("layui-this");
+    }else{
+     	$(".layui-tab-title").children().eq(channelId).addClass("layui-this");
+   	}
+   	*/
+     $("#searchSocreByMonth").submit(function(){
+    	var startTime =  $("[name='startDate']").val();
+    	var endTime = $("[name='endDate']").val();
+    	if(startTime=="" || endTime==""){
+    		alert("开始时间和结束时间不能同时为空");
+    		return false;
+    	}else{
+    		if(endTime < startTime){
+    			alert("结束时间不能小于开始时间");
+        		return false;
+    		}else{
+    			return true;
+    		}
+    	}
+     });
+});  
+function selectJG(){
+//显示机关图表开始
+        // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main2'));
+	// 指定图表的配置项和数据
+    var option = {
+	    title: {
+	        x: 'center',
+	        text: '党建绩效(本月积分统计)'
+	       
+	    },
+	    tooltip: {
+	        trigger: 'item'
+	    },
+	    toolbox: {
+	        show: true,
+	        feature: {
+	            dataView: {show: false, readOnly: false},
+	            restore: {show: false},
+	            saveAsImage: {show: true}
+	        }
+	    },
+	    calculable: true,
+	    grid: {
+	        borderWidth: 0,
+	        y: 80,
+	        y2: 60
+	    },
+	    grid:{bottom:260},
+	    xAxis: [
+	        {
+	            type: 'category',
+	            data:${xs!''},
+	            axisLabel:{
+	              interval:0,  //类目全显
+	              formatter:function(val){
+	                return val;
+//	              	var s=val.replace("市局机关党委","");
+//				    return s;
+				    },
+	              rotate:-45   //顺时针旋转45度<此处设置文字倾斜度>
+	            }
+	        }
+	    ],
+	    yAxis: [
+	        {
+	            type: 'value'
+	        }
+	    ],
+	    series: [
+	        {
+	            name: '党建绩效(本月积分统计)',
+	            type: 'bar',
+	            itemStyle: {
+	                normal: {
+	                    color: function(params) {
+	                        // build a color map as your need.
+	                        var colorList = [
+	                          '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+	                           '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+	                           '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+	                        ];
+	                        return colorList[params.dataIndex]
+	                    },
+	                    label: {
+	                        show: true,
+	                        position: 'top'
+	                    }
+	                }
+	            },
+	            data: ${datas!''},
+	            markPoint: {
+	                tooltip: {
+	                    trigger: 'item'
+	                },
+	                 data : [
+	                    {type : 'max', name: '最高积分'},
+	                    {type : 'min', name: '最低积分'}
+	                ]
+	            }
+	        }
+	    ]
+	};
+	 // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+}
+</script>
+<script type="text/javascript">
+ function showLoading()
+        {
+           $("#over").css("display","block");
+           $("#zhezhao").css("display","block");
+           $("#loding").css("display","block");
+          //  document.getElementById("loding").style.display = "block";
+            
+        }
+ function closeLoading()
+        {
+        	$("#zhezhao").css("display","none");
+        	$("#over").css("display","none");
+        	$("#loding").css("display","none");
+           // document.getElementById("over").style.display = "none";
+            //document.getElementById("loding").style.display = "none";
+        }
+    </script>
+</head>
+<body>
+<!-- 
+<input type="hidden" id="root" value="${parentId!}"/>
+    <div class="layui-tab">
+      <ul class="layui-tab-title">
+        <li class="layui-this">总分</li>
+        <#if parentId ?? && parentId==1>
+        <li>支部动态</li>
+     	<li>党费缴纳</li>
+        <li>党务公开</li>
+     	<li>特色工作</li>
+        <#else>
+    	<li>图片新闻</li>
+    	<li>党建动态</li>
+    	<li>经验交流</li>
+    	<li>媒体宣传</li>
+    	<li>理论研讨</li>
+    	<li>网上荣誉室</li>
+    	</#if>
+    	</a>
+      </ul>
+   </div> 
+<script>
+ 
+    
+$(function(){
+  
+  
+})
+</script>
+     
+	<div id="main"  style="float:left; width:99%;height:445px;"></div>
+	 -->
+	  <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<input type="hidden" id="root" value="${parentId!}"/>
+    <div class="system" id="jxtj">
+        <div id="xt"><a href="../department/v_list_xtIndex.do?departId=${departId!}" style="display:block;width:120px;height:40px;line-height:40px;background-color:#1E9FFF !important; text-align:center; color:#fff;float:left;">系统</a></div>
+        <div id="jg"><a href="../department/v_list_xtIndex.do?root=1&departId=${departId!}" style="display:block;width:120px;height:40px;line-height:40px;background-color:#1E9FFF !important; text-align:center; color:#fff;float:left; margin-left:20px;">机关</a></div>
+        <!-- <div id="xtLevel"><a href="../department/v_list_xtLevelIndex.do?departId=${departId!}" style="display:block;width:120px;height:40px;line-height:40px;background-color:#1E9FFF !important; text-align:center; color:#fff;margin-left:20px;float:left;">系统等级查看图</a></div>
+        <div id="jgLevel"><a href="../department/v_list_xtLevelIndex.do?root=1&departId=${departId!}" style="display:block;width:120px;height:40px;line-height:40px;background-color:#1E9FFF !important; text-align:center; color:#fff;float:left; margin-left:20px;">机关等级查看图</a> -->
+		<div style="clear:both"></div>
+		<div style="width:580px;height:40px; padding-top:30px;">
+			<form id="searchSocreByMonth" action="v_list_xtIndex.do">
+				<div style="width:216px; height:40xp; float:left;"></div>查询时间区间:<input type="text" name="startDate" value="${startDate!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+				<div style="width:160px; height:40xp; float:left;"></div>-&nbsp;&nbsp;&nbsp;<input type="text" name="endDate" value="${endDate!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+				<input type="hidden" name="root" value="${parentId!}"/>
+				<input type="hidden" id="channelId" value="${channelId!}"/>
+				<input type="hidden" id="departId" value="${departId!}"/>
+				<input class="query" type="submit" value="查询"/>
+				<!-- <input class="query" type="button" value="导出" onclick="exportData();"/> -->
+			</form>
+		</div>
+    </div>
+    <div class="layui-tab">
+    <!-- 栏目细分已被屏蔽掉
+      <ul class="layui-tab-title">
+        	<li class="layui-this">总分</li>
+        <#if parentId?? && parentId ==1>
+       	    <li>支部动态</li>
+       	    <li>党费缴纳</li>
+       	    <li>党务公开</li>
+       	    <li>特色工作</li>
+       	    
+	      <#else>
+	    	<li>图片新闻</li>
+	    	<li>党建动态</li>
+	    	<li>经验交流</li>
+	    	<li>媒体宣传</li>
+	    	<li>理论研讨</li>
+	    	<li>网上荣誉室</li>	
+    	</#if>
+
+    	</a>
+      </ul>
+       -->
+      <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+             <table class="layui-table" lay-skin="line">
+                  <colgroup>
+                    <col width="100">
+                    <col width="300">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="120">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col>
+                  </colgroup>
+                  <thead>
+                  <#if parentId?? && parentId ==1>
+                  	<tr>
+                      <th>序号</th>
+                      <th>组织名称</th>
+                      <th>图片新闻</th>
+                      <th>支部动态</th>
+                      <th>党费缴纳</th>
+                      <th>党务公开</th>
+                      <th>特色工作</th>
+                      <th>其他</th>
+                      <th>本月积分</th>
+                      <th>总分</th>
+                      <th>操作</th>
+                    </tr> 
+                  	<#else>
+                    <tr>
+                      <th>序号</th>
+                      <th>组织名称</th>
+                      <th>图片新闻</th>
+                      <th>党建动态</th>
+                      <th>经验交流</th>
+                      <th>媒体视点</th>
+                      <th>理论研讨</th>
+                      <th>网上荣誉室</th>
+                      <th>其他</th>
+                      <th>本月积分</th>
+                      <th>总分</th>
+                      <th>操作</th>
+                    </tr> 
+                    </#if>	
+                  </thead>
+                  <tbody>
+                  	<#if list?? && parentId?? && parentId ==1>
+                  		<#list list as depart>
+                  			<tr>
+		                      <td>${depart.groupid!''}</td>
+							   <td>${(depart.name!'')}</td>
+							  <td>${depart.tpxw!'0'}</td>
+		                      <td>${depart.zbdt!'0'}</td>
+		                      <td>${depart.dfjl!'0'}</td>
+		                      <td>${depart.dwgk!'0'}</td>
+		                      <td>${depart.tsgz!'0'}</td>
+		                      <td class="otherScore${depart.id!}">0</td>
+		                      <td>${depart.score!'0'}</td>
+		                 	  <td>${depart.pid!'0'}</td>
+		                      <td>
+		                      	<a href="../partyBuild/getShareContents.do?deptId=${depart.id!''}&startDate=${startDate!''}&endDate=${endDate!''}&status=1" style="display:block;width:66px;height:28px;line-height:28px;background-color:#fff; border:solid 1px #ccc;  text-align:center; color:#333; float:left;">得分记录</a>
+		                      </td>
+		                    </tr>
+		                    <script>
+		                    	var totalScore = parseFloat("${depart.pid!'0'}");
+		                    	var tpxwScore = parseFloat("${depart.tpxw!'0'}");
+		                    	var zbdtScore = parseFloat("${depart.zbdt!'0'}");
+		                    	var dfjlScore = parseFloat("${depart.dfjl!'0'}");
+		                    	var dwgkScore = parseFloat("${depart.dwgk!'0'}");
+		                    	var tsgzScore = parseFloat("${depart.tsgz!'0'}");
+		                    	var otherScore = totalScore-(tpxwScore+zbdtScore+dfjlScore+dwgkScore+tsgzScore);
+		                    	$(".otherScore${depart.id!}").text(otherScore);
+		                    </script>
+                  		</#list>	
+                  		<#else>
+                  		<#list list as depart>
+                  			<tr>
+		                      <td>${depart.groupid!''}</td>
+		                      <td>${(depart.name!'0')?replace("市局机关党委","")?replace("党支部","")}</td>
+		                      <td>${(depart.tpxw!'0')}</td>
+		                      <td>${(depart.djdt!'0')}</td>
+		                      <td>${(depart.jyjl!'0')}</td>
+		                      <td>${(depart.mtxc!'0')}</td>
+		                      <td>${(depart.llyt!'0')}</td>
+		                      <td>${(depart.wsrys!'0')}</td>
+		                      <td class="elsepoin_${depart.id}">0</td>
+		                      <td>${depart.score!'0'}</td>
+		                 	  <td>${depart.pid!'0'}</td>
+		                      <td>
+		                      	<a href="../partyBuild/getShareContents.do?deptId=${depart.id!''}&startDate=${startDate!''}&endDate=${endDate!''}&status=1" style="display:block;width:66px;height:28px;line-height:28px;background-color:#fff; border:solid 1px #ccc;  text-align:center; color:#333; float:left;">得分记录</a>
+		                      </td>
+		                    </tr>
+		                      <script type="text/javascript"> 
+		                      var elsepoin=null;
+		                      var a=parseFloat("${depart.tpxw!'0'}");
+		                      var b=parseFloat("${depart.djdt!'0'}");
+		                      var c=parseFloat("${depart.jyjl!'0'}");
+		                      var d=parseFloat("${depart.mtxc!'0'}");
+		                      var e=parseFloat("${depart.llyt!'0'}");
+		                      var f=parseFloat("${depart.wsrys!'0'}");
+		                      var g=parseFloat("${depart.pid!'0'}");
+		                      if(g==0||g==null){
+		                      $(".elsepoin_${depart.id}").text("0");
+		                      }else{
+		                       $(".elsepoin_${depart.id}").text(g-(a+b+c+d+e+f));
+		                      }
+		                      </script>
+                  		</#list>
+                  	</#if>
+                  </tbody>
+            </table>   
+        </div>
+      </div>
+    </div>
+<script>
+layui.use('element', function(){
+  var $ = layui.jquery
+  ,element = layui.element(); //Tab的切换功能，切换事件监听等，需要依赖element模块
+});
+/* 显示排名样式1.2.3        
+$(function(){
+
+   $(".layui-tab-item tr:lt(4)").find('td:first').css({color:'#fff',background:'url(${base}/res/jeecms/images/dan.png) no-repeat 21px 49%'});
+   $("#col tr:lt(4)").find('td:first').css({color:'#fff',background:'url(${base}/res/jeecms/images/dan.png) no-repeat 20px 49%'});
+   $(".layui-tab-item tr").find('td:first').css({padding:'0 0 0 25px'});
+  
+})*/
+</script>
+<div class="page-positon ove">
+    <!-- 加载框 -->
+    <!--
+          <div id="zhezhao" class="zhezhao"></div>
+    <div id="loding" class="loding ">
+    	<img style="width: 50px;height: 50px;" src="${base}/r/cms/loading.gif" alt="" /><br/>
+    	<font color="white">正在加载数据，请稍后...</font>	
+ 	</div>
+ 	 -->
+ 	
+</div>
+
+	<div id="main" class="list1" style="float:left; width:99%;height:650px;display: block;"></div>
+	<div id="main2"class="list2" style="float:left; width:99%;height:650px;display: none;"></div>
+</div>	  
+</body>
+</html>

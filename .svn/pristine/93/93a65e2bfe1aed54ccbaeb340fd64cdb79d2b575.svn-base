@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>jeecms-left</title>
+<#include "/jeecms_sys/head.html"/>
+<script src="${base}/res/jeecms/js/FengTab.js" type="text/javascript"></script>
+<link href="${base}/res/common/css/jquery.flot.css" rel="stylesheet" type="text/css"/>
+<!--[if lte IE 8]><![endif]-->
+<!-- 
+<script language="javascript" type="text/javascript" src="${base}/res/common/js/excanvas.min.js"></script>
+<script src="${base}/res/common/js/jquery.flot.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.time.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.categories.min.js" type="text/javascript"></script>
+ -->
+<script class="code" type="text/javascript">
+$(function() {
+	$("#tabs").tabs({
+		event: "mouseover"
+	});
+	$("#contentTabs").tabs({
+		event: "mouseover"
+	});
+	$("a[id^='check_']").each(function(i){
+	   var contentId=$(this).prop("id").split("check_")[1];
+	   $(this).bind('click', function() {
+		   $.post("content/o_ajax_check.do", {
+				  ids:contentId
+				}, function(data) {
+					if(data.success){
+						 $("#tr_"+contentId).remove();
+						 $.alert("<@s.m 'global.prompt'/>","<@s.m 'global.success'/>");
+					}else{
+						 $.alert("<@s.m 'global.prompt'/>","<@s.m 'global.failed'/>");
+					}
+			 }, "json");
+		});	
+	});
+	$("#dialog-reject-form").dialog({
+		autoOpen: false,
+		height: 300,
+		width: 350,
+		modal: true,
+		buttons: {
+			"<@s.m code='global.submit'/>": function rejectSubmit() {
+				$.post("content/o_ajax_reject.do", {
+					ids:$("#contentId").val(),
+					rejectOpinion:$("#rejectOpinion").val()
+				}, function(data) {
+					if(data.success){
+						 $("#tr_"+contentId).remove();
+						 $.alert("<@s.m 'global.prompt'/>","<@s.m 'global.success'/>");
+					}else{
+						 $.alert("<@s.m 'global.prompt'/>","<@s.m 'global.failed'/>");
+					}
+				 }, "json");
+				 $( this ).dialog( "close" );
+			},
+			"<@s.m code='global.reset'/>": function() {
+				$("#rejectForm")[0].reset();
+			}
+		}
+	});
+	$("a[id^='reject_']").each(function(i){
+	  contentId=$(this).prop("id").split("reject_")[1];
+	  $("#contentId").val(contentId);
+	  $(this).bind('click', function() {
+		  $( "#dialog-reject-form" ).dialog("open");
+	  });	
+	});
+//	<#if user.department.sddspoOrgtype??  && (user.department.sddspoOrgtype)?indexOf('支部')!= -1 >
+//		$("#jxfx").css("display","none");
+//	</#if>
+});
+</script>
+</head>
+<body>
+     <div class="page-positon ove">
+    <div class="position-div"><@s.m "global.position"/>: <@s.m "global.admin.home"/> > <@s.m "global.admin.index"/></div>
+     </div>
+     <div class="welcome-con">
+       <span><@s.m "welcome.usedMemory"/>: <em class="yync">${(usedMemory/1024/1024)?string("0.##")}MB</em><@s.m "welcome.useableMemory"/>: <em class="sync">${(useableMemory/1024/1024)?string("0.##")}MB</em><@s.m "welcome.maxMemory"/>: ${(maxMemory/1024/1024)?string("0.##")}MB</span><@s.m "welcome.word.login"/>${site.name!}<a class="change-inf" href="personal/v_profile.do"><@s.m "welcome.personinfo.edit"/></a><@s.m "welcome.lastlogintime"/>: ${user.lastLoginTime?string("yyyy-MM-dd")}
+     </div>
+     <div id="jxfx" class="home-main">
+       <div class="home-main-l f_l" style="width: 100%;">
+         <div class="item count">
+           <!-- <div class="item-nav"><a><i></i>绩效考核分析</a></div> -->
+           <div class="item-con" style="height: 1900px;">
+           	<#if user.department.sddspoOrgtype??  && (user.department.sddspoOrgtype)?indexOf('支部')!= -1 >
+           		<iframe runat="server" src="partyBuild/reportzhibu.do" width="90%" height="1850" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
+           	 <#else>
+           	 	<#if (user.username)!='admin'&&(user.username)!='省局机关党委' >
+           	 		<#if (user.username)?indexOf('市局机关党委')!=-1   >
+           	 			<iframe runat="server" src="partyBuild/report.do" width="90%" height="1850" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
+           	 		 <#else>
+           	 			<iframe runat="server" src="partyBuild/reportzhibu.do" width="90%" height="1850" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
+           	 		</#if>
+           	 	<#else>
+           	 		<iframe runat="server" src="partyBuild/report.do" width="90%" height="1850" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
+           	 	</#if>
+            </#if>
+           </div>
+         </div>
+       </div>
+     </div>
+</body>
+</html>

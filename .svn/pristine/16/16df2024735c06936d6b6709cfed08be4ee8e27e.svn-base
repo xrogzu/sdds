@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.jeecms.cms.entity.assist">
+	<class name="CmsBallotRecord" table="jc_ballot_record">
+		<meta attribute="sync-DAO">false</meta>
+		<id name="recordId" type="integer" column="record_id">
+			<generator class="sequence"><param name="sequence">JC_BALLOT_RECORDID</param></generator>
+		</id>
+		<property name="voteTime" column="vote_time" type="date" not-null="false"/>
+		<property name="voteIp" column="vote_ip" type="string" length="100"/>
+		<property name="voteCookie" column="vote_cookie" type="string" length="100"/>
+		<property name="wxopenId" column="wx_open_id" type="string" length="255"/>
+		<many-to-one name="item" class="CmsBallotItem" column="item_id" cascade="save-update"></many-to-one>
+	</class>
+</hibernate-mapping>

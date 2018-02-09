@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "../head.html"/>
+<script type="text/javascript">
+$(function() {
+	
+	var endResult = false;
+	$("#jvForm").validate();
+	$("#jvForm").submit(function(){
+		var number = $("#multiSelect").val();
+		var reg =/^\d+$/;
+		if(!reg.test(number)){
+			alert("最大投票数为数字！");
+			return false;
+		}
+		if(endResult){
+			return true;
+		}else{
+			return false;
+		}
+	});
+	
+	$("[name='title']").change(function(){
+		var title = $("[name='title']").val();
+		var url = "existBallot.do?title="+title;
+		$.post(url,function(result){
+			if(result=="noexist"){
+				endResult = true;
+			}else{
+				alert("此项目已添加过!");
+			}
+		});
+	});
+});
+</script>
+
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: E票通 - 在线投票 - 添加</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';" class="return-button"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_save.do">
+<@p.text label="标题" colspan="1" width="200" name="title" required="0" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="开始时间" id="startTime" readonly="readonly" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:$dp.$('endTime').value})" colspan="1" width="100" name="startTime" required="0" class="required" /><@p.tr/>
+<@p.text label="结束时间" id="endTime" readonly="readonly" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:$dp.$('startTime').value})" colspan="1" width="100" name="endTime" required="0" class="required" /><@p.tr/>
+<@p.text label="最多投票数" id="multiSelect" colspan="1" width="100" name="multiSelect" required="0" class="required" /><@p.tr/>
+<@p.radio label="限制用户" name="isRestrictmember" value="false" list={"true":"global.true","false":"global.false"} help="cmsVoteTopic.restrictMember.help"/>
+<@p.radio label="限制IP" name="isRestrictip" value="false" list={"true":"global.true","false":"global.false"}/>
+<@p.radio label="限制COOKIE" name="isRestrictcookie" value="false" list={"true":"global.true","false":"global.false"}/>
+<@p.radio label="是否使用" name="isDisabled" value="true" list={"true":"global.true","false":"global.false"}/>
+<@p.textarea label="描述" id="description" rows="6" cols="100" name="description"></@p.textarea>
+
+<@p.td colspan="2"><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td><@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

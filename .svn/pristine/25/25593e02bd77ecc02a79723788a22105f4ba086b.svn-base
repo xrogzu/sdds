@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title> ${site.name}</title>
+<meta http-equiv="keywords" content="${site.keywords!}"/>
+<meta http-equiv="description" content="${site.description!}"/>
+<script src="${base}/r/cms/jquery.js" type="text/javascript"></script>
+<script src="${base}/r/cms/front.js" type="text/javascript"></script>
+<script src="${base}/r/cms/layer/jquery-1.12.1.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.SuperSlide.2.1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+     <style>
+    	li{
+    	list-style-type:none;
+    	}
+    </style>
+<script type="text/javascript">
+$(function() {
+	Cms.siteFlow("${base}", location.href, document.referrer);
+});
+</script>
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/www/default/css/index.css" />
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+
+
+<!--[if lt IE 9]> 
+<script src="/${res}/js/html5shiv.min.js"></script>
+<script src="/${res}/js/respond.min.js"></script>
+<![endif]-->
+
+<head>
+<body>
+
+[#include "../include/header_shengju.html"/]
+<div class="main container survey clearfix"> 
+  <section class="survey_w840">
+    <h1>调查结果<a href="${base}/survey/index.jhtml" class="position">在线调查</a></h1>
+    <div class="survey_con result">
+      <h1><span>投票主题：</span>${vote.title?html}</h1>
+     <!--   <div style="border:1px  solid #E2E2E2; width:328px;float: right;margin-top: 45px;word-wrap:break-word;word-break:break-all; border-radius: 8px;overflow: auto;">
+	<p style="font-size: 24px;color: red;height:40px;line-height:40px;margin-left:10px;">导语:</p>
+	</div> -->
+	<p style="text-indent: 2em;color:#3333ff;margin-left:4px;margin-top:6px;font-size: 16px;line-height:18px;">${vote.description!''}</p>
+      <div class="survey_list">
+        <form name="votes" action="${base}/vote.jspx" method="post" >
+     <input type="hidden" name="voteId" value="${vote.id}"/>
+      <div class="survey_list">
+        [#list vote.subtopics as subTopic]
+        <div class="item">
+          <p>${subTopic_index+1}、${subTopic.title?html}</p>
+          <div>
+          [#if subTopic.isRadio]
+          [#if (subTopic.voteItems?size>3)]
+          [#list subTopic.voteItems as item]
+          <li><input type="radio" name="itemIds${subTopic.id}" value="${item.id}"/>${item_index+1}.${item.title?html}</li>
+          [/#list]
+          [#else]
+          [#list subTopic.voteItems as item]
+          <span><input type="radio" name="itemIds${subTopic.id}" value="${item.id}"/>${item_index+1}.${item.title?html}</span>
+          [/#list]
+          [/#if]
+          [/#if]
+          [#if subTopic.isMulti]
+          [#if (subTopic.voteItems?size>3)]
+          [#list subTopic.voteItems as item]
+          <li class="xzan"><input type="checkbox" name="itemIds${subTopic.id}" value="${item.id}"  id="${item.id}"/>${item_index+1}.${item.title?html}</li>
+          [/#list]
+          [#else]
+          [#list subTopic.voteItems as item]
+          <span><input type="checkbox" name="itemIds${subTopic.id}" value="${item.id}"  id="${item.id}"/>${item_index+1}.${item.title?html}</span>
+          [/#list]
+          [/#if]
+          [/#if]
+          [#if subTopic.isText]
+          <textarea name="reply" type="text"></textarea>
+          [/#if]
+          </div>
+        </div>
+        <input name=subIds type="hidden" value="${subTopic.id}"/>
+        [/#list]
+      </div>
+      <div class="survey_Btn"><input type="submit" value="提交投票"><a href="${base}/vote_result.jspx?voteId=${vote.id}" class="result">查看投票结果</a></div>
+</form> 
+      </div>
+
+    </div>
+  </section>
+ <!-- [#include "../include/vote_right.html"/] 
+   [#include "../include/vote_right.html"/]-->
+</div>
+[#include "../include/footer_shengju.html"/]
+</body>
+</html>

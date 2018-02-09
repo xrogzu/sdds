@@ -1,0 +1,18 @@
+package com.risen.service;
+
+import com.jeecms.common.page.Pagination;
+import com.risen.entity.CmsFloating;
+
+public interface CmsFloatingMng {
+	public Pagination getPage(int pageNo, int pageSize);
+
+	public CmsFloating findById(Integer sddsfiId);
+
+	public CmsFloating save(CmsFloating bean);
+
+	public CmsFloating update(CmsFloating bean);
+
+	public CmsFloating deleteById(Integer sddsfiId);
+	
+	public CmsFloating[] deleteByIds(Integer[] ids);
+}

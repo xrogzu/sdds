@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<link href="${base}/res/jeecms/css/admin.css" rel="stylesheet" type="text/css"/>
+<link href="${base}/res/common/css/theme.css" rel="stylesheet" type="text/css"/>
+<link href="${base}/res/common/css/jquery.validate.css" rel="stylesheet" type="text/css"/>
+<link href="${base}/res/common/css/jquery.treeview.css" rel="stylesheet" type="text/css"/>
+<link href="${base}/res/common/css/jquery.ui.css" rel="stylesheet" type="text/css"/>
+<script src="${base}/res/common/js/jquery.js" type="text/javascript"></script>
+<script src="${base}/thirdparty/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+</script>
+</head>
+<body>
+<div class="body-box">
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<@p.table value=pagination listAction="${base}/getFrontShareContentScore.jspx?deptId=${deptId!}&startDate=${startDate!}&endDate=${endDate!}&status=${status!}";risenIntegralRecord,i,has_next><#rt/>
+	<@p.column align="center" title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+		<input type='checkbox' id="ids" name='ids' value="${risenIntegralRecord.risenirUuid!''}"  onclick="Pn.selectCheckBox('${risenIntegralRecord.risenirUuid!''}',this.checked)"/><#t/>
+	</@p.column><#t/>
+	<@p.column align="center" title="ID">${risenIntegralRecord.risenirUuid!''}</@p.column><#t/>
+	<@p.column align="center" code="标题">[${risenIntegralRecord.risenirChannel!''}]<a href="${risenIntegralRecord.risenirContenturl!''}" target="_blank"><@text_cut s=risenIntegralRecord.risenirContent?html len=22 append="..."/></a></@p.column><#t/>
+	<@p.column align="center" code="共享人">${risenIntegralRecord.risenirOrgname!''}</@p.column><#t/>
+	<@p.column align="center" code="内容来源">${risenIntegralRecord.risenirOrgname!''}>${risenIntegralRecord.risenirChannel!''}</@p.column><#t/>
+	<@p.column align="center" code="目标栏目">${risenIntegralRecord.risenirTargetchannel!''}</@p.column><#t/>
+	<@p.column align="center" code="共享时间">${(risenIntegralRecord.risenirHandledate?string("yyyy-MM-dd HH:mm:ss"))!''}</@p.column><#t/>
+	<@p.column align="center" code="分数">${risenIntegralRecord.risenirScore!'0'}</@p.column><#t/>
+</@p.table>
+</form>
+</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>jeecms-left</title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function(){
+	$("#browser").treeview({
+		url: "tree.do?sddscpUsertype="+$("#sddscpUsertype").val()
+	});
+	
+	Cms.lmenu("lmenu");
+});
+</script>
+</head>
+<body class="lbody">
+<div class="left">
+	<div class="fresh">
+		 <table width="100%" border="0" cellspacing="0" cellpadding="0">
+	          <tr>
+	            <td height="28" align="center"><img src="${base}/res/jeecms/img/admin/sxicon.gif" />&nbsp;&nbsp;<a href="javascript:location.href=location.href"><@s.m "global.refresh"/></a></td>	
+	      	 </tr>
+	     </table>
+	     <input id="sddscpUsertype" name="sddscpUsertype" type="hidden" value="${sddscpUsertype!}" />
+	</div>
+</div>
+<ul id="browser" class="filetree"></ul>
+
+</body>
+</html>

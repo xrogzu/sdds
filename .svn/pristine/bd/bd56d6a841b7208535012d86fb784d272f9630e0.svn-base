@@ -1,0 +1,23 @@
+<#if isRoot>
+[
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<a href='<#if (depart.child?size gt 0)&&(!isZb)>../changeremind/changeRemind_list.do?pid=${depart.id}<#elseif (depart.child?size gt 0)&&(isZb)>../changeremind/changeRemind_list.do?pid=${depart.id}&iszb=1<#else>../changeremind/changeRemind_list.do?departid=${depart.id}</#if>' target='changeRemindRightFrame'>${depart.name}</a>",
+		"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+		"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+<#else>
+	[
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<a href='<#if (depart.child?size gt 0)&&(!isZb)>../changeremind/changeRemind_list.do?pid=${depart.id}<#elseif (depart.child?size gt 0)&&(isZb)>../changeremind/changeRemind_list.do?pid=${depart.id}&iszb=1<#else>../changeremind/changeRemind_list.do?departid=${depart.id}</#if>' target='changeRemindRightFrame'>${depart.name}</a>",
+		"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+		"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+</#if>

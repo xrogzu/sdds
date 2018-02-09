@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script src="${base}/res/common/js/ProvinceAndCityJson.js" type="text/javascript"></script>
+<script type="text/javascript">
+function showDeptTree(){
+	$("[name='target']").show();
+	$("#outPartyUser1").show();
+}
+function hideDeptTree(){
+	$("[name='target']").hide();
+	$("#outPartyUser1").hide();
+}
+$(function() {
+	$("#jvForm").validate();
+	$("#jvForm").submit(function(){
+		var jgdw=$("#sddscpJgdwname").val();
+		var dzz=$("#sddscpDzzname").val();
+		var zb=$("#sddscpZbname").val();
+		var zjstatus=$("#zjstatus").val();
+		var sddscpOutpartycause=$("#sddscpOutpartycause").val();
+		var changeType = $("[name='sddscpChangestype']:checked").val();
+		var sddscpChanges = $("input[name='sddscpChanges']:checked").val();
+		var sddscpOutpartycause = $("[name='sddscpOutpartycause']").val();
+		if((jgdw==""||jgdw==null)&&(dzz==""||dzz==null)&&(zb==""||zb==null)){
+			$("#s1").show();
+			$("#s2").show();
+			$("#s3").show();
+		}else{
+			var jgCheck = false,dzzCheck=false,zbCheck = false;
+			if(jgdw!=null && jgdw!="" ){
+				if(jgdw.indexOf("工作指导组")>-1){
+					alert("机关党委不能选党组党建工作指导组");
+					return false;
+				}else{
+					jgCheck = true;
+				}
+			}else{
+				jgCheck = true;
+			}
+			if(dzz!=null && dzz!="" ){
+				if(dzz.indexOf("工作指导组")>-1){
+					alert("党总支不能选党组党建工作指导组");
+					return false;
+				}else{
+					dzzCheck = true;
+				}
+			}else{
+				dzzCheck = true;
+			}
+			if(zb!=null && zb!="" ){
+				if(zb.indexOf("工作指导组")>-1){
+					alert("支部不能选党组党建工作指导组");
+					return false;
+				}else{
+					zbCheck = true; 
+				}
+			}else{
+				zbCheck = true; 
+			}
+			if(jgCheck && dzzCheck && zbCheck){
+				if(zjstatus=="3"){
+					return true;
+				}else{
+					if(changeType!=undefined && changeType!=null && changeType!=""){
+						if(sddscpChanges==undefined || sddscpChanges==null || sddscpChanges==""){
+							alert("请选择党员减少类型");
+							return false;
+						}else{
+							if(sddscpOutpartycause!=undefined && sddscpOutpartycause!=null && sddscpOutpartycause!=""){
+								return true;
+							}else{
+								alert("请您简述当前党员减少原因");
+								return false;
+							}
+						}
+					}else{
+						if(sddscpChanges!=undefined && sddscpChanges!=null && sddscpChanges!=""){
+							if(sddscpOutpartycause!=undefined && sddscpOutpartycause!=null && sddscpOutpartycause!=""){
+								return true;
+							}else{
+								alert("请您简述当前党员减少原因");
+								return false;
+							}
+						}else{
+							if(sddscpOutpartycause!=undefined && sddscpOutpartycause!=null && sddscpOutpartycause!=""){
+								alert("当前操作不是党员减少，请删除减少原因内容；反之请选中党员减少！");
+								return false;
+							}else{
+								return true;
+							}
+						}
+					} 
+				}
+			}else{
+				return false;
+			}
+		}
+	});
+	$("[name='sddscpChanges']").click(function(){
+		$("[name='sddscpChangestype']").attr("checked","checked");
+	});
+	$("#sddscpEducation").blur(function(){
+		var level=parseInt($(this).val());
+		if(level<=4){//专科和高中
+			$("#sddscpDegree option:eq(0)").attr("selected","selected");
+			$("#sddscpDegree option:eq(1)").removeAttr("selected");
+			$("#sddscpDegree option:eq(2)").removeAttr("selected");
+			$("#sddscpDegree option:eq(3)").removeAttr("selected");
+		}
+	});
+	
+	
+	//部门对话框
+	$("#departDialog").dialog({
+		autoOpen: false,
+		modal: true,
+		width: 280,
+		height: 420,
+		position: ["center",20],
+		buttons: {
+			"OK": function() {
+				$("#sddscpJgdw").val($("input[name='departId']:checked").val());
+				$("#sddscpJgdwname").val($("input[name='departId']:checked+span").html());
+				$("#s1").hide();
+				$("#s2").hide();
+				$("#s3").hide();
+				$(this).dialog("close");
+			},"清除":function(){
+				$("#sddscpJgdw").val(0);
+				$("#sddscpJgdwname").val("");
+				$("#s1").hide();
+				$("#s2").hide();
+				$("#s3").hide();
+				$(this).dialog("close");
+			}
+		}
+	});
+	$("#departDialog1").dialog({
+		autoOpen: false,
+		modal: true,
+		width: 280,
+		height: 420,
+		position: ["center",20],
+		buttons: {
+			"OK": function() {
+				$("#sddscpDzz").val($("#departTree1 input[name='departId']:checked").val());
+				$("#sddscpDzzname").val($("#departTree1 input[name='departId']:checked+span").html());
+				$("#s1").hide();
+				$("#s2").hide();
+				$("#s3").hide();
+				$(this).dialog("close");
+			},"清除":function(){
+				$("#sddscpDzz").val(0);
+				$("#sddscpDzzname").val("");
+				$("#s1").hide();
+				$("#s2").hide();
+				$("#s3").hide();
+				$(this).dialog("close");
+			}
+		}
+	});
+	$("#departDialog2").dialog({
+		autoOpen: false,
+		modal: true,
+		width: 280,
+		height: 420,
+		position: ["center",20],
+		buttons: {
+			"OK": function() {
+				$("#sddscpZb").val($("input[name='departId']:checked").val());
+				$("#sddscpZbname").val($("input[name='departId']:checked+span").html());
+				$("#s1").hide();
+				$("#s2").hide();
+				$("#s3").hide();
+				$(this).dialog("close");
+			},"清除":function(){
+				$("#sddscpZb").val(0);
+				$("#sddscpZbname").val("");
+				$("#s1").hide();
+				$("#s2").hide();
+				$("#s3").hide();
+				$(this).dialog("close");
+			}
+		}
+	});
+	$("#departDialog3").dialog({
+		autoOpen: false,
+		modal: true,
+		width: 280,
+		height: 420,
+		position: ["center",20],
+		buttons: {
+			"OK": function() {
+				$("#targetDeptId").val($("input[name='departId']:checked").val());
+				$("#targetDeptName").val($("input[name='departId']:checked+span").html());
+				$(this).dialog("close");
+				$(this).dialog("close");
+			},"清除":function(){
+				$("#targetDeptId").val(0);
+				$("#targetDeptName").val("");
+				$(this).dialog("close");
+			}
+		}
+	});
+	
+	$("#jgDialog").dialog({
+		autoOpen: false,
+		modal: true,
+		width: 500,
+		height: 200,
+		position: ["center",20],
+		buttons: {
+			"OK": function() {
+				var address="";
+				if($("#SelectProvince").val()!=null&&$("#SelectProvince").val()!=""){
+					address=$("#SelectProvince").find("option:selected").text();
+					if($("#SelectCity").val()!=null&&$("#SelectCity").val()!=""){
+						address+=$("#SelectCity").find("option:selected").text()
+							if($("#SelectArea").val()!=null&&$("#SelectArea").val()!=""){
+								address+=$("#SelectArea").find("option:selected").text();
+							}
+					}
+					address+=$("#detailAddress").val();
+					
+				}
+				$("#sddscpNative").val(address);
+				$(this).dialog("close");
+			}
+		}
+	});
+/* 	var jobStatusValue = '${cmsMember.sddscpJobstatus!}';
+	if("离退休党员"==jobStatusValue){
+		$("#out").parent().parent().hide();
+	}
+	$("[name='sddscpJobstatus']").change(function(){
+		var sddscpJobstatus = $(this).children('option:selected').val();
+		if(sddscpJobstatus!=undefined && sddscpJobstatus!=null && sddscpJobstatus!=""){
+			if(sddscpJobstatus=="离退休党员"){
+				$("#out").parent().parent().hide();
+			}else{
+				$("#out").parent().parent().show();
+				$("#out").show();
+			}
+		}
+	}); */
+	$('#jg').click(function(){
+		$('#jgDialog').dialog('open');
+	});
+	
+	var parent_opened = false;
+	var parent_opened1 = false;
+	var parent_opened2 = false;
+	var parent_opened3 = false;
+	$('#depart').click(function(){
+		//第一次打开，需要获取数据。
+		if(!parent_opened) {
+			$("#departTree").treeview({
+				url: "../admin_global/v_depart_add.do"
+			});
+			parent_opened = true;
+			$("#departDialog").show();
+		}
+		$('#departDialog').dialog('open');
+		return false;
+	});	
+
+	$('#depart1').click(function(){
+		//第一次打开，需要获取数据。
+		if(!parent_opened1) {
+			$("#departTree1").treeview({
+				url: "../admin_global/v_depart_add.do"
+			});
+			parent_opened1 = true;
+			$("#departDialog1").show();
+		}
+		$('#departDialog1').dialog('open');
+		return false;
+	});	
+	$('#depart2').click(function(){
+		if(!parent_opened2) {
+			$("#departTree2").treeview({
+				url: "../admin_global/v_depart_add.do"
+			});
+			parent_opened2 = true;
+			$("#departDialog2").show();
+		}
+		$('#departDialog2').dialog('open');
+		return false;
+	});	
+	$('#depart3').click(function(){
+		if(!parent_opened3) {
+			$("#departTree3").treeview({
+				url: "../admin_global/v_depart_add.do"
+			});
+			parent_opened3 = true;
+			$("#departDialog3").show();
+		}
+		$('#departDialog3').dialog('open');
+		return false;
+	});	
+	
+});
+	function inOrOut(s){
+		if(s==1){
+			$("#out").css("display","none");
+			$("#in").css("display","block");
+		}else{
+			$("#in").css("display","none");
+			$("#out").css("display","block");
+		}
+		$("input[name='sddscpChanges']").attr("checked",false);
+	}
+	
+</script>
+</head>
+<body>
+	<div class="page-positon ove">
+	<#if (ischeck??) && ischeck="0">
+		<div class="position-div"><@s.m "global.position"/>: 党员管理 > <@s.m "global.edit"/></div>
+	<#else>
+		<div class="position-div"><@s.m "global.position"/>: 党员管理 > 查看</div>
+	</#if>
+  		
+	</div>
+	<div class="box-positon ck">
+		<form class="ropt">
+			<input type="button" value="<@s.m "global.backToList"/>" onclick="history.back();" class="return-button"/>
+		</form>
+		<div class="clear"></div>
+	</div>
+	<div class="body-box">
+		<@p.form id="jvForm" action="o_update.do" labelWidth="12" class="formDefStyle">
+		<@p.td width="50" colspan="1" label="姓名">${cmsMember.username}<#if cmsMember.admin> &nbsp; <span style="color:red">[<@s.m "cmsUser.admin"/>]</span></#if></@p.td>
+		<@p.radio width="50" colspan="1" label="cmsUser.gender" name="gender" required="true" value=cmsMember.gender list={"true":"cmsUser.male","false":"cmsUser.female"}/>
+		<@p.tr/>
+<@p.text width="50" colspan="1" label="民族" name="sddscpNational" value=cmsMember.sddscpNational maxlength="100"/>
+<@p.text width="50" colspan="1" label="cmsUser.email" name="email" value=cmsMember.email class="email"/><@p.tr/>
+<@p.text width="50" colspan="1" class="required" required="true" label="身份证号" name="sddscpIdnumber" value=cmsMember.sddscpIdnumber maxlength="100"/>
+<@p.text width="50" colspan="1" class="required" id="birthday" required="true" label="cmsUser.birthday" name="birthday" value=(cmsMember.birthday?string('yyyy-MM-dd'))! onclick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})" class="Wdate"/><@p.tr/>
+<@p.radio width="50" colspan="1" label="政治面貌" name="sddscpPoliticaltype" value=cmsMember.sddscpPoliticaltype list={"1":"中共党员","2":"预备党员"} />
+<@p.select width="50" colspan="1" label="工作身份" name="sddscpJobstatus"  value=cmsMember.sddscpJobstatus list=jobstatusList listKey="value" listValue="key"/><@p.tr/>
+
+<@p.text width="50" colspan="1" class="required" required="true" label="入党时间" name="sddscpJoinpartydate" value=(cmsMember.sddscpJoinpartydate?string('yyyy-MM-dd'))! onclick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d',minDate:$dp.$('birthday').value})" class="Wdate"/>
+<@p.text width="50" colspan="1" label="家庭住址" name="sddscpAddress" value=cmsMember.sddscpAddress maxlength="150"/><@p.tr/>
+<@p.text width="50" colspan="1" required="true" label="进入支部日期" name="sddscpEbranchdate" value=(cmsMember.sddscpEbranchdate?string('yyyy-MM-dd'))! onclick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d',minDate:$dp.$('birthday').value})" class="Wdate"/>
+<@p.text width="50" colspan="1" required="true" label="参加工作日期" name="sddscpJoinworktime" value=(cmsMember.sddscpJoinworktime?string('yyyy-MM-dd'))! onclick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d',minDate:$dp.$('birthday').value})" class="Wdate"/><@p.tr/>
+<@p.select width="50" colspan="1" class="required" required="true" label="学历"  value="3" id="sddscpEducation" name="sddscpEducation" list={"1":"研究生","2":"大学本科","3":"大学专科","4":"专科以下"} value=cmsMember.sddscpEducation />
+<@p.text width="50" colspan="1" label="毕业院校" name="sddscpGraduate" value=cmsMember.sddscpGraduate maxlength="100"/><@p.tr/>
+<@p.select width="50" colspan="1" label="学位"  value="2" id="sddscpDegree" name="sddscpDegree" list={"1":"无","2":"学士","3":"硕士","4":"博士"} value=cmsMember.sddscpDegree  />
+<@p.radio width="50" colspan="1" label="婚姻状况" required="true" name="sddscpMatrimonial" value=cmsMember.sddscpMatrimonial list={"1":"未婚","2":"已婚"}/><@p.tr/>
+<@p.text width="50" colspan="1" required="true" label="工作单位" name="sddscpWorkplace" value=cmsMember.sddscpWorkplace maxlength="100"/>
+<@p.text width="50" colspan="1" required="true" label="职务" name="sddscpJobposition" value=cmsMember.sddscpJobposition maxlength="100"/><@p.tr/>
+<@p.td colspan="1" width="50" label="籍贯"><@p.text id="sddscpNative" value=cmsMember.sddscpNative name="sddscpNative" maxlength="100"/><input class="depart" type="button" id="jg" value="请选择"/></@p.td>
+<@p.text width="50" colspan="1" label="户籍所在地" name="sddscpResidence" value=cmsMember.sddscpResidence maxlength="100"/><@p.tr/>
+<@p.text width="50" colspan="1" label="其他联系方式" name="sddscpOtherphone" value=cmsMember.sddscpOtherphone maxlength="100"/>
+<@p.text width="50" colspan="1" label="cmsUser.qq" name="qq" value=cmsMember.qq maxlength="100"/><@p.tr/>
+<@p.text width="50" colspan="1" label="cmsUser.phone" name="phone" value=cmsMember.phone maxlength="50"/>
+<@p.text width="50" colspan="1" label="cmsUser.mobile" name="mobile" value=cmsMember.mobile maxlength="50"/><@p.tr/>
+<@p.td   colspan="1" width="50" label="所属机关党委">
+<@p.text  id="sddscpJgdwname" name="sddscpJgdwname" value=cmsMember.sddscpJgdwname readonly="true"  maxlength="25"/><input class="depart" type="button" id="depart" value="请选择"/>
+<label id="s1" for="sddscpJgdwname" generated="true" class="error" style="display: none;">所属机关党委/党总支/支部必须选择至少一个</label>
+<input type="hidden" name="sddscpJgdw" id="sddscpJgdw" value="${cmsMember.sddscpJgdw!0}" /> 
+</@p.td>
+<@p.select  colspan="1" width="50" label="机关党委职务" value="${cmsMember.sddscpJgdwjob!'无'}" name="sddscpJgdwjob" list=jiguan listKey="corecdKey" listValue="corecdVal" />
+
+<@p.tr/>
+<@p.td   colspan="1" width="50" label="所属党总支">
+<@p.text  id="sddscpDzzname" name="sddscpDzzname" value=cmsMember.sddscpDzzname readonly="true"  maxlength="25"/><input class="depart" type="button" id="depart1" value="请选择"/>
+<label id="s2" for="sddscpDzzname" generated="true" class="error" style="display: none;">所属机关党委/党总支/支部必须选择至少一个</label>
+<input type="hidden" name="sddscpDzz" id="sddscpDzz" value=${cmsMember.sddscpDzz!0} />
+</@p.td>
+<@p.select colspan="1" width="50" label="党总支职务" value="${cmsMember.sddscpDzzjob!'无'}" name="sddscpDzzjob" list=dangzongzhi listKey="corecdKey" listValue="corecdVal" />
+<@p.tr/>
+
+<@p.td colspan="1" width="50" label="所属支部">
+<@p.text id="sddscpZbname" name="sddscpZbname" value="${cmsMember.sddscpZbname!'无'}" readonly="readonly"  maxlength="50"/><#if zjstatus?? ><p>提交转结成功后系统会自动更改支部为：${targetDeptName!''}</p><#else><input class="depart" type="button" id="depart2"  value="请选择"/></#if>
+<label id="s3" for="sddscpZbname" generated="true" class="error" style="display: none;">所属机关党委/党总支/支部必须选择至少一个</label>
+<input type="hidden" name="sddscpZb" id="sddscpZb"  value=${cmsMember.sddscpZb!0} />
+<input type="hidden" name="zjstatus" id="zjstatus" value=${zjstatus!''} />
+</@p.td>
+ <@p.select colspan="1" width="50" label="支部职务" value=cmsMember.sddscpZbjob name="sddscpZbjob" list=zhibu listKey="corecdKey" listValue="corecdVal" />
+<@p.tr/>
+<@p.tr/>
+	<#if (ischeck??) && ischeck="0">
+		<tr>
+			<@p.td width="50" colspan="1" label="人员变动"  >
+					<input type="radio" ${(cmsMember.sddscpChangestype! =='2')?string('checked="checked"','')} name="sddscpChangestype" value="2">党员减少
+			</@p.td>
+			<@p.td width="50" colspan="1" label="减少类型"  >
+				<span id="out">
+					<input type="radio" name="sddscpChanges" <#if cmsMember?? && ('5' == (cmsMember.sddscpChanges!))>checked</#if> value="5">开除党籍
+					<input type="radio" name="sddscpChanges" <#if cmsMember?? && ('7' == (cmsMember.sddscpChanges!))>checked</#if> value="7">退党
+					<input type="radio" name="sddscpChanges" <#if cmsMember?? && ('9' == (cmsMember.sddscpChanges!))>checked</#if> value="9">死亡
+	                <!--  <input type="radio" name="sddscpChanges" value="11">警告
+	                <input type="radio" name="sddscpChanges" value="13">严重警告
+	                <input type="radio" name="sddscpChanges" value="15">撤消党内职务
+	                <input type="radio" name="sddscpChanges" value="17">留党查看-->
+				</span>
+			</@p.td>
+	<#else>
+	  
+	</#if>
+<@p.tr/>
+
+<#if (zjstatus??) && zjstatus=3>
+	<@p.td colspan="1" width="50" label="变动说明">
+	<@p.textarea id="sddscpOutpartycause" name="sddscpOutpartycause"  value="${cmsMember.sddscpOutpartycause!}" readonly="readonly" rows="4" cols="50"/>
+	</@p.td>
+<@p.tr/>
+<#elseif (sddscpIsinjob??) && sddscpIsinjob="2">
+	<@p.td colspan="1" width="50" label="变动说明">
+	<@p.textarea id="sddscpOutpartycause" name="sddscpOutpartycause"  value="${cmsMember.sddscpOutpartycause!}" readonly="readonly" rows="4" cols="50"/>
+	</@p.td>
+<@p.tr/>
+<#elseif (ischeck??) && ischeck="0">
+	<@p.td colspan="1" width="50" label="减少原因">
+	<@p.textarea id="sddscpOutpartycause" name="sddscpOutpartycause" value="${cmsMember.sddscpOutpartycause!}"  rows="4" cols="50"/>
+    </@p.td>
+    <@p.tr/>
+<#else>
+</#if>
+<#list registerItems as item>
+<#if item_has_next>
+<@p.selfDefineRegisterWidget name="attr_${item.field}" value=userAttrValues[item_index] size="${item.size!}" width="50" colspan="1" list="${item.optValue!}" help=item.help helpPosition="${item.helpPosition!2}" rows="${item.rows!}" cols="${item.cols!}" label=item.label required=item.required type="${item.dataType}"/>
+<#if item_index%2==1><@p.tr/></#if>
+<#else>
+<@p.selfDefineRegisterWidget name="attr_${item.field}" value=userAttrValues[item_index] size="${item.size!}" width="100" colspan="2" list="${item.optValue!}" help=item.help helpPosition="${item.helpPosition!2}" rows="${item.rows!}" cols="${item.cols!}" label=item.label required=item.required type="${item.dataType}"/>
+<@p.tr/>
+</#if>
+</#list>
+<@p.td colspan="2">
+	<@p.hidden name="id" value=cmsMember.id/>
+	<input type="hidden" name="sddscpIsinjob1" value="${sddscpIsinjob!''}"/>
+	<input type="hidden" name="sddscpAssess1" value="${sddscpAssess!''}"/>
+	<input type="hidden" name="sddscpChanges1" value="${sddscpChanges!''}"/>
+	<input type="hidden" name="sddscpAll" value="${sddscpAll!''}"/>
+	<input type="hidden" name="deptsIds" value="${dept.id!}"/>
+	<#if (ischeck??) && ischeck="0">
+		<@p.submit id="sub" code="global.submit" class="query"/><@p.reset code="global.reset" class="cancel"/>
+	</#if>
+</@p.td>
+</@p.form>
+</div>
+
+<!-- 弹出框start -->
+<div id="departDialog" title="组织" style="display:none;">
+    <ul id="departTree" class="filetree">
+    </ul>
+</div>
+<div id="departDialog1" title="组织" style="display:none;">
+    <ul id="departTree1" class="filetree"></ul>
+</div>
+<div id="departDialog2" title="组织" style="display:none;">
+    <ul id="departTree2" class="filetree"></ul>
+</div>
+<div id="departDialog3" title="组织" style="display:none;">
+    <ul id="departTree3" class="filetree"></ul>
+</div>
+<div id="jgDialog" title="籍贯" style="display:none;">
+    <select id="SelectProvince" name="SelectProvince"></select>
+    <select id="SelectCity" name="SelectCity"></select>
+    <select id="SelectArea" name="SelectArea"></select><br/>
+            详细地址：<input type="text" id="detailAddress" style="margin-top: 10px; width: 330px;" />
+</div>
+<!-- 弹出框end -->
+
+</body>
+</html>

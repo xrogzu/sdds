@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+</head>
+<body>
+<div class="box-positon ove">
+	<div class="position-div"><@s.m "global.position"/>: <@s.m "risenOrgLifeCalendar.function"/> - <@s.m "global.list"/></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_save.do">
+
+<@p.text label="举办时间" colspan="1" width="50" name="risenlcOdate" required="true" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="required" maxlength="100"/>
+<@p.text label="risenOrgLifeCalendar.risenlcAddress" colspan="1" width="50" name="risenlcAddress" required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenOrgLifeCalendar.risenlcCtPhone" colspan="1" width="50" name="risenlcCtphone" required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenOrgLifeCalendar.risenlcParticipant" colspan="1" width="50" name="risenlcParticipant" required="true" class="required" maxlength="100"/>
+
+<@p.radio width="50" colspan="1" label="risenOrgLifeCalendar.risenlcMeetingType" name="risenlcMeetingtype" list={"1":"支部党员大会","2":"支部委员会","3":"党小组会","4":"党课","5":"组织生活会","6":"民主评议","7":"主题党日"}/><@p.tr/>
+<@p.text label="risenOrgLifeCalendar.risenlcExpectDate"  colspan="1" width="50" name="risenlcExpectdate" required="true" class="required" maxlength="100"/><@p.tr/>
+
+<@p.editor colspan="2" label="risenOrgLifeCalendar.risenlcComment" name="risenlcComment"/><@p.tr/>
+<@p.td colspan="2"> <@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td><@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

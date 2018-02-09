@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<link href="${base}/res/common/css/loading.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+var type;
+var score;
+var ids=[];
+$(function(){
+	$("#cScore").click(function(){
+		var rules = /^-?\d+(\.\d{1,1})?$/;
+		score=$("#score").val();
+		if(rules.test(score)){
+			if(parseFloat(score)>1000){
+				alert("积分应小于1000");
+			}else if(parseFloat(score)<1){
+				alert("积分至少1分");
+			}else{
+				type=2;
+				submitScore(ids,type,score);
+			}
+		}else{
+			alert("请输入一个整数");
+		}
+	});
+});
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var checks =$("input[name='ids']:checked");
+	for(var i=0;i<checks.length;i++){
+		ids.push($(checks[i]).val());
+	}
+	$.ajax({
+        type: "POST",
+        url: "o_deletenew.do",
+        data: {"ids":ids},
+        dataType: "json",
+        success: function(data){
+			$.alert("提示","退回成功！");
+			ids = [];
+			location.reload();	
+        },
+        error:function(){
+        	$.alert("提示","数据处理失败，请及时联系维护人员");
+        	ids = [];
+ 	 	}
+    });
+}
+
+function deletethis(modelid){
+	var sureOrReturn = confirm("确定要删除吗?");
+	if(sureOrReturn){
+		shanchu(modelid);
+	}
+	//$.confirm(shanchu(modelid),"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+
+function shanchu(modelid){
+	ids[0] = modelid;
+	$.ajax({
+        type: "POST",
+        url: "o_deletenew.do",
+        data: {"ids":ids},
+        dataType: "json",
+        success: function(data){
+			$.alert("提示","退回成功！");
+			ids = [];
+			location.reload();	
+        },
+        error:function(){
+        	$.alert("提示","数据处理失败，请及时联系维护人员");
+        	ids = [];
+ 	 	}
+    });
+}
+
+function toPage(date){
+	$("#risenlcOdate").val(date);
+	$("#tform").submit();
+	//window.location.href="../risenIntegralRecord/v_list.do?risenlcOdate="+date+"&pageNo=${pageNo}";
+}
+function confirmShare(){
+	var checks =$("input[name='ids']:checked");
+	if(checks.length<1){
+		$.alert("提示","请选择一条共享记录");
+		return ;
+	}else if(checks.length>1){
+		$.alert("提示","一次只能采纳一条记录");
+		return ;
+	}
+	debugger;
+showLoading();//打开加载框
+ $( "#dialog" ).dialog({
+ 	width:420,
+ 	close:function(event, ui){
+ 	 ids = [];
+ 	 closeLoading();//关闭加载框
+ 	}
+ });
+	
+	for(var i=0;i<checks.length;i++){
+		ids.push($(checks[i]).val());
+	}
+	 
+}
+
+function caina(modelid){
+	ids[0] = modelid;
+	 $( "#dialog" ).dialog({
+ 	width:420,
+ 	close:function(event, ui){
+ 	 ids = [];
+ 	 closeLoading();//关闭加载框
+ 	}
+ });
+}
+
+function submitScore(ids,type,score){
+$( "#dialog" ).dialog( "close" );
+showLoading();//打开加载框
+	$.ajax({
+        type: "POST",
+        url: "confirmSharehs.do",
+        data: {"ids":ids,"type":type,"score":score},
+        dataType: "json",
+        success: function(data){
+            closeLoading();//关闭加载框
+        	if(data=="1"){
+				$.alert("提示","已更改分数，请查阅");
+				ids = [];
+				 location.reload();	
+			}
+        },
+        error:function(){
+            closeLoading();//关闭加载框
+        	$.alert("提示","更改分数失败，请及时联系维护人员");
+        	ids = [];
+ 	 	}
+    });
+}
+
+function showLoading(){
+    $("#zhezhao").css("display","block");
+    $("#loding").css("display","block");
+          
+}
+ function closeLoading(){
+    $("#zhezhao").css("display","none");
+    $("#loding").css("display","none");
+        
+}
+</script>
+</head>
+<style>
+	.ui-dialog{position:fixed !important; top:10% !important;}
+</style>
+<body>
+	<div id="dialog" title="积分设置" style="display: none;" align="center">
+		<div align="center" style="margin-bottom: 10px;">
+			提示：可手动在此处更改已经采纳过给出的评分
+		</div>
+		<div align="center">
+			分数：<input type="number"  id="score" min="1" value="1" step="0.1" max="1000"
+				style="width: 50px; margin-bottom: 10px;" />
+		</div>
+		<div align="center">
+		<input type="button" class="query" id="cScore" value="提交" />
+		<!-- 
+			<input type="button" class="query" id="cScore" value="提交" /><input type="button"
+				class="query" style="width: 120px;" id="bScore" value="使用默认积分规则" />
+		 -->		
+		</div>
+	</div>
+	<div class="box-positon ove">
+	<div class="position-div"><@s.m "global.position"/>: <@s.m "risenIntegralRecord.function"/> - <@s.m "global.list"/></div>
+</div>
+
+<div class="body-box">
+ <!-- 加载框 -->
+ <div id="zhezhao" class="zhezhao"></div>
+    <div id="loding" class="loding ">
+    	<img style="width: 50px;height: 50px;" src="${base}/r/cms/loading.gif" alt="" /><br/>
+    	<font color="white">正在处理，请稍后...</font>	
+ </div>
+<form id="tableForm" method="post">
+
+<!-- 举办时间：<input type="text" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="risenlcOdate" name="risenlcOdate" value="${(risenIntegralRecord.risenlcOdate?string('yyyy-MM-dd'))!''}"/>
+提醒时间：<input type="text" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="risenlcReminddate" name="risenlcReminddate" value="${(risenIntegralRecord.risenlcReminddate?string('yyyy-MM-dd'))!''}"/>
+<input class="query" type="submit" value="查询"/> -->
+<!-- <input class="query" type="button" style="margin-bottom: 10px" onclick="confirmShare()" value="采纳"/> -->
+<input class="query" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/>
+
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<@p.table value=pagination listAction="../partyBuild/shareContenthsMonth.do?deptId=${deptId!}&startDate=${startDate!}&endDate=${endDate!}&status=1";risenIntegralRecord,i,has_next><#rt/>
+	<@p.column align="center" title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+		<input type='checkbox' id="ids" name='ids' value="${risenIntegralRecord.risenirUuid!''}"  onclick="Pn.selectCheckBox('${risenIntegralRecord.risenirUuid!''}',this.checked)"/><#t/>
+	</@p.column><#t/>
+	<@p.column align="center" title="ID">${risenIntegralRecord.risenirUuid!''}</@p.column><#t/>
+	
+	<@p.column align="center" code="标题">[${risenIntegralRecord.risenirChannel!''}]<@text_cut s=risenIntegralRecord.risenirContent?html len=22 append="..."/></@p.column><#t/>
+	
+	<@p.column align="center" code="共享人">${risenIntegralRecord.risenirOrgname!''}</@p.column><#t/>
+
+	<@p.column align="center" code="内容来源">${risenIntegralRecord.risenirOrgname!''}>${risenIntegralRecord.risenirChannel!''}</@p.column><#t/>
+	<@p.column align="center" code="目标栏目">${risenIntegralRecord.risenirTargetchannel!''}</@p.column><#t/>
+	<@p.column align="center" code="共享时间">${(risenIntegralRecord.risenirHandledate?string("yyyy-MM-dd HH:mm:ss"))!''}</@p.column><#t/>
+	<@p.column align="center" code="分数">${risenIntegralRecord.risenirScore!'0'}</@p.column><#t/>
+	<@p.column align="center" code="操作" style="width:94px;">
+		<a href="javascript:deletethis(${risenIntegralRecord.risenirUuid!''})">删除</a><span> | </span>
+		<a href="javascript:caina(${risenIntegralRecord.risenirUuid!''})">修改分数</a>
+		<!--<a href="../content/v_edit.do?id=${risenIntegralRecord.risenirContentid}&listtype=share" class="pn-opt">修改分数</a>  -->
+	</@p.column><#t/>
+	
+	
+</@p.table>
+<div></div>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenQairesRecord" table="rs_qaires_record">
+	<id name="id" type="integer" column="rs_id">
+			<generator class="sequence"><param name="sequence">RISEN_QAIRES_RECORD_SD</param></generator>
+		</id>
+		<property name="recordTime" column="rs_record_time" type="timestamp" not-null="false" length="20"/>
+		<property name="recordIp" column="rs_record_ip" type="string" not-null="false"  length="50"/>
+		<property name="totalScore" column="rs_total_score" type="integer" not-null="false" />
+		<property name="rightCount" column="rs_right_count" type="integer" not-null="false" />
+		<property name="wrongCount" column="rs_wrong_count" type="integer" not-null="false" />
+		<property name="unwrite" column="rs_un_write" type="integer" not-null="false" />
+		<many-to-one name="user" column="rs_user_id" class="com.jeecms.core.entity.CmsUser" />
+		<many-to-one name="qaires" column="rs_qaires_id" class="RisenQaires" />
+	</class>
+</hibernate-mapping> 

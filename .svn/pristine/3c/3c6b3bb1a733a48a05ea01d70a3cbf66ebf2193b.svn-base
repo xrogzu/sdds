@@ -1,0 +1,60 @@
+package com.risen.dao.impl;
+
+import org.hibernate.Criteria;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
+
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.RisenDevpartyDao;
+import com.risen.entity.RisenDevparty;
+import com.jeecms.common.hibernate4.Finder;
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.jeecms.core.entity.CmsUser;
+import com.jeecms.core.web.util.CmsUtils;
+
+@Repository
+public class RisenDevpartyDaoImpl extends HibernateBaseDao<RisenDevparty, Integer> implements RisenDevpartyDao {
+	public Pagination getPage(int pageNo, int pageSize) {
+		Criteria crit = createCriteria();
+		Pagination page = findByCriteria(crit, pageNo, pageSize);
+		return page;
+	}
+	
+	public Pagination getPage(int pageNo, int pageSize,Integer departId) {
+		Finder f = Finder.create(" from RisenDevparty where 1=1");
+		if(StringUtils.hasText(String.valueOf(departId))){
+			f.append(" and risendp_Expands3 ="+departId);
+		}
+		Pagination page = find(f, pageNo, pageSize);
+		return page;
+	}
+
+	public RisenDevparty findById(Integer id) {
+		RisenDevparty entity = get(id);
+		return entity;
+	}
+
+	public RisenDevparty save(RisenDevparty bean) {
+		getSession().save(bean);
+		return bean;
+	}
+
+	public RisenDevparty deleteById(Integer id) {
+		RisenDevparty entity = super.get(id);
+		if (entity != null) {
+			getSession().delete(entity);
+		}
+		return entity;
+	}
+	
+	@Override
+	protected Class<RisenDevparty> getEntityClass() {
+		return RisenDevparty.class;
+	}
+
+	@Override
+	public RisenDevparty update(RisenDevparty bean) {
+		getSession().update(bean);
+		return bean;
+	}
+}

@@ -1,0 +1,53 @@
+package com.risen.action;
+
+
+import static com.jeecms.common.page.SimplePage.cpn;
+
+import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.jeecms.cms.entity.assist.CmsAppealMailReplay;
+import com.jeecms.cms.manager.assist.CmsAppealMailReplayMng;
+import com.jeecms.common.page.Pagination;
+import com.jeecms.common.web.CookieUtils;
+import com.jeecms.core.entity.CmsDepartment;
+import com.jeecms.core.entity.CmsSite;
+import com.jeecms.core.entity.CmsUser;
+import com.jeecms.core.web.util.CmsUtils;
+import com.risen.entity.CmsAppealMail;
+import com.risen.service.CmsAppealMailMng;
+
+@Controller
+public class CmsAppealMaiAct {
+	@RequiresPermissions("appealMail:v_list")
+	@RequestMapping("/appealMail/v_list.do")
+	public String detail(HttpServletResponse response, Integer pageNo, HttpServletRequest request,
+			ModelMap model) {
+		CmsUser user = CmsUtils.getUser(request);
+		CmsDepartment department  = user.getDepartment();
+		Integer departId = user.getDepartment().getId();
+		if(department.getSddspoOrgtype().equals("机关党委")||(department.getSddspoOrgtype().equals("党总支"))){
+			departId = user.getDepartment().getParent().getId();
+		}
+		Pagination pagination=cmsAppealMailMng.getPage(cpn(pageNo), CookieUtils.getPageSize(request),departId);
+		model.addAttribute("pagination", pagination);
+		model.addAttribute("pageNo", pagination.getPageNo());
+		return "development_partymembers/appealMail/list";
+
+	}
+	@Autowired
+	private CmsAppealMailMng  cmsAppealMailMng;
+	@Autowired
+	private CmsAppealMailReplayMng  cmsAppealMailReplayMng;
+}

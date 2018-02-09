@@ -1,0 +1,747 @@
+package com.jeecms.core.manager.impl;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import antlr.collections.impl.LList;
+
+import com.jeecms.core.entity.CmsDepartment;
+import org.hibernate.annotations.OnDelete;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+import com.ibm.db2.jcc.am.i;
+import com.jeecms.cms.cache.DepartmentCache;
+import com.jeecms.cms.entity.assist.CmsGuestbookCtg;
+import com.jeecms.cms.entity.main.Channel;
+import com.jeecms.cms.manager.assist.CmsGuestbookCtgMng;
+import com.jeecms.cms.manager.main.ChannelMng;
+import com.jeecms.common.hibernate4.Updater;
+import com.jeecms.common.page.Pagination;
+import com.jeecms.core.dao.CmsDepartmentDao;
+import com.jeecms.core.entity.CmsDepartment;
+import com.jeecms.core.manager.CmsDepartmentMng;
+import com.jeecms.core.manager.CmsUserMng;
+import com.jeecms.core.web.util.CmsUtils;
+import com.risen.entity.CoreDictionary;
+import com.risen.service.ICoreDictionaryService;
+
+@Service
+@Transactional
+public class CmsDepartmentMngImpl implements CmsDepartmentMng {
+	
+	@Transactional(readOnly = true)
+	public List<CmsDepartment> getList(Integer parentId,boolean all){
+		List<CmsDepartment> list = new ArrayList<CmsDepartment>();
+		if (DepartmentCache.departentList.size()>0) {
+			for (CmsDepartment cmsDepartment : DepartmentCache.departentList) {
+				if (all) {
+					return DepartmentCache.departentList;
+				}else if (parentId==null) {
+					if (cmsDepartment.getParent()==null) {
+						list.add(cmsDepartment);
+					}
+				}else if (cmsDepartment.getParent()!=null) {
+					if (cmsDepartment.getParent().getId().equals(parentId)) {
+						/*
+						if(!cmsDepartment.getSddspoOrgtype().equals("机关党委")){
+							if(!cmsDepartment.getSddspoOrgtype().equals("党总支")){
+								list.add(cmsDepartment);
+							}
+						}
+						*/
+						list.add(cmsDepartment);
+					}
+				}
+			}
+		}
+		//List<CmsDepartment> list=dao.getList(parentId,all);
+		return list;
+	}
+	
+	@Transactional(readOnly = true)
+	public Pagination getPage(String name, int pageNo,
+			int pageSize) {
+		return dao.getPage( name, pageNo, pageSize);
+	}
+
+	@Transactional(readOnly = true)
+	public CmsDepartment findById(Integer id) {
+		CmsDepartment entity = dao.findById(id);
+		return entity;
+	}
+
+	public CmsDepartment save(CmsDepartment bean) {
+		dao.save(bean);
+		return bean;
+	}
+
+	public CmsDepartment save(CmsDepartment bean,Integer channelIds[],Integer[] controlChannelIds,Integer[]ctgIds) {
+		CmsDepartment model = dao.save(bean);
+		if (channelIds != null) {
+			Channel channel;
+			for (Integer cid : channelIds) {
+				channel = channelMng.findById(cid);
+				bean.addToChannels(channel);
+			}
+		}
+		if (controlChannelIds != null) {
+			Channel channel;
+			for (Integer cid : controlChannelIds) {
+				channel = channelMng.findById(cid);
+				bean.addToControlChannels(channel);
+			}
+		}
+		if(ctgIds!=null){
+			CmsGuestbookCtg ctg;
+			for(Integer cid:ctgIds){
+				ctg=guestBookCtgMng.findById(cid);
+				bean.addToGuestBookCtgs(ctg);
+			}
+		}
+		cmsUserMng.registerMember(bean.getName().trim(), null, "123456", "127.0.0.1", 1, 0, null, null,
+				null, null, null, null, null,null, null, null, null, null, null, null, null, null, null, 
+				null, null, null, null, null, null, model.getId(), null, null, null,null, null, null, null,"2",
+				bean.getName(),bean.getSddspoLogincode() ,1,null,null,"委员",null,null,"1","1","1",bean.getName(),null,null,false, null, null,false);
+		return bean;
+	}
+
+	public CmsDepartment update(CmsDepartment bean) {
+		Updater<CmsDepartment> updater = new Updater<CmsDepartment>(bean);
+		CmsDepartment entity = dao.updateByUpdater(updater);
+		return entity;
+	}
+	
+	public CmsDepartment update(CmsDepartment bean,Integer channelIds[],Integer[] controlChannelIds,Integer[]ctgIds) {
+		CmsDepartment entity = findById(bean.getId());
+		Updater<CmsDepartment> updater = new Updater<CmsDepartment>(bean);
+		updater.include("parent");
+		entity = dao.updateByUpdater(updater);
+		if (channelIds != null) {
+			Channel channel;
+			for (Integer cid : channelIds) {
+				channel = channelMng.findById(cid);
+				entity.addToChannels(channel);
+			}
+		}
+		if (controlChannelIds != null) {
+			Channel channel;
+			for (Integer cid : controlChannelIds) {
+				channel = channelMng.findById(cid);
+				entity.addToControlChannels(channel);
+			}
+		}
+		entity.getGuestBookCtgs().clear();
+		if(ctgIds!=null){
+			CmsGuestbookCtg ctg;
+			for(Integer cid:ctgIds){
+				ctg=guestBookCtgMng.findById(cid);
+				entity.addToGuestBookCtgs(ctg);
+			}
+		}
+		/*List<CmsDepartment> departcache = DepartmentCache.departentList;
+		for (int i = 0; i < departcache.size(); i++) {
+			if(bean.getId().equals(departcache.get(i).getId())){
+				departcache.remove(i);
+			}
+		}
+		departcache.add(entity);*/
+		return entity;
+	}
+
+	public void updatePriority(Integer[] ids, Integer[] priorities) {
+		if (ids == null || priorities == null || ids.length <= 0
+				|| ids.length != priorities.length) {
+			return;
+		}
+		CmsDepartment department;
+		for (int i = 0, len = ids.length; i < len; i++) {
+			department = findById(ids[i]);
+			department.setPriority(priorities[i]);
+		}
+	}
+
+	public CmsDepartment deleteById(Integer id) {
+		CmsDepartment bean = new CmsDepartment();
+		if(findlistByPid(id)){
+			cmsUserMng.deleteUserBydepartid(id);
+			bean = dao.deleteById(id);
+		}
+		return bean;
+	}
+
+	public CmsDepartment[] deleteByIds(Integer[] ids) {
+		CmsDepartment[] beans = new CmsDepartment[ids.length];
+		for (int i = 0, len = ids.length; i < len; i++) {
+			beans[i] = deleteById(ids[i]);
+		}
+		return beans;
+	}
+	public boolean nameExist(String name) {
+		return dao.findByName(name)!=null;
+	}
+	
+	public List<CmsDepartment> findAll(){
+		return dao.findAll();
+	}
+
+	/**
+	 * 换届提醒
+	 */
+	@Transactional (readOnly = true)
+	public List<CmsDepartment> changeRemindList(Date today,String departmentName,Integer departid,Integer pid){
+		List<CmsDepartment> list = new ArrayList<CmsDepartment>();
+		List<CmsDepartment> departments = dao.changeRemindList(departmentName,departid,pid);
+			if(departments.size()>0){
+			for (int i = 0; i < departments.size(); i++) {
+				if(departments.get(i).getSddspoChangelasttime()!=null){
+					Long time = ((departments.get(i).getSddspoChangelasttime().getTime())-(today.getTime()));
+					//departments.get(i).setOverplus(String.valueOf((time+86400000*2)/86400000));
+					departments.get(i).setOverplus(String.valueOf((time/86400000)));
+					if((time/86400000)>=0){
+						departments.get(i).setIsplus("p");	//正数
+					}else {
+						departments.get(i).setOverplus(String.valueOf((time/86400000)-(2*(time/86400000))));
+						departments.get(i).setIsplus("m");
+					}
+					if((time/86400000)>365){
+						departments.get(i).setOverplus(">1年");
+					}
+					list.add(departments.get(i));
+				}
+			}
+		}
+		
+		return list;
+	}
+	/**
+     * 获取字典键值列表
+     * @param corecdType
+     * @return
+     */
+	@Transactional(readOnly = true)
+    public List<CmsDepartment> getCorecdKeyList(String corecdType){
+		List<CoreDictionary> corecdKeyList = coreDictionaryService.getCorecdKeyList(corecdType);
+		List<CmsDepartment> list = new ArrayList<CmsDepartment>();
+		if(corecdKeyList.size()>0){
+			for (int i = 0; i < corecdKeyList.size(); i++) {
+				CmsDepartment model = new CmsDepartment();
+				if(StringUtils.hasText((corecdKeyList.get(i).getCorecdKey()))){
+					model.setKey(corecdKeyList.get(i).getCorecdKey());
+				}
+				if(StringUtils.hasText(corecdKeyList.get(i).getCorecdVal())){
+					model.setValue(corecdKeyList.get(i).getCorecdVal());
+				}
+				list.add(model);
+			}
+		}
+		return list;
+	}
+
+	/**
+     * 根据父级id查询组织列表(判断删除)
+     * true 底级组织，无子级节点
+     * false 有子级节点
+     */
+	@Override
+    public boolean findlistByPid(Integer pid){
+    	boolean b = false;
+    	List<Object []> list = dao.findlistByPid(pid);
+    	if(list.size()<=1){
+    		b = true;
+    	}
+    	return b;
+    }
+    /**
+     * 导入组织小程序
+     */
+	public void impOrgToUser(){
+		List<CmsDepartment> list = dao.findNotInUser();
+		String sddspoLogincode = "";
+		if(list.size()>0){
+			for (int i = 0; i < list.size(); i++) {
+				if (StringUtils.hasText(list.get(i).getSddspoLogincode())) {
+					sddspoLogincode = list.get(i).getSddspoLogincode();
+				}
+				if(!("xxxxxxx".equals(list.get(i).getName().trim()))){
+					cmsUserMng.registerMember(list.get(i).getName().trim(), null, "123456", "127.0.0.1", 1, 0, null, null,
+					null, null, null, null, null,null, null, null, null, null, null, null, null, null, null, 
+					null, null, null, null, null, null, list.get(i).getId(), null, null, null,null, null, null, null,"2",
+					list.get(i).getName(),sddspoLogincode  ,1,null,null,"委员",null,null,"1","1","1",list.get(i).getName().trim(),null,null,false, null, null,false);
+				}
+			System.out.println(" ID : " + list.get(i).getId());
+			System.out.println(" name : " + list.get(i).getName().trim());
+			System.out.println(" logincode : " + sddspoLogincode);
+			System.out.println("已成功导入 ： " + (i+1) + "条数据!");
+			}
+		}
+	}
+	/**
+     * 替换书记
+     */
+	@Override
+    public CmsDepartment changeSecretaryByDid(String sddspoSecretary,String sddspoSecretaryidc,Integer sddspoSecretaryid,Integer departid,Date sddspoChangelasttime){
+    	CmsDepartment model = new CmsDepartment();
+//    	model.setSddspoSecretary(sddspoSecretary);
+//    	model.setSddspoSecretaryid(sddspoSecretaryid);
+//    	model.setSddspoSecretaryidc(sddspoSecretaryidc);
+    	model.setId(departid);
+    	model.setSddspoChangelasttime(sddspoChangelasttime);
+    	SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+    	Date date = new Date();
+    	try {
+    		model.setSddspoChangecdate(sd.parse(sd.format(date)));
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+    	return dao.changeSecretaryByDid(model);
+    }
+	/**
+     * 查看换届
+     */
+    public List<CmsDepartment> checkChangelist (Integer id,String toYear,String departName ,boolean isall){
+    	return dao.checkChangelist(id, toYear,departName,isall);
+    }
+    public List<CmsDepartment> findNopidList(){
+    	return getList(null,false);
+    	//return dao.findNopidList();
+    }
+	public List<CmsDepartment> findZbList(Integer id,Integer pid){
+		return dao.findZbList(id, pid);
+	}
+	
+	private CmsDepartmentDao dao;
+	
+	@Autowired
+	private ChannelMng channelMng;
+	@Autowired
+	private CmsGuestbookCtgMng guestBookCtgMng;
+
+	@Autowired
+	public void setDao(CmsDepartmentDao dao) {
+		this.dao = dao;
+	}
+
+	
+	public List<CmsDepartment> baseScore(Integer parentId) {
+		
+		return dao.baseScore(parentId);
+	}
+
+
+	@Autowired
+	public ICoreDictionaryService coreDictionaryService;
+	@Autowired
+	public CmsUserMng cmsUserMng;
+
+	public List<CmsDepartment> getDeptByType(String type) {
+		
+		return dao.getDeptByType(type);
+	}
+
+	@Override
+	public int getMaxPriority(Integer parentId) {
+		
+		return  dao.getMaxPriority(parentId);
+	}
+    public List<CmsDepartment> getDeptByTypeAndLoginId(String type,Integer loginId){
+    	return dao.getDeptByTypeAndLoginId(type,loginId);
+    }
+    public CmsDepartment findByName(String name){
+    	return dao.findByName(name);
+    }
+
+    public Map<String, String> statisticsDeptSum(Integer i, Integer deptid){
+    	List<Object[]> obj = new ArrayList<Object[]>();
+    	if(i == 1){
+    		obj = dao.statisticsDeptSum(null);
+    	}else {
+    		obj = dao.statisticsDeptSum(deptid);
+    	}
+    	int deptsum = 0;
+    	int zdzDept = 0;
+    	int jgdwDept = 0;
+    	int dzzDept = 0;
+    	int zbDept = 0;
+    	int deptsumJc = 0;
+    	int zdzDeptJc = 0;
+    	int jgdwDeptJc = 0;
+    	int dzzDeptJc = 0;
+    	int zbDeptJc = 0;
+    	int deptsumX = 0;
+    	int zdzDeptX = 0;
+    	int jgdwDeptX = 0;
+    	int dzzDeptX = 0;
+    	int zbDeptX = 0;
+    	int deptsumShi = 0;
+    	int zdzDeptShi = 0;
+    	int jgdwDeptShi = 0;
+    	int dzzDeptShi = 0;
+    	int zbDeptShi = 0;
+    	int deptsumSe = 0;
+    	int zdzDeptSe = 0;
+    	int jgdwDeptSe = 0;
+    	int dzzDeptSe = 0;
+    	int zbDeptSe = 0;
+    	int zdzDeptSe1 = 0;
+    	int zdzDeptShi1 = 0;
+    	int zdzDeptX1 = 0;
+    	int zdzDeptJc1 = 0;
+    	if(obj != null && obj.size()>0){
+    		for (Object[] objects : obj) {
+    			int num = 0;
+    			try{
+    				num = Integer.parseInt(objects[0].toString());
+    			}catch (Exception e) {
+    				num = 0;
+				}
+    			if(!"工作指导组".equals(objects[1].toString())){
+    				deptsum = deptsum + num;
+    			}
+    			  //1.区县2.基层3.市级4.省级
+    			if(objects[1] != null){
+        			if("工作指导组".equals(objects[1].toString())){
+        				zdzDept = zdzDept + num;
+        				if(objects[2] != null){
+        					if("4".equals(objects[2].toString())){
+        						zdzDeptSe1 = zdzDeptSe1 + num;
+        						if(zdzDeptSe1==0){
+        							zdzDeptSe1=1;
+        						}
+        					}else if("3".equals(objects[2].toString())){
+        						zdzDeptShi1 = zdzDeptShi1 + num;
+        					}else if("1".equals(objects[2].toString())){
+        						zdzDeptX1 = zdzDeptX1 + num;
+        					}else if("2".equals(objects[2].toString())){
+        						zdzDeptJc1 = zdzDeptJc1 + num;
+        					}
+        				}
+        			}else if("党总支".equals(objects[1].toString())){
+        				dzzDept = dzzDept + num;
+        				if(objects[2] != null){
+        					if("4".equals(objects[2].toString())){
+        						dzzDeptSe = dzzDeptSe + num;
+        					}else if("3".equals(objects[2].toString())){
+        						dzzDeptShi = dzzDeptShi + num;
+        					}else if("1".equals(objects[2].toString())){
+        						dzzDeptX = dzzDeptX + num;
+        					}else if("2".equals(objects[2].toString())){
+        						dzzDeptJc = dzzDeptJc + num;
+        					}
+        				}
+        			}else if("机关党委".equals(objects[1].toString())){
+        				jgdwDept = jgdwDept + num;
+        				if(objects[2] != null){
+        					if("4".equals(objects[2].toString())){
+        						jgdwDeptSe = jgdwDeptSe + num;
+        					}else if("3".equals(objects[2].toString())){
+        						jgdwDeptShi = jgdwDeptShi + num;
+        					}else if("1".equals(objects[2].toString())){
+        						jgdwDeptX = jgdwDeptX + num;
+        					}else if("2".equals(objects[2].toString())){
+        						jgdwDeptJc = jgdwDeptJc + num;
+        					}
+        				}
+        			}else if("支部".equals(objects[1].toString())){
+        				zbDept = zbDept + num;
+        				if(objects[2] != null){
+        					if("4".equals(objects[2].toString())){
+        						zbDeptSe = zbDeptSe + num;
+        					}else if("3".equals(objects[2].toString())){
+        						zbDeptShi = zbDeptShi + num;
+        					}else if("1".equals(objects[2].toString())){
+        						zbDeptX = zbDeptX + num;
+        					}else if("2".equals(objects[2].toString())){
+        						zbDeptJc = zbDeptJc + num;
+        					}
+        				}
+        			}
+    			}
+			}
+    	}
+    	if(deptid==null){
+    		deptid=1;
+    	}
+    	if(deptid==1){
+    		zdzDeptSe1=1;
+        	zdzDept=zdzDept+1;
+    	}
+    	deptsumJc = zbDeptJc + jgdwDeptJc + dzzDeptJc + zdzDeptJc;
+    	deptsumX = zbDeptX + jgdwDeptX + dzzDeptX + zdzDeptX;
+    	deptsumShi = zbDeptShi + jgdwDeptShi + dzzDeptShi + zdzDeptShi;
+    	deptsumSe = zbDeptSe + jgdwDeptSe + dzzDeptShi + zdzDeptSe;
+    	Map<String,String> tjMap = new HashMap<String, String>();
+    	tjMap.put("deptsum", deptsum + "");
+    	tjMap.put("zdzDept", zdzDept + "");
+    	tjMap.put("jgdwDept", jgdwDept + "");
+    	tjMap.put("dzzDept", dzzDept + "");
+    	tjMap.put("zbDept", zbDept + "");
+    	tjMap.put("deptsumJc", deptsumJc + "");
+    	tjMap.put("zdzDeptJc", zdzDeptJc1 + "");
+    	tjMap.put("jgdwDeptJc", jgdwDeptJc + "");
+    	tjMap.put("dzzDeptJc", dzzDeptJc + "");
+    	tjMap.put("zbDeptJc", zbDeptJc + "");
+    	tjMap.put("deptsumX", deptsumX + "");
+    	tjMap.put("zdzDeptX", zdzDeptX1 + "");
+    	tjMap.put("jgdwDeptX", jgdwDeptX + "");
+    	tjMap.put("dzzDeptX", dzzDeptX + "");
+    	tjMap.put("zbDeptX", zbDeptX + "");
+    	tjMap.put("deptsumShi", deptsumShi + "");
+    	tjMap.put("zdzDeptShi", zdzDeptShi1 + "");
+    	tjMap.put("jgdwDeptShi", jgdwDeptShi + "");
+    	tjMap.put("dzzDeptShi", dzzDeptShi + "");
+    	tjMap.put("zbDeptShi", zbDeptShi + "");
+    	tjMap.put("deptsumSe", deptsumSe + "");
+    	tjMap.put("zdzDeptSe", zdzDeptSe1 + "");
+    	tjMap.put("jgdwDeptSe", jgdwDeptSe + "");
+    	tjMap.put("dzzDeptSe", dzzDeptSe + "");
+    	tjMap.put("zbDeptSe", zbDeptSe + "");
+    	return tjMap;
+    }
+    public Map<String, String> statisticsDeptQmhjSum(Integer i, Integer deptid, String sdate, String edate){
+    	List<Object[]> obj = new ArrayList<Object[]>();
+    	if(i == 1){
+    		obj = dao.statisticsDeptQmhjSum(null, sdate, edate);
+    	}else {
+    		obj = dao.statisticsDeptQmhjSum(deptid, sdate, edate);
+    	}
+    	int rjqmsum = 0;
+    	int rjqmZdz = 0;
+    	int rjqmDzz = 0;
+    	int rjqmJgdw = 0;
+    	int rjqmZb = 0;
+    	if(obj != null && obj.size()>0){
+    		for (Object[] objects : obj) {
+    			int num = 0;
+    			try{
+    				num = Integer.parseInt(objects[0].toString());
+    			}catch (Exception e) {
+    				num = 0;
+				}
+    			if(!"工作指导组".equals(objects[1])){
+    				rjqmsum = rjqmsum + num;
+    			}
+    			if(objects[1] != null){
+    				if("工作指导组".equals(objects[1])){
+    					rjqmZdz = rjqmZdz + num;
+    				}else if("党总支".equals(objects[1])){
+    					rjqmDzz = rjqmDzz + num;
+    				}else if("机关党委".equals(objects[1])){
+    					rjqmJgdw = rjqmJgdw + num;
+    				}else if("支部".equals(objects[1])){
+    					rjqmZb = rjqmZb + num;
+    				}
+    			}
+			}
+    	}
+    	Map<String, String> rjqmMap = new HashMap<String, String>();
+    	rjqmMap.put("rjqmsum", rjqmsum + "");
+    	rjqmMap.put("rjqmZdz", rjqmZdz + "");
+    	rjqmMap.put("rjqmDzz", rjqmDzz + "");
+    	rjqmMap.put("rjqmJgdw", rjqmJgdw + "");
+    	rjqmMap.put("rjqmZb", rjqmZb + "");
+    	return rjqmMap;
+    }
+
+    public Map<String, String> statisticsDeptYhjSum(Integer i, Integer deptid, String sdate, String edate){
+    	List<Object[]> obj = new ArrayList<Object[]>();
+    	if(i == 1){
+    		obj = dao.statisticsDeptYhjSum(null, sdate, edate);
+    	}else {
+    		obj = dao.statisticsDeptYhjSum(deptid, sdate, edate);
+    	}
+    	int yhjsum = 0;
+    	int yhjZdz = 0;
+    	int yhjDzz = 0;
+    	int yhjJgdw = 0;
+    	int yhjZb = 0;
+    	if(obj != null && obj.size()>0){
+    		for (Object[] objects : obj) {
+    			int num = 0;
+    			try{
+    				num = Integer.parseInt(objects[0].toString());
+    			}catch (Exception e) {
+    				num = 0;
+				}
+    			if(!"工作指导组".equals(objects[1])){
+    				yhjsum = yhjsum + num;
+				}
+    			if(objects[1] != null){
+    				/*
+    				if("工作指导组".equals(objects[1])){
+    					yhjZdz = yhjZdz + num;
+    				}else if("党总支".equals(objects[1])){
+    				*/
+    				if("党总支".equals(objects[1])){
+    					yhjDzz = yhjDzz + num;
+    				}else if("机关党委".equals(objects[1])){
+    					yhjJgdw = yhjJgdw + num;
+    				}else if("支部".equals(objects[1])){
+    					yhjZb = yhjZb + num;
+    				}
+    			}
+			}
+    	}
+    	Map<String, String> yhjMap = new HashMap<String, String>();
+    	yhjMap.put("yhjsum", yhjsum + "");
+    	yhjMap.put("yhjZdz", yhjZdz + "");
+    	yhjMap.put("yhjDzz", yhjDzz + "");
+    	yhjMap.put("yhjJgdw", yhjJgdw + "");
+    	yhjMap.put("yhjZb", yhjZb + "");
+    	return yhjMap;
+    }
+
+    public List<CmsDepartment> findXtForJGDWByDeptId(Integer detpid){
+    	if(detpid == null || detpid==0){
+    		return null;
+    	}
+    	List<CmsDepartment> list = dao.findXtForJGDWByDeptId(detpid);
+    	return list;
+    }
+    
+   // public List<Integer> ids = new ArrayList<Integer>();
+    public List<Integer> findDpetNameByLoginDept(Integer detpId,List<Integer> ids){
+    	if(detpId == null || detpId<=0){
+    		return null;
+    	}
+    	if (dao.findCountByPid(detpId)>0) {
+			List<Object[]> list = dao.findDeptByPid(detpId);
+			for (Object[] objects : list) {
+				findDpetNameByLoginDept(Integer.valueOf(objects[0].toString()),ids);
+			}
+		}else{
+			ids.add(detpId);
+		}
+    	return ids;
+    }
+
+	@Override
+	public List<CmsDepartment> getAllDeptByIdAndName(String deptId,
+			String deptName) {
+		// TODO Auto-generated method stub
+		return dao.getAllDeptByIdAndName(deptId,deptName);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public List<CmsDepartment> getAllJgdwDept() {
+		//bean.name like '%市局机关党委%' and bean.priority = 1 and bean.id !=1"
+		List<CmsDepartment> resList = new ArrayList<CmsDepartment>();
+		for (CmsDepartment dept : DepartmentCache.departentList) {
+			if (StringUtils.hasText(dept.getName()) && dept.getName().contains("市局机关党委") && dept.getPriority() != null && dept.getPriority().intValue() == 1 && dept.getId().intValue() != 1) {
+				resList.add(dept);
+			}
+		}
+		return resList;
+//		return dao.getAllJgdwDept();
+	}
+
+	@Override
+	public List<CmsDepartment> getAllJgdwDeptById(Integer deptId,boolean isShiju) {
+		// TODO Auto-generated method stub
+		return dao.getAllJgdwDeptById(deptId,isShiju);
+	}
+
+	@Override
+	public List<CmsDepartment> getAllZhiBuById(Integer deptId) {
+		// TODO Auto-generated method stub
+		return dao.getAllZhiBuById(deptId);
+	}
+
+	@Override
+	public Map<String, String> statisticsDeptYqhjSum(Integer i, Integer deptid,
+			String nowTime) {
+		// TODO Auto-generated method stub
+		List<Object[]> obj = new ArrayList<Object[]>();
+    	if(i == 1){
+    		obj = dao.statisticsDeptYqhjSum(null, nowTime);
+    	}else {
+    		obj = dao.statisticsDeptYqhjSum(deptid, nowTime);
+    	}
+    	int deptYqhjSum = 0;
+    	int jgdwYqhjDept = 0;
+    	int dzzYqhjDept = 0;
+    	int zbYqhjDept = 0;
+    	
+    	if(obj != null && obj.size()>0){
+    		for (Object[] objects : obj) {
+    			int num = 0;
+    			try{
+    				num = Integer.parseInt(objects[0].toString());
+    			}catch (Exception e) {
+    				num = 0;
+				}
+    			if(!"工作指导组".equals(objects[1].toString())){
+    				deptYqhjSum = deptYqhjSum + num;
+    			}
+    			  //1.区县2.基层3.市级4.省级
+    			if(objects[1] != null){
+    				if("党总支".equals(objects[1].toString())){
+        				dzzYqhjDept = dzzYqhjDept + num;
+        			}else if("机关党委".equals(objects[1].toString())){
+        				jgdwYqhjDept = jgdwYqhjDept + num;
+        			}else if("支部".equals(objects[1].toString())){
+        				zbYqhjDept = zbYqhjDept + num;
+        			}
+    			}
+			}
+    	}
+    	Map<String,String> tjMap = new HashMap<String, String>();
+    	tjMap.put("deptYqhjSum", deptYqhjSum + "");
+    	tjMap.put("jgdwYqhjDept", jgdwYqhjDept + "");
+    	tjMap.put("dzzYqhjDept", dzzYqhjDept + "");
+    	tjMap.put("zbYqhjDept", zbYqhjDept + "");
+    	return tjMap;
+	}
+
+	@Override
+	public Map<String, String> statisticsDeptAqhjSum(Integer i, Integer deptid,
+			String nowTime) {
+		// TODO Auto-generated method stub
+		List<Object[]> obj = new ArrayList<Object[]>();
+    	if(i == 1){
+    		obj = dao.statisticsDeptAqhjSum(null, nowTime);
+    	}else {
+    		obj = dao.statisticsDeptAqhjSum(deptid, nowTime);
+    	}
+    	int deptAqhjSum = 0;
+    	int jgdwAqhjDept = 0;
+    	int zbAqhjDept = 0;
+    	int dzzAqhjDept = 0;
+    	if(obj != null && obj.size()>0){
+    		for (Object[] objects : obj) {
+    			int num = 0;
+    			try{
+    				num = Integer.parseInt(objects[0].toString());
+    			}catch (Exception e) {
+    				num = 0;
+				}
+    			if(!"工作指导组".equals(objects[1].toString())){
+    				deptAqhjSum = deptAqhjSum + num;
+    			}
+    			if(objects[1] != null){
+    				if("党总支".equals(objects[1].toString())){
+        				dzzAqhjDept = dzzAqhjDept + num;
+        			}else if("机关党委".equals(objects[1].toString())){
+        				jgdwAqhjDept = jgdwAqhjDept + num;
+        			}else if("支部".equals(objects[1].toString())){
+        				zbAqhjDept = zbAqhjDept + num;
+        			}
+    			}
+			}
+    	}
+    	Map<String,String> tjMap = new HashMap<String, String>();
+    	tjMap.put("deptAqhjSum", deptAqhjSum + "");
+    	tjMap.put("dzzAqhjDept", dzzAqhjDept + "");
+    	tjMap.put("jgdwAqhjDept", jgdwAqhjDept + "");
+    	tjMap.put("zbAqhjDept", zbAqhjDept + "");
+    	return tjMap;
+	}
+}

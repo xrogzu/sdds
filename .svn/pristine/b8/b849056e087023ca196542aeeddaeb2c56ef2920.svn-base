@@ -1,0 +1,58 @@
+<div class="top" >
+      <div class="top_na">
+          <span>欢迎访问${site.name}智慧党建平台</span>
+          <div class="to_na">
+               <a href="javascript:;" onclick="kqNav()">无障碍浏览&nbsp;&nbsp;|&nbsp;&nbsp;</a>
+               <script language="javascript" src="${base}/r/cms/www/risen/script/wzall.js"></script>
+               <a href="">网站导航</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+               <a href="" class="na1">站点地图</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+               <a href="javascript:;" onclick="SetHome(window.location)" class="na2">设为首页</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+               <a href="javascript:;" onclick="AddFavorite(window.location,document.title)" class="na3">加入收藏</a>
+          </div>
+          <div class="serch">
+               <input type="text">
+               <button>搜索</button>
+          </div>
+      </div>
+</div>
+<div class="nav" >
+         <div class="nav_to">
+              <a>${channel.name}</a>
+              <span></span>
+         </div>
+         <div class="nav_bom">
+              <ul>
+              	  <li style="width:130px;"><a href="${base}/">首页</a></li>
+              	  [@cms_channel_list parentId='119' orderBy='4']
+        		  [#list tag_list as c]
+                  <li style="width:132px;"><a href="${c.url!}" target="_blank">${c.name!}</a></li>
+                  [/#list]
+        		  [/@cms_channel_list]
+          </ul>
+     </div>
+</div>
+<script type="text/javascript" language="javascript">
+   //加入收藏
+       function AddFavorite(sURL, sTitle) {
+           sURL =encodeURI(sURL); 
+       try{   
+          window.external.addFavorite(sURL, sTitle);   
+       }catch(e) {   
+          try{   
+              window.sidebar.addPanel(sTitle, sURL, "");   
+           }catch (e){   
+              alert("您的浏览器不支持自动加入收藏功能，请使用Ctrl+D进行添加，或手动在浏览器里进行设置！");
+          }   
+       }
+   }
+   
+   //设为首页
+   function SetHome(url){
+       if (document.all) {
+          document.body.style.behavior='url(#default#homepage)';
+             document.body.setHomePage(url);
+       }else{
+           alert("您的浏览器不支持自动设置页面为首页功能，请您手动在浏览器里设置该页面为首页！");
+       }
+   }
+</script>

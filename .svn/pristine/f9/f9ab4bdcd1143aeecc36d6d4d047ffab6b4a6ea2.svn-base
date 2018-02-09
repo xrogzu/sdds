@@ -1,0 +1,338 @@
+<script>
+    	function sitesnav2(pid){
+			$("#sr_dj").html("");
+    		$.ajax({  
+		         type : "post",  
+		          url : "${base}/getChannelPaths.jspx?departId="+pid,
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			        $("#go2").attr("href","#");
+			        if(data!=null && data!=""){
+			        	$("#go2").attr("href","${base}/${site.accessPath!}/"+data+"/index.jhtml");
+			        	$("#go2").attr("target","_blank");
+			        }else{
+			        	$("#go2").attr("href","#");
+			        	$("#go2").attr("target","_blank");
+			        }
+			        $.ajax({  
+				         type : "post",  
+				          url : "${base}/getSites.jspx?pid="+pid,  
+				          data : {},
+				          dataType : "json" , 
+				          success : function(data){
+					        if(data.length>0){
+					        	for(var i=0;i<data.length;i++){
+					        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+					          			$("#sr_dj").append("<a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+					          		}else{
+					          			$("#sr_dj").append("<a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+					          		}
+					        	}
+					        }
+				          }
+				     });
+				  }
+		     });
+    	}
+    	
+    	function findJgdw(pid){
+    		$("#jgdw").html("");
+    		 $.ajax({  
+		         type : "post",  
+		          url : "${base}/getSites.jspx?pid="+pid,  
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			        $(".sh_tr").css({"text-align":"left","overflow-y":"scroll","height":"400px"});
+			        if(data.length>0){
+			        	for(var i=0;i<data.length;i++){
+			        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+			          			$("#jgdw").append("<a target='_blank' style='width:100%;' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+			          		}else{
+			          			$("#jgdw").append("<a target='_blank' style='width:100%;' href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+			          		}
+			        	}
+			        }
+		          }
+		     });
+    	}
+    	$(function(){
+    		$("#jgdw").html("");
+    		 $.ajax({  
+		         type : "post",  
+		          url : "${base}/getSites.jspx?pid=2201",  
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			        $(".sh_tr").css({"text-align":"left","overflow-y":"scroll","height":"400px"});
+			        var jgdwHtml = $("#jgdw").html();
+			        if(jgdwHtml=="" || (jgdw==null)){
+			        	if(data.length>0){
+				        	for(var i=0;i<data.length;i++){
+				        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+				          			$("#jgdw").append("<a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+				          			$("#gfhdzb_list").append("<li><a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"<font color='#00AA00'>【点击进入】</font></a></li>");
+				          		}else{
+				          			$("#jgdw").append("<a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+				          			$("#gfhdzb_list").append("<li><a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"<font color='#DDDDDD'>【点击进入】</font></a></li>");
+				          		}
+				        	}
+				        }
+			        }
+			        
+		          }
+		     });
+    	});
+    </script>
+     <style>
+		.seli{position: absolute; right: 143px;bottom: 110px;}
+		.dropdown{width:140px; position:relative; float: left;} 
+		.input_select{width:120px; height:24px; line-height:24px; padding:0 4px; border:1px solid #a9c9e2; background:#e8f5fe url(arrow.gif) no-repeat rightright 4px; color:#807a62; } 
+		.dropdown ul{width:128px; background:#e8f5fe; margin-top:2px; height:90px; overflow-x:hidden;overflow-y:scroll; border:1px solid #a9c9e2; position:absolute; display:none} 
+		.dropdown ul li{height:24px; line-height:24px; text-indent:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} 
+		.dropdown ul li a{display:block; height:24px; color:#807a62; text-decoration:none} 
+		.dropdown ul li a:hover{background:#c6dbfc; color:#369} 
+    </style>
+</head>
+<body>
+[#include "../include/header_shengju.html"/]
+<div class="coen" id="container">
+<div class="content">
+     <div class="shdh">
+          <a href="javascript:;" class="shei"><img src="${base}/r/cms/www/risen/images/zh_dh.png" alt=""></a>
+          <div class="shnr" style="display:block;background:url(${base}/r/cms/www/risen/images/ytds/zh_bg.png)">
+          <div class="shelf">
+                <img id="jens" src="${base}/r/cms/www/risen/images/ytds/1.png" width="442" height="333" usemap="#Map">
+<map name="Map">
+  <area shape="poly" coords="222,35,212,29,204,19,196,12,220,4,228,13,229,21,225,34" onfocus="blur(this);" class="mac" title="长岛市" href="#">
+  <area shape="poly" coords="251,50,239,52,228,53,224,55,214,58,209,63,208,68,218,79,220,84,226,99,229,106,229,122,230,133,240,125,244,116,246,107,257,106,267,106,274,106,278,99,282,88,286,82,279,76,269,72" onfocus="blur(this);" class="mac" title="蓬莱市" href="javascript:sitesnav2(2417)">
+  <area shape="poly" coords="193,62,180,64,172,68,167,74,164,80,160,88,154,95,153,99,148,102,156,107,163,109,178,109,187,112,191,117,197,118,211,117,214,117,219,119,223,117,223,109,223,103,216,96,214,89,212,85,207,80,198,75,196,64" onfocus="blur(this);" class="mac" title="龙口市" href="javascript:sitesnav2(2295)">
+  <area shape="poly" coords="160,199,169,198,192,189,194,183,194,176,197,170,200,160,200,150,200,139,201,131,194,126,185,121,177,120,170,117,160,111,143,109,138,123,130,125,133,136,139,143,149,152,156,162,159,177,153,192" onfocus="blur(this);" class="mac" title="招远市" href="javascript:sitesnav2(2396)">
+  <area shape="poly" coords="122,127,125,144,138,153,142,164,146,172,148,180,147,186,140,191,137,205,133,209,127,216,123,218,112,219,100,219,94,219,85,219,81,219,67,218,60,218,51,218,41,215,36,209,35,206,52,205,60,206,66,198,76,191,83,184,90,173,101,162,89,154,89,146,84,137,112,133,115,131" onfocus="blur(this);" class="mac" title="莱州市" href="javascript:sitesnav2(2344)">
+  <area shape="poly" coords="211,126,220,133,237,143,244,134,250,129,258,119,264,114,281,121,283,130,286,140,286,150,286,156,298,155,300,155,305,155,306,160,307,170,305,174,303,177,301,182,297,185,292,185,281,188,276,190,264,192,261,197,256,200,252,201,241,196,236,193,229,191,220,190,214,190,211,190,206,189,199,187,204,178,205,168,205,154,204,141,209,126" onfocus="blur(this);" class="mac" title="栖霞市" href="javascript:sitesnav2(2230)">
+  <area shape="poly" coords="289,93,298,103,316,114,317,124,325,133,328,145,326,156,325,160,325,165,322,167,319,168,318,162,313,158,311,148,306,145,302,145,295,146,291,125,286,114,282,107" onfocus="blur(this);" class="mac" title="福山区" href="javascript:sitesnav2(2254)">
+  <area shape="poly" coords="291,76,298,98,316,105,327,120,331,127,337,111,344,107,346,94,331,90,316,99,309,98,299,96,297,93" onfocus="blur(this);" class="mac" title="芝罘区" href="javascript:sitesnav2(2266)">
+  <area shape="poly" coords="343,119,339,124,339,132,333,143,337,155,347,163,349,144,355,136,358,131,352,128" onfocus="blur(this);" class="mac" title="莱山区" href="javascript:sitesnav2(2409)">
+  <area shape="poly" coords="424,128,406,128,380,134,368,137,364,146,352,153,348,168,330,168,333,155,326,173,319,176,315,192,308,203,344,194,369,193,384,189,395,192,398,176,397,166,404,153,414,147,420,134" onfocus="blur(this);" class="mac" title="牟平区" href="javascript:sitesnav2(2448)">
+  <area shape="poly" coords="297,192,283,193,271,197,269,205,271,222,267,234,265,251,268,260,256,275,252,296,265,297,273,305,283,300,296,296,302,287,311,284,329,285,346,281,343,272,337,269,330,263,329,255,324,248,315,244,305,238,298,225,300,215" onfocus="blur(this);" class="mac" title="海阳市" href="javascript:sitesnav2(2515)">
+  <area shape="poly" coords="203,196,218,195,244,204,250,210,258,216,264,227,261,242,255,250,255,262,246,271,246,281,243,294,237,301,231,303,222,308,217,309,212,298,209,287,199,280,206,261,207,248,201,232,204,225,204,219,202,211,200,198" onfocus="blur(this);" class="mac" title="莱阳市" href="javascript:sitesnav2(2319)">
+</map>
+      </div>
+      <div class="neir">
+           <div class="sh_dw">
+               <a href="javascript:;" id="gub">×</a>
+               <div class="ne_sp"><span></span><a href="javascript:;" id="go2">点击进入</a></div>
+               <div class="ne_sr" id="sr_dj">
+                                       
+               </div>
+           </div>
+      </div>
+     <!-- 
+      <div class="jied">
+           <div class="sh_dw">
+               <a href="javascript:;" id="gub1">×</a>
+               <div class="ne_sp"><span>街道</span><a href="javascript:;">点击进入</a></div>
+               <div class="ne_sr">
+                    <a href="">城阳街道</a>
+                    <a href="">关山街道</a>
+                    <a href="">曙光街道</a>
+                    <a href="">城阳街道</a>
+                    <a href="">关山街道</a>
+                    <a href="">曙光街道</a>
+                    <a href="">城阳街道</a>
+                    <a href="">关山街道</a>
+                    <a href="">曙光街道</a>                   
+               </div>
+           </div>
+      </div>  
+         -->
+      <div class="sheri">
+               <div class="sh_tit"><a class="on" href="javascript:;">系统</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="###">机关</a></div>
+               <div class="sh_tr">
+                    <a target='_blank' href="${base}/${site.accessPath!}/jjjskfqfj/index.jhtml">烟台市局经济技术开发区分局</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/qxsdfswj/index.jhtml">栖霞市</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/fsfj/index.jhtml">烟台市局福山分局</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/zbfj/index.jhtml">烟台市局芝罘分局</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/lksdfswj/index.jhtml">龙口市</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/cdxdfswj/index.jhtml">长岛县</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/lysdfswj/index.jhtml">莱阳市</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/lzsdfswj/index.jhtml">莱州市</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/zysdfswj/index.jhtml">招远市</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/ytsjgxjscykfqfjzhdjpt/index.jhtml">烟台市局高新技术产业开发区分局</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/lsfj/index.jhtml">烟台市局莱山分局</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/plsdfswj/index.jhtml">蓬莱市</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/mpfj/index.jhtml">烟台市局牟平分局</a>
+                    <a target='_blank' href="${base}/${site.accessPath!}/hysdfswj/index.jhtml">海阳市</a>
+               </div>
+               <div class="sh_tr" id="jgdw"  style="overflow-y:auto; display:none;overflow-x:hidden;">
+                    
+               </div>  
+      </div>  
+      
+       <div class="seli">
+           <div class="dropdown"> 
+                <input class="input_select" type="text" value="国家税务总局网站"/> 
+                <ul> 
+                <li><a href="http://130.9.1.168" rel="3" target="_blank">国家税务总局</a></li> 
+                </ul> 
+           </div> 
+           <div class="dropdown"> 
+                <input class="input_select" type="text" value="政府、部门网站"/> 
+                <ul> 
+                <li><a href="http://www.shandong.gov.cn" target="_blank" rel="3">山东省政务专网</a></li> 
+                <li><a href="http://15.32.5.5" rel="4" target="_blank">省科技厅</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0002" rel="5" target="_blank">省财政厅</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0008" rel="5" target="_blank">省统计局</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0008" rel="5" target="_blank">省工商局</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0003" rel="5" target="_blank">省国税局</a></li> 
+                <li><a href="http://15.32.76.19" rel="5" target="_blank">省防总</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0006" rel="5" target="_blank">人行济南分行</a></li> 
+                <li><a href="http://www.ta.sd.gov.cn" rel="5" target="_blank">泰安政务信息网</a></li> 
+                <li><a href="http://www/lc.sd.gov.cn" rel="5" target="_blank">聊城电子政务系统</a></li> 
+                <li><a href="http://www/wh.sd.gov.cn" rel="5" target="_blank">威海市政务网</a></li> 
+                <li><a href="http://www.rz.sd.gov.cn" rel="5" target="_blank">日照政务网</a></li> 
+                <li><a href="http://www/lw.sd.gov.cn" rel="5" target="_blank">莱芜政务专网</a></li> 
+                </ul> 
+           </div> 
+           <div class="dropdown"> 
+                <input class="input_select" type="text" value="省局内网网站"/> 
+                <ul> 
+                <li><a href="http://140.12.96.100" rel="3" target="_blank">山东省地方税务局</a></li> 
+                <li><a href="http://140.12.96.51/lxsd/index.jsp" rel="4" target="_blank">山东地税网络教育学院</a></li> 
+                </ul> 
+           </div> 
+           <div class="dropdown"> 
+                <input class="input_select" type="text" value="其他"/> 
+                <ul> 
+                <li><a href="http://140.16.16.16/col/col22472/index.html" rel="3" target="_blank">中国税务报</a></li> 
+                <li><a href="http://140.16.16.16/col/col22716/index.html" rel="4" target="_blank">齐鲁晚报</a></li> 
+                <li><a href="http://140.16.16.16/col/col22796/index.html" rel="5" target="_blank">生活日报</a></li> 
+                <li><a href="http://140.16.16.16/col/col91/index.html" rel="5" target="_blank">山东地税时空</a></li> 
+                <li><a href="http://140.16.16.16/col/col13150/index.html" rel="5" target="_blank">《山东地税》杂志</a></li> 
+                </ul> 
+           </div> 
+      </div>                     
+   </div>
+</div>
+     <script>
+        $(function(){
+            $(".sh_tit a").click(function(){
+                var index = $(".sh_tit a").index(this);
+                $(".sh_tr").hide();
+                $(".sh_tr").eq(index).show(0);
+            });                   
+            $(".shei").click(function(){
+                 var hei = $(".shnr").height();
+                 if(hei == 0){
+                    $(".shnr").animate({height:'420px',right:'10px'});
+                 }else{
+                    $(".shnr").animate({height:'0px',right:'-1270px'});
+                 };                 
+            });
+            var shr = $(".sh_tr a");
+            for(var i=0; i<shr.length; i++){
+                $(".sh_tr a:eq("+i+")").addClass("son"+i);
+            };
+            $("#gub").click(function(){
+                $(".neir").hide();
+            });
+            $("#gub1").click(function(){
+                $(".jied").hide();
+            });
+            $("#sr_dj a").click(function(){
+                 $(".neir").stop(true,true).fadeOut();
+                 $(".jied").stop(true,true).fadeIn();
+            });
+            $(".mac").click(function(){
+                var tle = $(this).attr("title");
+                var csa = $(".sh_tr a").attr("title");
+                $(".neir").stop(true,true).fadeOut();
+                $(".neir").stop(true,true).fadeIn();
+                $(".jied").stop(true,true).fadeOut();
+                $(".neir .ne_sp span").text(tle)
+                switch(tle)
+                    {
+                    case '长岛市':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/10.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son0").addClass("son");
+                      break;
+                    case '蓬莱市':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/8.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son1").addClass("son");
+                      break;
+                    case '龙口市':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/11.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son2").addClass("son");
+                      break;
+                    case '招远市':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/11.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son3").addClass("son");
+                      break;
+                    case '莱州市':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/5.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son4").addClass("son");
+                      break;
+                    case '栖霞市':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/9.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son5").addClass("son");
+                      break;
+                    case '福山区':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/2.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son6").addClass("son");
+                      break;
+                    case '芝罘区':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/12.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son7").addClass("son");
+                      break;
+                    case '莱山区':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/13.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son8").addClass("son");
+                      break;
+					case '牟平区':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/6.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son9").addClass("son");
+                      break;
+					case '海阳市':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/3.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son10").addClass("son");
+                      break;
+					case '莱阳市':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/ytds/4.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son10").addClass("son");
+                      break;
+                    default:
+                    }
+            });
+        });
+     </script>
+     <script type="text/javascript"> 
+	$(function(){ 
+	$(".dropdown .input_select").click(function(){ 
+	var ul = $(this).next('ul'); 
+	if(ul.css("display")=="none"){ 
+	ul.slideDown("fast"); 
+	}else{ 
+	ul.slideUp("fast"); 
+	} 
+	}); 
+	$(".dropdown ul li a").click(function(){ 
+	var txt = $(this).text(); 
+	$(this).parents('ul').prev('.input_select').val(txt); 
+	var value = $(this).attr("rel"); 
+	$(this).parents('ul').hide(); 
+	}); 
+	}); 
+</script>   

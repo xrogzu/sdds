@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<link href="${base}/res/common/css/jquery.flot.css" rel="stylesheet" type="text/css"/>
+<!--[if lte IE 8]><![endif]-->
+<script src="${base}/res/common/js/excanvas.min.js" type="text/javascript" ></script>
+<script src="${base}/res/common/js/jquery.flot.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.time.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.categories.min.js" type="text/javascript"></script>
+<script src="${base}/thirdparty/echarts/echarts.js" type="text/javascript" ></script>
+<script class="code" type="text/javascript">
+	$(function() {
+		var myChart_basicInfo = echarts.init(document.getElementById('tab_basicInfo'));
+		option_basicInfo = {
+		    tooltip : {
+		        trigger: 'axis',
+		        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+		            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+		        }
+		    },
+		    grid: {
+		        left: '3%',
+		        right: '4%',
+		        bottom: '3%',
+		        containLabel: true
+		    },
+		    xAxis : [
+		        {
+		            type : 'category',
+		            data:['预备党员','男','女','少数民族','30岁以下','31岁-35岁','36岁-40岁','41岁-45岁','46岁-50岁','51岁-55岁','56岁-60岁','61岁-65岁','66岁-70岁','70岁以上']
+		        }
+		    ],
+		    yAxis : [
+		        {
+		            type : 'value'
+		        }
+		    ],
+		    toolbox: {
+		        show: true,
+		        feature: {
+		            dataZoom: {
+		                yAxisIndex: 'none'
+		            },
+		            dataView: {readOnly: false},
+		            magicType: {type: ['line', 'bar']},
+		            restore: {},
+		            saveAsImage: {}
+		        }
+		    },
+		    series : [
+		        {	
+		        	<#if statisticModel=="DZJG">
+		        		 name:'党政机关工作人员',
+		        	<#elseif statisticModel=="SYDW">
+		        		name:'事业单位管理人员',
+		        	<#elseif statisticModel=="GQ">
+		        		name:'工勤技能人员',
+		        	<#elseif statisticModel=="LTX">
+		        		name:'离退休人员',
+		        	</#if>
+		        	label:{
+					    normal:{
+					        show:true,
+					        position:'top'
+					    }
+					},
+					itemStyle:{
+						normal:{
+							color:'#FF6347'
+						}
+					},
+		            type:'bar',
+		            data:[
+		            	<#if list??>
+		            		<#list list as info>
+		            			<#list info as s>
+		            				${s!},
+		            			</#list>
+							</#list>
+		            	</#if>
+		            ]
+		       	}
+		   	]
+		};
+
+		myChart_basicInfo.setOption(option_basicInfo);
+	});	
+</script>
+<style>
+	table{border-collapse:collapse;}
+	td { width: 89px; text-align: center; font-size: 15px; display: block; float: left; height: 30px; border-bottom: 1px solid #ccc;
+	 border-right: 1px solid #ccc; line-height: 30px; border-collapse：collapse;}
+	.rightTd{ border-left: 1px solid #ccc; width: 95px;}
+	tr { display: block; margin-bottom: 20px;}
+	.fristTr{ border-top: 1px solid #ccc;}
+</style>	
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: <@s.m "cms.function.statistic"/> > 党员基本情况分析</div>
+</div>
+<div class="statistic">
+  <div class="five" style="width:1267px;">
+  	<table>
+  		<tr class="fristTr">
+  			<td class="rightTd">预备党员</td><td>男</td><td>女</td><td>少数民族</td><td>30岁以下</td><td>31岁-35岁</td><td>36岁-40岁</td><td>41岁-45岁</td><td>46岁-50岁</td><td>51岁-55岁</td><td>56岁-60岁</td><td>61岁-65岁</td><td>66岁-70岁</td><td>70岁以上</td>
+  		</tr>
+  		<tr>
+  			<#if listAll??>
+          		<#list listAll as info>
+          			<#list info as s>
+          				<#if s_index==0>
+          				<td class="rightTd">${s!'0'}</td>
+          				<#else>
+          				<td>${s!'0'}</td>
+          				</#if>
+          			</#list>
+				</#list>
+          	</#if>
+  		</tr>
+  	</table>
+  </div>
+  <div class="sta-tab" style="width:1267px;">
+    <div class="sta-tab-nav">
+    	<a style="width:85px;" <#if statisticModel=="ALL">class="member on"<#else>class="member"</#if> target="rightFrame" href="basicInfo_list.do?queryModel=ALL" ><span style="width:85px;"></span>总体分析</a>
+    	<a style="width:120px;" <#if statisticModel=="DZJG">class="member on"<#else>class="member"</#if> target="rightFrame" href="basicInfo_list.do?queryModel=DZJG" ><span style="width:122px;"></span>党政机关工作人员</a>
+    	<a style="width:120px;" <#if statisticModel=="SYDW">class="member on"<#else>class="member"</#if>class="month on" target="rightFrame" href="basicInfo_list.do?queryModel=SYDW" ><span style="width:124px;"></span>事业单位管理人员</a>
+    	<a style="width:92px;" <#if statisticModel=="GQ">class="member on"<#else>class="member"</#if>class="month on" target="rightFrame" href="basicInfo_list.do?queryModel=GQ" ><span style="width:92px;"></span>工勤技能人员</a>
+    	<a style="width:92px;" <#if statisticModel=="LTX">class="member on"<#else>class="member"</#if>class="month on" target="rightFrame" href="basicInfo_list.do?queryModel=LTX" ><span style="width:92px;"></span>离退休人员</a>
+    </div>
+    <div class="tab-con" style="width:1267px;">
+     
+      <div class="tab-main" style="height:445px;width:1267px;">
+        <div>
+        	<div id="tab_basicInfo" style="float:left; width:99%;height:444px;"></div>
+		</div>
+      </div>
+      
+      
+      <script type="text/javascript">
+		$(document).ready(function () {
+			
+		});
+	  </script>
+    </div>
+  </div>
+</div>
+</body>
+</html>

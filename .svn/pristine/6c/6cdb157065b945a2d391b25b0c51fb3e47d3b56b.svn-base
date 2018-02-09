@@ -1,0 +1,81 @@
+package com.risen.dao.impl;
+
+import java.util.List;
+
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.IRisenTargetDetailDao;
+import com.risen.entity.RisenTargetDetail;
+
+public class RisenTargetDetailDao  extends HibernateBaseDao<RisenTargetDetail, Integer> implements IRisenTargetDetailDao{
+
+	@Override
+	protected Class<RisenTargetDetail> getEntityClass() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void batchUpdBaseScore(Integer[] orgId, Integer score) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int confirmShare(Integer orgId, Integer score) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void delete(Integer id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public RisenTargetDetail findById(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RisenTargetDetail findByOrgId(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Pagination getPage(int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<RisenTargetDetail> getReportData(Integer orgId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RisenTargetDetail save(RisenTargetDetail voteQues) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RisenTargetDetail update(RisenTargetDetail bean) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateBaseScore(Integer orgId, Integer score) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	 
+	 
+	 
+}

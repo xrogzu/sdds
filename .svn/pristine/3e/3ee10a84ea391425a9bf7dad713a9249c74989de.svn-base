@@ -1,0 +1,392 @@
+package com.risen.action;
+
+import static com.jeecms.common.page.SimplePage.cpn;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.jeecms.cms.action.admin.main.CmsMemberAct;
+import com.jeecms.cms.manager.assist.CmsFileMng;
+import com.jeecms.common.page.Pagination;
+import com.jeecms.common.upload.FileRepository;
+import com.jeecms.common.web.CookieUtils;
+import com.jeecms.common.web.RequestUtils;
+import com.jeecms.core.entity.CmsSite;
+import com.jeecms.core.entity.CmsDepartment;
+import com.jeecms.core.entity.CmsUser;
+import com.jeecms.core.entity.CmsUserExt;
+import com.jeecms.core.entity.Ftp;
+import com.jeecms.core.manager.CmsUserMng;
+import com.jeecms.core.manager.DbFileMng;
+import com.jeecms.core.web.WebErrors;
+import com.jeecms.core.web.util.CmsUtils;
+import com.risen.entity.RisenDevparty;
+import com.risen.entity.RisenPartyChange;
+import com.risen.service.IRisenPartyChangeService;
+import com.risen.service.RisenDevpartyMng;
+
+@Controller
+public class RisenDevpartyAct {
+	private static final Logger log = LoggerFactory.getLogger(RisenDevpartyAct.class);
+
+	@RequestMapping("/risenDevparty/v_list.do")
+	public String list(Integer pageNo, HttpServletRequest request, ModelMap model) {
+		try{
+			CmsUser user = CmsUtils.getUser(request);
+			String username = user.getUsername();
+			Integer id = user.getDepartment().getId();
+			if("admin".equals(username)){
+				id = null ;
+			}
+			Pagination pagination = manager.getPage(cpn(pageNo), CookieUtils
+					.getPageSize(request),id);
+			model.addAttribute("pagination",pagination);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return "risenDevparty/list";
+	}
+
+	@RequestMapping("/risenDevparty/v_add.do")
+	public String add(ModelMap model) {
+		return "risenDevparty/add";
+	}
+
+	@RequestMapping("/risenDevparty/v_edit.do")
+	public String edit(Integer id, HttpServletRequest request, ModelMap model) {
+		WebErrors errors = validateEdit(id, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		model.addAttribute("risenDevparty", manager.findById(id));
+		return "risenDevparty/edit";
+	}
+	
+	@RequestMapping("/risenDevparty/showInfo.do")
+	public String showInfo(Integer id, HttpServletRequest request, ModelMap model) {
+		WebErrors errors = validateEdit(id, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		model.addAttribute("risenDevparty", manager.findById(id));
+		return "risenDevparty/showInfo";
+	}
+	
+	@RequestMapping("/risenDevparty/getInfo.do")
+	public String getInfo(Integer id, HttpServletRequest request, ModelMap model) {
+		WebErrors errors = validateEdit(id, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		model.addAttribute("risenDevparty", manager.findById(id));
+		return "risenDevparty/getInfo";
+	}
+
+	@RequestMapping("/risenDevparty/o_save.do")
+	public String save(RisenDevparty bean, HttpServletRequest request, ModelMap model) {
+		WebErrors errors = validateSave(bean, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		CmsUser user = CmsUtils.getUser(request);
+		/*
+		 * 保存自己的组织ID
+		 */
+		if(user != null){
+			CmsDepartment dept = user.getDepartment();
+			if(dept != null ){
+				bean.setRisendpExpands3(dept.getId()+"");
+			}
+		}
+		bean = manager.save(bean);
+		log.info("save RisenDevparty id={}", bean.getId());
+		return "redirect:v_list.do";
+	}
+	
+	@RequestMapping("/risenDevparty/getAllActive.do")
+	public String getActives(Integer pageNo, HttpServletRequest request,
+			ModelMap model){
+		CmsUser user = CmsUtils.getUser(request);
+		CmsDepartment depart = user.getDepartment();
+		Integer deptId = depart.getId();
+		if("机关党委,党总支".indexOf(depart.getSddspoOrgtype())>-1){
+			deptId = depart.getId();
+		}
+		Pagination pagination = manager.getAllActives(deptId,cpn(pageNo), CookieUtils
+				.getPageSize(request));
+		model.addAttribute("pagination",pagination);
+		return "risenDevparty/v_allActives";
+	}
+	
+	@RequestMapping("/risenDevparty/o_update.do")
+	public String update(RisenDevparty bean, Integer pageNo, HttpServletRequest request,
+			ModelMap model) {
+		WebErrors errors = validateUpdate(bean.getId(), request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		String expands1 = bean.getRisendpExpands1();
+		String mark = bean.getUpdateMark();
+		//保存不执行下一步操作
+		if(StringUtils.hasText(expands1) && !"save".equalsIgnoreCase(mark)){
+			expands1 = ( Integer.parseInt(expands1) +1 ) + "";
+			bean.setRisendpExpands1(expands1);
+		}
+		bean = manager.update(bean);
+		if("26".equals(expands1)){
+			/**
+			 * 25步流程走完保存党员
+			 */
+			/**
+			 * 新发展党员  START
+			 */
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			String username = bean.getRisendpName();
+			String sddscpIdnumber = bean.getRisendpIdnumber();
+			String sddscpNational = bean.getRisendpNation();
+			String sddscpAddress = bean.getRisendpNative();
+			String risendpNineXl = bean.getRisendpNineXl();
+			String risendpBirth = bean.getRisendpBirth();
+			boolean risendpSex = bean.getRisendpSex().equals("1");
+			Integer departId = null;
+			CmsUserExt userExt = new CmsUserExt();
+			try {
+				userExt.setBirthday(df.parse(risendpBirth));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				System.out.println("不能转换为日期类型!");
+				e.printStackTrace();
+			}
+			userExt.setGender(risendpSex);
+			userExt.setPhone("");
+			userExt.setMobile("");
+			if(StringUtils.hasText(bean.getRisendpExpands3())){
+				departId = Integer.parseInt(bean.getRisendpExpands3());//所属党组织ID
+			}
+			CmsUser regUser = cmsUserMng.registerMember(username, null, 
+					"123456", "127.0.0.1", 1, 0, 
+					sddscpIdnumber, sddscpNational,sddscpAddress, 
+					"2", null, 
+					null, null,null, 
+					null, bean.getRisendpBranch(), 
+					bean.getRisendpFiveInpartytime(), null, 
+					null, risendpNineXl,
+					null, null, 
+					bean.getRisendpMarriage(), bean.getRisendpEighteenDept(), 
+					bean.getRisendpEighteenPost(), bean.getRisendpNative(),
+					null, null, 
+					"1", departId, bean.getRisendpBranch(),
+					null, null,
+					"1", null, 
+					null, null,
+					"1",username, 
+					sddscpIdnumber,null,null,
+					departId,null,null,
+					null,"1","0","1",
+					null,null,bean.getRisendpBranch(),
+					false, userExt, 
+					null,false);
+			if(regUser!=null){
+				bean.setRisendpExpands4(String.valueOf(regUser.getId()));
+			}
+			partyChangeMng.saveDevparty(bean);
+		}
+		log.info("update RisenDevparty id={}.", bean.getId());
+		return list(pageNo, request, model);
+	}
+
+	@RequestMapping("/risenDevparty/o_delete.do")
+	public String delete(Integer[] ids, Integer pageNo, HttpServletRequest request,
+			ModelMap model) {
+		WebErrors errors = validateDelete(ids, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		RisenDevparty[] beans = manager.deleteByIds(ids);
+		for (RisenDevparty bean : beans) {
+			log.info("delete RisenDevparty id={}", bean.getId());
+		}
+		return list(pageNo, request, model);
+	}
+
+	// 上传
+	@RequiresPermissions("risenDevparty:o_upload_doc")
+	@RequestMapping("/risenDevparty/o_upload_doc.do")
+	public String uploadDoc(
+			@RequestParam(value = "docFile", required = false) MultipartFile file,
+			String filename, HttpServletRequest request, ModelMap model,String num) {
+		CmsSite site = CmsUtils.getSite(request);
+		CmsUser user = CmsUtils.getUser(request);
+		String origName = file.getOriginalFilename();
+		String ext = FilenameUtils.getExtension(origName).toLowerCase(
+				Locale.ENGLISH);
+		WebErrors errors = validateUpload(file, request);
+		if (errors.hasErrors()) {
+			model.addAttribute("error", errors.getErrors().get(0));
+			return "changeremind/wenku_iframe";
+		}
+		// TODO 检查允许上传的后缀
+		try {
+			String fileUrl;
+			if (site.getConfig().getUploadToDb()) {
+				String dbFilePath = site.getConfig().getDbFileUri();
+				if (!org.apache.commons.lang.StringUtils.isBlank(filename)
+						&& FilenameUtils.getExtension(filename).equals(ext)) {
+					filename = filename.substring(dbFilePath.length());
+					fileUrl = dbFileMng.storeByFilename(filename,
+							file.getInputStream());
+				} else {
+					fileUrl = dbFileMng.storeByExt(site.getUploadPath(), ext,
+							file.getInputStream());
+					// 加上访问地址
+					fileUrl = request.getContextPath() + dbFilePath + fileUrl;
+				}
+			} else if (site.getUploadFtp() != null) {
+				Ftp ftp = site.getUploadFtp();
+				String ftpUrl = ftp.getUrl();
+				if (!org.apache.commons.lang.StringUtils.isBlank(filename)
+						&& FilenameUtils.getExtension(filename).equals(ext)) {
+					filename = filename.substring(ftpUrl.length());
+					fileUrl = ftp.storeByFilename(filename,
+							file.getInputStream());
+				} else {
+					fileUrl = ftp.storeByExt(site.getUploadPath(), ext,
+							file.getInputStream());
+					// 加上url前缀
+					fileUrl = ftpUrl + fileUrl;
+				}
+			} else {
+				String ctx = request.getContextPath();
+				if (!org.apache.commons.lang.StringUtils.isBlank(filename)
+						&& FilenameUtils.getExtension(filename).equals(ext)) {
+					filename = filename.substring(ctx.length());
+					fileUrl = fileRepository.storeByFilename(filename, file);
+				} else {
+					fileUrl = fileRepository.storeByExt(site.getUploadPath(),
+							ext, file);
+				}
+				// 加上部署路径
+				fileUrl = ctx + fileUrl;
+			}
+			cmsUserMng.updateUploadSize(user.getId(),
+					Integer.parseInt(String.valueOf(file.getSize() / 1024)));
+			if (fileMng.findByPath(fileUrl) != null) {
+				fileMng.saveFileByPath(fileUrl, origName, false);
+			}
+			model.addAttribute("docPath", fileUrl);
+			model.addAttribute("docExt", ext);
+			model.addAttribute("num", num);
+		} catch (IllegalStateException e) {
+			model.addAttribute("error", e.getMessage());
+			log.error("upload file error!", e);
+		} catch (IOException e) {
+			model.addAttribute("error", e.getMessage());
+			log.error("upload file error!", e);
+		}
+		return "risenDevparty/wenku_iframe";
+	}
+
+	private WebErrors validateUpload(MultipartFile file,
+			HttpServletRequest request) {
+		String origName = file.getOriginalFilename();
+		CmsUser user = CmsUtils.getUser(request);
+		String ext = FilenameUtils.getExtension(origName).toLowerCase(
+				Locale.ENGLISH);
+		int fileSize = (int) (file.getSize() / 1024);
+		WebErrors errors = WebErrors.create(request);
+		if (errors.ifNull(file, "file")) {
+			return errors;
+		}
+		if (origName != null
+				&& (origName.contains("/") || origName.contains("\\") || origName
+						.indexOf("\0") != -1)) {
+			errors.addErrorCode("upload.error.filename", origName);
+		}
+		// 非允许的后缀
+		if (!user.isAllowSuffix(ext)) {
+			errors.addErrorCode("upload.error.invalidsuffix", ext);
+			return errors;
+		}
+		// 超过附件大小限制
+		if (!user.isAllowMaxFile((int) (file.getSize() / 1024))) {
+			errors.addErrorCode("upload.error.toolarge", origName, user
+					.getGroup().getAllowMaxFile());
+			return errors;
+		}
+		// 超过每日上传限制
+		if (!user.isAllowPerDay(fileSize)) {
+			long laveSize = user.getGroup().getAllowPerDay()
+					- user.getUploadSize();
+			if (laveSize < 0) {
+				laveSize = 0;
+			}
+			errors.addErrorCode("upload.error.dailylimit", laveSize);
+		}
+		return errors;
+	}
+
+	private WebErrors validateSave(RisenDevparty bean,
+			HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		return errors;
+	}
+
+	private WebErrors validateEdit(Integer id, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		return errors;
+	}
+
+	private WebErrors validateUpdate(Integer id, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		return errors;
+	}
+
+	private WebErrors validateDelete(Integer[] ids, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		errors.ifEmpty(ids, "ids");
+		return errors;
+	}
+
+	private boolean vldExist(Integer id, Integer webId, WebErrors errors) {
+		if (errors.ifNull(id, "id")) {
+			return true;
+		}
+		RisenDevparty entity = manager.findById(id);
+		if (errors.ifNotExist(entity, RisenDevparty.class, id)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Autowired
+	private RisenDevpartyMng manager;
+	@Autowired
+	private DbFileMng dbFileMng;
+	@Autowired
+	private FileRepository fileRepository;
+	@Autowired
+	private CmsUserMng cmsUserMng;
+	@Autowired
+	private CmsFileMng fileMng;
+	@Autowired
+	private IRisenPartyChangeService partyChangeMng;
+}

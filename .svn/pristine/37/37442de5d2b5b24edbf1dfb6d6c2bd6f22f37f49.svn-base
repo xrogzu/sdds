@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script src="${base}/r/cms/www/default/js/FusionCharts.js" type="text/javascript"></script>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+
+
+</script>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 网上投票 - 投票详细</div>
+	<form class="ropt">
+	    <input type="hidden" name="voteId" value="${vote.id}"/>
+		<input type="submit" class="return-button" value="<@s.m "global.backToList"/>" onclick="this.form.action='${base}/admin/vote/item/list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+
+<div class="body-box">
+
+  <div id="chartdiv"></div>
+  <script type="text/javascript">
+	       var str="${xml}";
+	       var chart = new FusionCharts("${base}/r/cms/www/default/charts/Pie2D.swf", "ChartId", "100%", "500");
+		   chart.setDataXML(str);		   
+		   chart.render("chartdiv");
+  </script>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

@@ -1,0 +1,17 @@
+package com.risen.dao;
+
+import com.jeecms.common.hibernate4.Updater;
+import com.jeecms.common.page.Pagination;
+import com.risen.entity.CmsFloating;
+
+public interface CmsFloatingDao {
+	public Pagination getPage(int pageNo, int pageSize);
+
+	public CmsFloating findById(Integer sddsfiId);
+
+	public CmsFloating save(CmsFloating bean);
+
+	public CmsFloating updateByUpdater(Updater<CmsFloating> updater);
+
+	public CmsFloating deleteById(Integer sddsfiId);
+}

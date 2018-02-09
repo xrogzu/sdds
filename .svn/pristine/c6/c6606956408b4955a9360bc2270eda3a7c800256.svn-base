@@ -1,0 +1,51 @@
+@charset "utf-8";
+/*---------ҳ begin-------------*/
+*{ padding:0; margin:0;font-family:"微软雅黑"}
+body{ padding:0px; margin:0px auto; font-size:12px; line-height:18px; font-family:"微软雅黑";width: 100%; zoom:1; /*overflow:-Scroll;overflow-x:hidden*/ background:#fff}
+ul,li,form, dl,dt, dd, div { padding: 0px; margin: 0px; }
+h1,h2,h3,h4,h5,h6{ margin:0px; padding:0px;}
+font,select,input,em{ font-size:12px; font-style:normal;}
+ul{ list-style-type: none; }
+img{ border:none; border:0;}
+a{ text-decoration:none;noline: expression(this.onFocus=this.blur()); font-family:"微软雅黑"; color: #666; }
+a:focus {outline:none;-moz-outline:none;}
+/*a:hover{ color:#fe0000; text-decoration:none;}*/
+.clear{ clear:both; overflow:hidden; height:0px;}
+.blue{ color:#0b6995;}
+.Green{ color:#008b4a;}
+h1{ font-weight:normal}
+/*---------ҳ end-------------*/
+.kebk{width: 800px; height:390px; background:url(/res/jeecms/img/duescalculator/beis.png) no-repeat; margin:20px auto;}
+.number{width:310px; margin-left:80px;  height:320px; float: left;  position: relative; }
+.number ul{ padding-top:20px;}
+.number li{width:72px; height:40px; float: left; margin:8px;  }
+.number li input{background:none; border:none; width:72px; height:40px; background:#f4f4f4; border:solid 1px #e4e4e4;  font-size:20px;  cursor: pointer; border-radius:5px; }
+#chsa{width:160px; }
+.xien{width:1px; height:320px; background:#e4e4e4; float: left; margin-top:20px;}
+.liex{width:300px; float: left;  margin-left:40px; height:340px;  }
+.shiy{margin-top:30px; }
+.shiy span{margin-left:10px; line-height:28px; font-size:14px;   }
+.shiy select{width:200px; float: left; border:solid 1px #e4e4e4; height:28px;  }
+.yrle li{margin-top:5px; }
+.yrle li input{width:198px; border:solid 1px #e4e4e4; height:26px; line-height:22px;  }
+.yrle li span{margin-left:10px; font-size:14px;  line-height:26px;   }
+
+.yer5{margin-top:5px; }
+.yer5 input{width:198px; border:solid 1px #e4e4e4; height:26px; line-height:22px;  }
+.yer5 span{margin-left:10px; font-size:14px;  line-height:26px;   }
+
+.yrle ul{display: none;}
+#yer1{display: block;}
+.jisn{position: absolute; bottom:0px; left:10px;}
+.jisn a{width:240px; height:36px; background:#08abd4; color:#fff; display: block; font-size:16px; text-align: center; line-height:36px; border-radius:5px;}
+.calculator{
+	margin: 30px auto;
+    width: 200px;
+   /* height:450px;*/
+    font-size: 32px;
+    font-family: 微软雅黑;
+    position: relative;
+    top: 36px;
+    display:inline-block";
+    z-index:21;
+}

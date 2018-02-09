@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>首页 - ${site.name}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" ></meta>
+    <script type="text/javascript" src="${base}/r/cms/www/risen/script/jquery.min.js"></script>
+    <script type="text/javascript" src="${base}/r/cms/www/risen/script/jquery.nicescroll.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+    <style>
+    	.article{ width:98%;margin-top:10px;margin-bottom:10px;text-align:center;overflow-y:scroll;}
+		dl{float: left;width:156px;border:1px solid #D8D8D8;margin-left:10px;;margin-top:10px;height:200px;}
+		dt,dd{text-align: center;}
+    </style>
+    [#include "../include/header_shengju.html"/]
+    <script type="text/javascript">
+    $(function(){
+             $(".zuze4").click(function(){
+                 $(".dwlis").show();
+                 $(".zhezc").show();
+             });
+             $(".dwlis .dw_tit a").click(function(){
+                 $(".dwlis").hide();
+                 $(".zhezc").hide();
+             });
+    });
+    var hideLength = 0;
+	function vote(id){
+		var id = $("#ids"+id).val();
+		var maxCount = $("[name='maxCount']").val();
+		
+		if(hideLength<=maxCount){
+			var url = "${base}/ballotItem/vote.jspx?ids="+id;
+			$.ajax({  
+		         type : "post",  
+		          url : url,  
+		          data : {},
+		          dataType : "text" , 
+		          success : function(data){
+			        if(data.substring(0,7)=="success"){
+			        	alert("投票成功!");
+			        	//$("#ids"+id).hide();
+			        	//$("#showCount"+id).show();
+			        	var totalCount = data.substring(7,data.length);
+			        	$("#viewCount").html("总票数:"+totalCount);
+			        	hideLength++;
+			        }else{
+			        	alert("你已投过票!");
+			        }
+			   	}
+	    	});
+		}else{
+			alert("你最多只能支持"+maxCount+"位!");
+		}
+	}
+    </script>
+<body>
+<div class="coen" id="container">
+<div class="content">
+     <div class="slideTxtBox" id="conter" style="height:580px;">
+     <div class="" id="ji_list">
+        <div class="list_ym">
+      		<div class="ym_top"><span>${ballot.title!}</span></div>
+      		<input type="hidden" name="maxCount" value="${ballot.multiSelect!}"/>
+	     	<div class="article">
+	     		 [#if pagination??]
+			[#list pagination.list as c]
+			<dl>
+				<dt>
+					[#if c.itemUrl??]
+					<a href="${c.itemUrl!}" target="_blank"><img style="width:100px;height:120px;" src="${base}${c.picture!}"/></a>
+					[#else]
+					<img style="width:100px;height:120px;" src="${base}${c.picture!}"/>
+					[/#if]
+				</dt>
+				<dd>${c.item!}</dd>
+				<div style="width:100%;height:20px;text-indent:10px;text-align:left;">
+					[#if c.describtion??]
+						[#if c.describtion?length gt 10]
+							<a title="${c.describtion}">${c.describtion?substring(0,10)}...</a>
+						[#else]
+							${c.describtion!''}
+						[/#if]
+					[#else]
+						暂无介绍
+					[/#if]
+				</div>
+				<div id="viewCount" style="width:100%;height:30px;text-align:center;">
+					<input type="image" id="ids${c.itemId!}" onClick="vote(${c.itemId!});" value="${c.itemId!}" src="${base}/r/cms/www/risen/images/93.png" style="width:60px;height:30px;"/>
+				</div>
+			</dl>
+			[/#list]
+			[/#if]
+		</div>
+	</div>
+	</div>
+	</div>
+	</div>
+</div>
+</div>
+[#include "../include/footer_shengju.html"/]
+<script>
+$("#pic_list_1").cxScroll();
+$("#pic_list_2").cxScroll({direction:"left",step:1});
+</script>
+<script type="text/javascript"> 
+$(document).ready(function(){
+	$('.carousel').carousel({
+		directionNav:true,
+		speed:500, 
+		carouselWidth:421,
+		carouselHeight:373,
+		frontWidth:160,
+		frontHeight:218,
+		hAlign:'center',
+		vAlign:'center',
+		autoplay:false,
+		autoplayInterval:5000,
+		shadow:false,
+		reflection:false,
+		reflectionHeight:0.2,
+		reflectionOpacity:0.5,
+		description:false,
+		descriptionContainer:'.carousel_description'
+	});
+});
+</script>
+<script>
+$(".menu li").click(function(){
+	$(".menu li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu li").index(this);
+	$(".tab").fadeOut(0);
+    $(".menu li a").fadeOut(0);
+	$(".tab").eq(index).fadeIn(0);
+    $(".menu li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu1 li").click(function(){
+	$(".menu1 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu1 li").index(this);
+	$(".tab1").fadeOut(0);
+    $(".menu1 li a").fadeOut(0);
+	$(".tab1").eq(index).fadeIn(0);
+    $(".menu1 li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu2 li").mousemove(function(){
+	$(".menu2 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu2 li").index(this);
+	$(".tab2").hide();
+    $(".menu2 li a").hide();
+	$(".tab2").eq(index).show();
+    $(".menu2 li a").eq(index).show();
+})
+</script>
+<script>
+$(".menu3 li").click(function(){
+	$(".menu3 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu3 li").index(this);
+	$(".tab3").hide();
+    $(".menu3 li a").hide();
+	$(".tab3").eq(index).show();
+    $(".menu3 li a").eq(index).show();
+})
+</script>
+<script>
+$(".menu4 li").click(function(){
+	$(".menu4 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu4 li").index(this);
+	$(".tab4").fadeOut(0);
+    $(".menu4 li a").fadeOut(0);
+	$(".tab4").eq(index).fadeIn(0);
+    $(".menu4 li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu5 li").click(function(){
+	$(".menu5 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu5 li").index(this);
+	$(".tab5").fadeOut(0);
+    $(".menu5 li a").fadeOut(0);
+	$(".tab5").eq(index).fadeIn(0);
+    $(".menu5 li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu6 li").click(function(){
+	$(".menu6 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu6 li").index(this);
+	$(".tab6").fadeOut();
+    $(".menu6 li a").fadeOut();
+	$(".tab6").eq(index).fadeIn();
+    $(".menu6 li a").eq(index).fadeIn();
+})
+</script>
+<script>
+$(".menu7 li").click(function(){
+	$(".menu7 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu7 li").index(this);
+	$(".tab7").fadeOut();
+    $(".menu7 li a").fadeOut();
+	$(".tab7").eq(index).fadeIn();
+    $(".menu7 li a").eq(index).fadeIn();
+})
+</script>
+<script type="text/javascript"> 
+function ScrollImgLeft(){ 
+    var speed=30; 
+    var scroll_begin = document.getElementById("scroll_begin"); 
+    var scroll_end = document.getElementById("scroll_end"); 
+    var scroll_div = document.getElementById("scroll_div"); 
+    scroll_end.innerHTML=scroll_begin.innerHTML; 
+    function Marquee(){ 
+        if(scroll_end.offsetWidth-scroll_div.scrollLeft<=0) 
+            scroll_div.scrollLeft-=scroll_begin.offsetWidth; 
+        else 
+            scroll_div.scrollLeft++; 
+    } 
+    var MyMar=setInterval(Marquee,speed); 
+    scroll_div.onmouseover=function() {clearInterval(MyMar);} 
+    scroll_div.onmouseout=function() {MyMar=setInterval(Marquee,speed);} 
+}
+ScrollImgLeft();
+</script>
+<script type="text/javascript">
+		jQuery(".txtMarquee-left").slide({mainCell:".bd ul",autoPlay:true,effect:"leftMarquee",vis:5,interTime:10});
+</script>
+<script type="text/javascript">jQuery(".slideTxtBox").slide({effect:"top",trigger:"click"});</script>
+<script type="text/javascript">
+var t = n =0, count;
+$(document).ready(function(){ 
+count=$("#banner_list a").length;
+$("#banner_list a:not(:first-child)").hide();
+$("#banner_info").html($("#banner_list a:first-child").find("img").attr('alt'));
+$("#banner_info").click(function(){window.open($("#banner_list a:first-child").attr('href'), "_blank")});
+$("#banner li").click(function() {
+var i = $(this).text() -1;//获取Li元素内的值，即1，2，3，4
+n = i;
+if (i >= count) return;
+$("#banner_info").html($("#banner_list a").eq(i).find("img").attr('alt'));
+$("#banner_info").unbind().click(function(){window.open($("#banner_list a").eq(i).attr('href'), "_blank")})
+$("#banner_list a").filter(":visible").fadeOut(500).parent().children().eq(i).fadeIn(1000);
+document.getElementById("banner").style.background="";
+$(this).toggleClass("on");
+$(this).siblings().removeAttr("class");
+});
+t = setInterval("showAuto()", 4000);
+$("#banner").hover(function(){clearInterval(t)}, function(){t = setInterval("showAuto()", 4000);});
+})
+function showAuto()
+{
+n = n >=(count -1) ?0 : ++n;
+$("#banner li").eq(n).trigger('click');
+}
+</script>
+
+        <script type="text/javascript">
+            $('.article').niceScroll({
+                cursorcolor: "#ccc",//#CC0071 光标颜色
+                cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
+                touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
+                cursorwidth: "5px", //像素光标的宽度
+                cursorheight: "5px", //像素光标的宽度
+                cursorborder: "0", // 	游标边框css定义
+                cursorborderradius: "5px",//以像素为光标边界半径
+                autohidemode: false //是否隐藏滚动条
+            });
+        </script>
+
+</body>
+</html>

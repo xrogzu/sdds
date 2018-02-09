@@ -1,0 +1,1118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>首页 - ${site.name}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" ></meta>
+    <script src="${base}/r/cms/layer/jquery-1.12.1.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.SuperSlide.2.1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+    [#include "../include/siteNav.html"/]
+    <script type="text/javascript">
+    $(function(){
+             $(".zuze4").click(function(){
+                 $(".dwlis").show();
+                 $(".zhezc").show();
+             });
+             $(".dwlis .dw_tit a").click(function(){
+                 $(".dwlis").hide();
+                 $(".zhezc").hide();
+             });
+	    	//加载机关和规范化党支部数据  1月3日修改From赖群 优化说明：这个地方应应该是页面加载完之后让AJAX直接去后台加载，而不是点击后才加载，点击后在加载会出现一段空白
+	   		 $.ajax({  
+		         type : "post",  
+		          url : "${base}/getSites.jspx?pid=68",  
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+		        	  $("#jgdw").html("");
+		        	  $("#gfhdzb_list").html("");
+		        	  if(data.length>0){
+			        	for(var i=0;i<data.length;i++){
+			        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+			          			$("#jgdw").append("<a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+			          			$("#gfhdzb_list").append("<li><a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"<font color='#00AA00'>【点击进入】</font></a></li>");
+			          		}else{
+			          			$("#jgdw").append("<a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+			          			$("#gfhdzb_list").append("<li><a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"<font color='#DDDDDD'>【点击进入】</font></a></li>");
+			          		}
+			        	}
+			        }
+			   	}
+	    	})
+    	})
+    </script>
+     <div class="slideTxtBox" id="conter">
+			<div class="hd" id="jiay">
+				<ul><li class="back1">首页</li><li class="back2">从严治党</li><li class="back3">党务管理</li><li class="back4">党建风采</li><li class="back5">网上党校</li><li class="back5">文化生活</li></ul>
+			</div>
+			<div class="" id="jinr">
+			<div class="bd" >
+				<div class="time1">
+                     <!--头部滚动-->
+                     <div class="wufn">
+                         <div class="togg">【通知公告】:</div>
+                         <div id="gongao"> 
+                                <div id="scroll_div" class="scroll_div"> 
+                                    <div id="scroll_begin"> 
+                                    	[@cms_content_list typeId='1' count='8' titLen='25' channelId='609' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+      									[#list tag_list as a]
+                                         <a href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a><span>&nbsp;|</span>
+                                        [/#list]
+      									[/@cms_content_list]
+                                    </div> 
+                                    <div id="scroll_end"></div> 
+                                </div> 
+                         </div> 
+                     </div>
+                     <!--头部滚动-->
+                     <div class="shoynr">
+                          <!--首页轮播-->
+                          <div class="syone">
+                          <div class="focusBox">
+                                <ul class="pic">
+                                	[@cms_content_list typeId='2,3' count='4' titLen='25' channelId='289' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+      								[#list tag_list as a]
+                                    <li><a href="${a.url}" target="_blank"><img src="${a.typeImg!}"/></a></li>
+                                    [/#list]
+      								[/@cms_content_list]
+                                </ul>
+                                <div class="txt-bg">
+                                	<ul class="num" style="left:200px;height:10px;bottom:35px;">
+	                                       <li><a></a></li>
+	                                       <li><a></a></li>
+	                                       <li><a></a></li>
+	                                       <li><a></a></li>
+	                                    </ul>
+                                </div>
+                                <div class="txt">
+                                    <ul>
+                                        [@cms_content_list typeId='2,3' count='4' titLen='25' channelId='289' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+	      								[#list tag_list as a]
+	                                     <li><a href="${a.url}" target="_blank" title="${a.title!}" style="color: #FFFFBB">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+	                                    [/#list]
+	      								[/@cms_content_list]
+                                    </ul>
+                                </div>
+                                <div style="float:left; z-index:99; position: absolute; cursor: pointer; bottom:10px; right:10px;">
+                                         <a href="${base}/${site.accessPath!}/[@cms_channel id='12765']${(tag_bean.path)!}[/@cms_channel]/index.jhtml" target="_blank"><img src="${base}/r/cms/www/risen/imagds/move.png" alt=""></a>
+                                	</div>
+	                       </div>
+                        <script type="text/javascript">
+                            jQuery(".focusBox").slide({ titCell:".num li", mainCell:".pic",
+                                                       effect:"fold", effect:"left",autoPlay:true,trigger:"click",
+                                //下面startFun代码用于控制文字上下切换
+                                startFun:function(i){
+                                     jQuery(".focusBox .txt li").eq(i).animate({"bottom":0}).siblings().animate({"bottom":-36});
+                                }
+                            });
+                        </script>
+                         <!--首页轮播-->
+                         
+                         <!--首页右侧新闻-->
+                        <div class="sydt">
+                             <div class="toti">
+                                 <div class="touty">
+                                 [@cms_content_list typeId='4' count='1' titLen='14' channelId='289,290,291,292,293,575' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+   									[#list tag_list as a]
+                                  	<a href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a>
+                                 	[/#list]
+   								 [/@cms_content_list]
+                                 </div>
+                                 <div class="yaown">
+                                      <a href="###" id="yaw">要闻</a>
+                                      [@cms_content_list typeId='1' recommend='1' count='3' titLen='10' channelId='289,290,291,292,293,575' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+	   									[#list tag_list as a]
+	                                  	<a href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen/]</a>[#if a_index != 2]<span style="color: #9DA0BE">|</span>[/#if]
+	                                 	[/#list]
+	   								  [/@cms_content_list]
+                                 </div>
+                             </div>
+                             
+                             <div class="xuwn">
+                                  <div class="tue">
+                                  	   [@cms_content_list typeId='1' recommend='2' count='4' titLen='30' channelId='290' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+	   								   [#list tag_list as a]
+	   								   [#if a_index == 0]
+                                       <a class="tit" href="${a.url}" target="_blank" title="${a.title!}"><span>热点</span>[@text_cut s=a.title len=titLen append='...'/]</a>
+                                       [#elseif a_index > 1]
+                                       <a href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen/]</a>
+                                       [/#if]
+                                       [/#list]
+	   								   [/@cms_content_list]
+                                  </div>
+                                  <div class="tue">
+                                  	   [@cms_content_list typeId='1' recommend='2' count='8' titLen='30' channelId='290' orderBy='2' channelOption='1' dateFormat='yyyy-MM-dd']
+	   								   [#list tag_list as a]
+	   								   [#if a_index == 1]
+                                       <a class="tit1" href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]<span>最新</span></a>
+                                       [#elseif a_index > 3]
+                                       <a href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen/]</a>
+                                       [/#if]
+                                       [/#list]
+	   								   [/@cms_content_list]
+                                  </div>
+                                  <!-- 
+                                  <div class="tue">
+                                       <a class="tit" href="">德州市地税局围绕五个强化全力推...</a>
+                                       <a href="">习近平在网信工作座谈会上的讲话全文发表</a>
+                                  </div> -->
+                             </div>
+                        </div>
+                        <!--首页右侧新闻-->
+                        </div>
+                        
+                        <div class="sytwo">
+                             <!--首页左侧列表-->
+                             <div class="sytle1">
+                                  <div class="box">
+                                        <ul class="menu">
+                                        	<li class="tabs">领导讲话<a target="_blank" href="${base}/ldjh/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></li>
+											<li class="others">经验交流<a target="_blank" href="${base}/jyjl/index.jhtml" style="display:none"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></li>
+                                        </ul>
+                                        <div class="tab tabs">
+                                             <ul class="ld">
+                                                 [@cms_content_list typeId='1' count='7' titLen='19' channelId='291' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   									[#list tag_list as a]
+				                                  	<li><a href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+				                                 	[/#list]
+				   								 [/@cms_content_list]
+                                             </ul>
+                                        </div>
+                                        <div class="tab tabs" style="display:none">
+                                             <ul class="ld">
+                                                 [@cms_content_list typeId='1' count='7' titLen='19' channelId='292' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   									[#list tag_list as a]
+				                                  	<li><a href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+				                                 	[/#list]
+				   								 [/@cms_content_list]
+                                             </ul>
+                                        </div>
+                                  </div>
+                                  
+                                  <div class="box">
+                                        <ul class="menu1">
+                                        <li class="tabs">媒体视点<a target="_blank" href="${base}/mtsd/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></li>
+                                        <li class="others">理论研讨<a target="_blank" href="${base}/llyt/index.jhtml" style="display:none"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></li>
+                                        </ul>
+                                        <div class="tab1 tabs">
+                                             <ul class="ld">
+                                                 [@cms_content_list typeId='1' count='7' titLen='19' channelId='293' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   									[#list tag_list as a]
+				                                  	<li><a href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+				                                 	[/#list]
+				   								 [/@cms_content_list]
+                                             </ul>
+                                        </div>
+                                        <div class="tab1 tabs" style="display:none">
+                                             <ul class="ld">
+                                                 [@cms_content_list typeId='1' count='7' titLen='19' channelId='575' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   									[#list tag_list as a]
+				                                  	<li><a href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+				                                 	[/#list]
+				   								 [/@cms_content_list]
+                                             </ul>
+                                        </div>
+                                  </div>
+                             </div>
+                             <!--首页左侧列表-->
+                             
+                             <!--首页右侧异步轮播-->
+                             <div class="yblb">
+                                  <div class="ybtop">
+                                       <span>电子期刊</span>
+                                  </div>
+                                  <div class="carousel">
+                                        <div class="slides">
+                                        	[@cms_content_list count='3' titLen='19' channelId='585' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+			   									[#list tag_list as a]
+			                                  	<div><a href="${a.url}" target="_blank" title="${a.title!}"><img alt="${a.title!}" src="${a.titleImg!}"></a></div>
+			                                 	[/#list]
+			   								[/@cms_content_list]
+                                        </div>
+                                   </div>
+                             </div>
+                             <!--首页右侧异步轮播-->
+                        </div>
+                    </div>
+				</div>
+				<div class="time2">
+                     <div class="time2_en">
+                          <!--从严治党头部-->
+                         <div class="time2_bo">
+                         		<div class="quer" style="margin-right: 20px !important; height: 260px !important;">
+                                  <div class="quer_top"><span>党建主体责任</span><a target="_blank" href="${base}/gfhdzb/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                  <div class="quer_tu">
+                                       <div class="tu_tit">
+                                       		[@cms_content_list recommend="1" typeId='1' count='1' titLen='22' description='50' channelId='589' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   							[#list tag_list as a]
+                                          		<span>[@text_cut s=a.title len=titLen append='...'/]</span>
+                                          		<a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.description len=description append='...'/]</a>
+                                            [/#list]
+			   								[/@cms_content_list]
+                                       </div>
+                                       <ul>
+                                           	[@cms_content_list recommend="2" count='3' titLen='23' channelId='589' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   						    [#list tag_list as a]
+				   						   		<li><a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                           		[/#list]
+			   							    [/@cms_content_list]
+                                       </ul>
+                                  </div>
+                              </div>
+                         
+                              <div class="quer1">
+                                  <div class="quer_top"><span>规范化党支部建设</span><a target="_blank" href="${base}/gfhdzb/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                  <div class="quer_tu">
+                                       <div class="tu_tit">
+                                       		[@cms_content_list recommend="1" typeId='1' count='1' titLen='22' description='50' channelId='591' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   							[#list tag_list as a]
+                                          		<span>[@text_cut s=a.title len=titLen append='...'/]</span>
+                                          		<a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.description len=description append='...'/]</a>
+                                            [/#list]
+			   								[/@cms_content_list]
+                                       </div>
+                                       <ul>
+                                           	[@cms_content_list recommend="2" count='3' titLen='23' channelId='591' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   						    [#list tag_list as a]
+				   						   		<li><a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                           		[/#list]
+			   							    [/@cms_content_list]
+                                       </ul>
+                                  </div>
+                              </div>
+                              
+                              
+                              
+                              <div class="box1">
+                              <div class="quer_top"><span>基层党组织建设</span><a target="_blank" href="${base}/jcdzzjs/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                        <ul class="menu2">
+                                        <a href="${base}/sx/index.jhtml" target="_blank"><li class="tabs">思想</li></a>
+                                        <a href="${base}/zz/index.jhtml" target="_blank"><li class="others">组织</li></a>
+                                        <a href="${base}/zf/index.jhtml" target="_blank"><li class="others">作风</li></a>
+                                        <a href="${base}/ffcl/index.jhtml" target="_blank"><li class="others">反腐倡廉</li></a>
+                                        <a href="${base}/zdjs/index.jhtml" target="_blank"><li class="others">制度建设</li></a>
+                                        </ul>
+                                        <div class="tab2 tabs">
+                                             <ul class="ld">
+                                                  [@cms_content_list typeId='1' count='6' titLen='15' channelId='593' orderBy='4' channelOption='1' dateFormat='MM-dd']
+				   									[#list tag_list as a]
+				                               		   <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+				                                 	[/#list]
+				   								  [/@cms_content_list]
+                                             </ul>
+                                        </div>
+                                        <div class="tab2 tabs" style="display:none">
+                                             <ul class="ld">
+                                                  [@cms_content_list typeId='1' count='6' titLen='15' channelId='594' orderBy='4' channelOption='1' dateFormat='MM-dd']
+				   									[#list tag_list as a]
+				                                  	  <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+				                                 	[/#list]
+				   								  [/@cms_content_list]
+                                             </ul>
+                                        </div>
+                                        <div class="tab2 tabs" style="display:none">
+                                             <ul class="ld">
+                                                  [@cms_content_list typeId='1' count='6' titLen='15' channelId='595' orderBy='4' channelOption='1' dateFormat='MM-dd']
+				   									[#list tag_list as a]
+				                                  		<li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+				                                 	[/#list]
+				   								  [/@cms_content_list]
+                                             </ul>
+                                        </div>
+                                        <div class="tab2 tabs" style="display:none">
+                                             <ul class="ld">
+                                                 [@cms_content_list typeId='1' count='6' titLen='15' channelId='596' orderBy='4' channelOption='1' dateFormat='MM-dd']
+				   									[#list tag_list as a]
+				                                 	 	<li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+				                                 	[/#list]
+			   								     [/@cms_content_list]
+                                             </ul>
+                                        </div>
+                                        <div class="tab2 tabs" style="display:none">
+                                             <ul class="ld">
+                                                  [@cms_content_list typeId='1' count='6' titLen='15' channelId='597' orderBy='4' channelOption='1' dateFormat='MM-dd']
+				   									[#list tag_list as a]
+				                               		   	<li><a href="${a.url}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+				                                 	[/#list]
+				   								  [/@cms_content_list]
+                                             </ul>
+                                        </div>
+                              </div>
+                         </div>
+                         <!--从严治党头部-->
+                         
+                         <!--从严治党底部-->
+                         <div class="time2_to">
+                             <div class="quer">
+                                  <div class="quer_top"><span>学习型党组织建设</span><a target="_blank" href="${base}/xxx/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                  <div class="quer_tu">
+                                       <div class="tu_tit">
+                                       		[@cms_content_list recommend='1' typeId='1' count='1' titLen='22' description='50' channelId='603' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   							[#list tag_list as a]
+                                            	 <span>[@text_cut s=a.title len=titLen append='...'/]</span>
+                                           		 <a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.description len=description append='...'/]</a>
+                                       		[/#list]
+			   								[/@cms_content_list]
+                                       </div>
+                                       <ul>
+                                       		[@cms_content_list count='5' titLen='23' channelId='603' recommend='2' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   							[#list tag_list as a]
+                                           		<li><a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                            [/#list]
+			   								[/@cms_content_list]
+                                       </ul>
+                                  </div>
+                             </div>
+
+                             <div class="quer">
+                                  <div class="quer_top"><span>服务型党组织建设</span><a target="_blank" href="${base}/fwx/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                  <div class="quer_tu">
+                                       <div class="tu_tit">
+                                       		[@cms_content_list recommend="1" typeId='1' count='1' titLen='22' description='50' channelId='604' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   							[#list tag_list as a]
+                                         	    <span>[@text_cut s=a.title len=titLen append='...'/]</span>
+                                                <a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.description len=description append='...'/]</a>
+                                            [/#list]
+			   								[/@cms_content_list]
+                                       </div>
+                                       <ul>
+                                           [@cms_content_list recommend="2"  count='5' titLen='23'  channelId='604' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   						   [#list tag_list as a]
+				   						        <li><a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                           [/#list]
+			   							   [/@cms_content_list]
+                                       </ul>
+                                  </div>
+                             </div>
+
+                             <div class="quer" style="margin-right:0px;">
+                                  <div class="quer_top"><span>创新型党组织建设</span><a target="_blank" href="${base}/cxx/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                  <div class="quer_tu">
+                                       <div class="tu_tit">
+                                       		[@cms_content_list recommend="1" typeId='1' count='1' titLen='22' description='50' channelId='606' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   							[#list tag_list as a]
+	                                            <span>[@text_cut s=a.title len=titLen append='...'/]</span>
+	                                            <a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.description len=description append='...'/]</a>
+                                      		[/#list]
+			   								[/@cms_content_list]
+                                       </div>
+                                       <ul>
+                                           [@cms_content_list recommend="2" count='5' titLen='23' channelId='606' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   						   [#list tag_list as a]
+                                          	 <li><a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                       	   [/#list]
+			   							   [/@cms_content_list]	
+                                       </ul>
+                                  </div>
+                             </div>
+                         </div>
+                         
+                         <div class="boes">
+                              <ul>
+                         			<li style="float: left;"><a href=""><img src="${base}/r/cms/www/risen/images/cyzd1.png" alt=""></a></li>
+                         			<li style="float: left;margin-left: 20px;"><a href=""><img src="${base}/r/cms/www/risen/images/cyzd2.png" alt=""></a></li>
+                         			<li style="float: left;margin-left: 20px;"><a href=""><img src="${base}/r/cms/www/risen/images/cyzd3.png" alt=""></a></li>
+                         			<li style="float: left;margin-left: 20px;"><a href=""><img src="${base}/r/cms/www/risen/images/cyzd4.png" alt=""></a></li>
+                         			<li style="float: left;margin-left: 20px;"><a href=""><img src="${base}/r/cms/www/risen/images/cyzd5.png" alt=""></a></li>
+                         		</ul>
+                         </div>
+                         <!--从严治党底部-->
+					 </div>
+				</div>
+				<!--党务管理-->
+				<div class="time3">
+					 <div class="time3_en">
+                          <!--党务管理左侧-->
+					      <div class="tonzi">
+					           <div class="tonzi_top">
+					                 <div class="tonz">
+                                          <div class="tonz_top"><span>通知公告</span><a target="_blank" href="${base}/tzgg/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                          <div class="tonz_tu">
+                                               <ul>
+                                                   [@cms_content_list typeId='1' count='9' titLen='20' channelId='609' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+					   									[#list tag_list as a]
+					                                  		<li><a href="${a.url}" target="_blank" title="${a.title!}"><span>【系统】</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+					                                 	[/#list]
+				   								   [/@cms_content_list]
+                                               </ul>
+                                          </div>
+                                     </div>
+                                     
+                               <div class="danj">
+                               <ul class="menu4">
+                                   <li class="tabs">党建文件<a target="_blank" href="${base}/djwj/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></li>                                                          <li class="others">党建会议<a target="_blank" href="${base}/djhy/index.jhtml" style="display:none"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></li>
+                               </ul>
+                                <div class="tab4 tabs">
+                                             <ul class="ld">
+                                                   [@cms_content_list typeId='1' count='9' titLen='19' channelId='612' orderBy='4' channelOption='1' dateFormat='MM-dd']
+					   									[#list tag_list as a]
+					                                	  	<li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+					                                 	[/#list]
+				   								   [/@cms_content_list]
+                                             </ul>
+                                        </div>
+                                        <div class="tab4 tabs" style="display:none">
+                                             <ul class="ld">
+                                             	[@cms_content_list typeId='1' count='9' titLen='19' channelId='615' orderBy='4' channelOption='1' dateFormat='MM-dd']
+				   									[#list tag_list as a]
+                                                 		<li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+													[/#list]
+				   								[/@cms_content_list]
+                                             </ul>
+                                        </div>
+                                 </div>
+                              
+					           </div>
+					           
+					           <div class="tonzi_bot">
+					                <div class="danj1">
+                                   <ul class="menu5">
+                                       <li class="tabs">党务培训<a target="_blank" href="${base}/dwpx/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></li>                                                          <li class="others">地税大讲堂<a target="_blank" href="${base}/dsdjt/index.jhtml" style="display:none"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></li>
+                                       <li class="others">大事记<a href="" style="display:none"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></li>
+                                   </ul>
+                                    <div class="tab5 tabs">
+                                             <ul class="ld">
+                                             	[@cms_content_list typeId='1' count='9' titLen='19' channelId='617' orderBy='4' channelOption='1' dateFormat='MM-dd']
+				   									[#list tag_list as a]
+                                                		 <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                                 	[/#list]
+				   								[/@cms_content_list]
+                                             </ul>
+                                    </div>
+                                    <div class="tab5 tabs" style="display:none">
+                                             <ul class="ld">
+                                             	  [@cms_content_list typeId='1' count='9' titLen='19' channelId='618' orderBy='4' channelOption='1' dateFormat='MM-dd']
+				   									[#list tag_list as a]
+                                                		 <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                                 	[/#list]
+				   								 [/@cms_content_list]
+                                             </ul>
+                                    </div>
+                                    <div class="tab5 tabs" style="display:none">
+                                             <ul class="ld">
+                                             	  [@cms_content_list typeId='1' count='9' titLen='19' channelId='619' orderBy='4' channelOption='1' dateFormat='MM-dd']
+				   									[#list tag_list as a]
+                                                		<li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                                 	[/#list]
+				   								[/@cms_content_list]
+                                             </ul>
+                                    </div>
+                                  </div>
+                                  <!--我的办公-->
+                                  <div class="wdbg">
+                                       <ul>
+                                            <li class="wd1"><a target="_blank" href="http://140.16.16.16/col/col22713/index.html">我的办公室</a><span>my office</span></li>
+                                            <li class="wd2"><a target="_blank" href="http://140.16.16.16/col/col22710/index.html">数据综合应用平台</a><span>platform</span></li>
+                                            <li class="wd3"><a target="_blank" href="http://140.16.16.16/col/col22711/index.html">公文处理系统</a><span>Document</span></li>
+                                            <li class="wd4"><a target="_blank" href="http://140.16.16.16/col/col22705/index.html">12366系统</a><span>system</span></li>
+                                            <li class="wd5"><a target="_blank" href="http://140.12.28.104/szzsk/sword?tid=SearchBLH_search">税收法规支撑平台</a><span>regulations</span></li>
+                                            <li class="wd6"><a target="_blank" href="http://140.16.16.16/col/col26927/index.html">税收真伪查询</a><span>authenticity</span></li>
+                                            <li class="wd7"><a target="_blank" href="http://140.16.16.16/col/col25758/index.html">绩效管理信息系统</a><span>Performance</span></li>
+                                            <li class="wd8"><a target="_blank" href="http://130.9.1.168/">国家税务总局</a><span>SAT</span></li>
+                                       </ul>
+                                  </div>
+                                  
+					           </div>
+					      </div>
+					      <!--党务管理左侧-->
+					      <!--党务管理右侧-->      
+					      <div class="danyo">
+                               <div class="zuzi">
+					                <div class="zuze1"><a target="_blank" href="${base}/getdyjbqk.jspx?deptId=${(channel.depart.id)!}">组织人员信息分析</a><span>PERSONNEL</span></div>
+					                <div class="zuze2"><a target="_blank" href="${base}/vote_index.jspx?departId=${(channel.depart.id)!''}">在线调查</a><span>SURVEY</span></div>
+					                <div class="zuze3"><a target="_blank" href="${base}/admin/index.do">目标管理</a><span>OBJECTIVES</span></div>
+					                <div class="zuze4"><a href="###">规范党支部建设</a><span>STANDARD</span></div>
+					                <div class="zuze5"><a target="_blank" href="${base}/admin/index.do">党建绩效分析</a><span>ANALYSIS</span></div>
+					                <div class="zuze6"><a target="_blank" href="${base}/ballot/list.jspx?departId=${(channel.depart.id)!}">在线投票</a><span>VOTING</span></div>
+					                <div class="zuze7"><a target="_blank" href="${base}/${site.accessPath!}/dwgk/xjdx/index.jhtml">党务公开</a></div>
+					           </div>
+					           <div class="zu_img">
+					                <a href="${base}/appealmail/add.jspx?partId=${channel.depart.id!''}" target="_blank" style="margin-left:170px;"><img src="${base}/r/cms/www/risen/images/49.png" alt=""></a>
+					                <a href="${base}/appealmailreplay/replay.jspx" target="_blank" ><img src="${base}/r/cms/www/risen/images/50.png" alt=""></a>
+					           </div>
+					           <!-- 这是列表 -->
+					           <div class="dwlis">
+					                <div class="dw_tit"><span>规范化党支部</span><a href="javascript:;">×</a></div>
+					                <div class="dw_lis">
+					                     <ul id="gfhdzb_list">
+					                     </ul>
+					                </div>
+					           </div>
+					           <!-- 这是列表 -->
+					      </div>
+					      <!--党务管理右侧-->
+					 </div>
+				</div>
+				<!--党务管理-->
+				
+				<!--党建风采-->
+				<div class="time4">
+					 <div class="time4_en">
+					      <div class="xiale">
+                               <!--党务左侧第一列-->  
+                                <div class="xione">
+                                    <div class="xiaj"  style="margin-right:20px;">
+                                      <div class="xiaj_top"><span>先进典型</span><a target="_blank" href="${base}/xjdx/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                      <div class="xiaj_tu">
+                                           <div class="tu_tit">
+		                                       [@cms_content_list typeId='2' count='1' titLen='25' channelId='621' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+		      								        [#list tag_list as a]
+		                                             <li><a href="${a.url}" target="_blank"><img src="${a.typeImg!}"style="width:350px;height:132px;" /></a></li>
+                                              			  <div></div>
+                                               		 <span>[@text_cut s=a.title len=titLen append='...'/]</span>
+                                               [/#list]
+	      								       [/@cms_content_list] 			 
+                                           </div>
+                                           <ul>
+                                           	  [@cms_content_list typeId='1' count='3' titLen='25' channelId='621' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   									[#list tag_list as a]
+				   										<li><a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+				                                 	[/#list]
+				   							  [/@cms_content_list]
+                                           </ul>
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="xiaj">
+                                      <div class="xiaj_top"><span>税徽闪耀党旗红</span><a target="_blank" href="${base}/dhsydqh/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                      <div class="xiaj_tu">
+                                           <div class="tu_tit">
+                                           	   [@cms_content_list typeId='2' count='1' titLen='25' channelId='622' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   									[#list tag_list as a]		
+                                               			 <a href="${a.url}" target="_blank"><img src="${a.typeImg!}" style="width:350px;height:132px;"></a>
+                                               			 <div></div>
+                                                <span>[@text_cut s=a.title len=titLen append='...'/]</span>
+                                           	      [/#list]
+				   							   [/@cms_content_list]		
+                                           </div>
+                                           <ul>
+                                           	  [@cms_content_list typeId='1' count='3' titLen='25' channelId='622' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   									[#list tag_list as a]
+				                                  		<li><a href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+				                                 	[/#list]
+				   							  [/@cms_content_list]	
+                                           </ul>
+                                      </div>
+                                    </div>
+                                </div>
+                                <!--党务左侧第一列-->
+                                    
+                                <!--党务左侧第二列-->
+                                <div class="xitwo">
+                                     <div class="chuax" style="margin-right:20px;">
+                                      <div class="chuax_top"><span>创先争优</span><a target="_blank" href="${base}/cxzy/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                      <div class="chuax_tu">
+                                           <ul>
+                                             [@cms_content_list typeId='1' count='4' titLen='21' channelId='3513' orderBy='4' channelOption='1' dateFormat='MM-dd']
+				   									[#list tag_list as a]
+                                                		<li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                                 	[/#list]
+		   									 [/@cms_content_list]
+                                           </ul>
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="chuax">
+                                      <div class="chuax_top"><span>光辉足迹</span><a target="_blank" href="${base}/ghzj/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                      <div class="chuax_tu">
+                                           <ul>
+                                             [@cms_content_list typeId='1' count='4' titLen='21' channelId='3534' orderBy='4' channelOption='1' dateFormat='MM-dd']
+				   									[#list tag_list as a]
+                                                		<li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                                 	[/#list]
+		   									 [/@cms_content_list]
+                                           </ul>
+                                      </div>
+                                    </div>
+                                </div>
+                                <!--党务左侧第二列-->
+                                
+                                <!--党务左侧第三列-->
+                                <div class="xithe">
+                                    <div class="chuax_top"><span>优秀党员</span><a target="_blank" href="${base}/yxdy/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                    <div id="pic_list_1" class="scroll_horizontal">
+                                    <div class="box">
+                                        <ul class="list">
+                                        	 [@cms_content_list count='4' channelId='3535' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   									[#list tag_list as a]
+                                           				 <li><a href="${a.url!}" target="_blank" title="${a.title!}"><img src="${a.typeImg!}" style="width:120px;height:147px;"></a><span>${a.title!}</span></li>
+                                       				[/#list]
+		   									 [/@cms_content_list]
+                                        </ul>
+                                    </div>
+                                    <div class="plus"></div>
+                                    <div class="minus"></div>
+                                </div>
+                                </div>
+                               <!--党务左侧第三列-->
+					      </div>
+					      
+					      <div class="xiari">
+                               <div class="xrinr">
+					                <div class="chuax_top"><span>地税先锋</span><a target="_blank" href="${base}/dsxf/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>    
+					                <div class="disui">
+					                	 [@cms_content_list  count='1' channelId='3774' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+		      								   [#list tag_list as a]
+					                   			  <a href="${a.url}" target="_blank" title="${a.title!}"><img src="${a.typeImg!}" style="width:412px;height:168px;"></a>
+					                		   [/#list]
+				   						 [/@cms_content_list]
+					                </div>
+					                <div class="dany">
+					                     <span class="huez">佩戴党员徽章</span>
+					                     <div class="dayu">
+					                     	  [@cms_content_list typeId='2' count='1' titLen='20' channelId='3734' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+		      								  	 [#list tag_list as a]	
+						                          	<a class="dydj" href="${a.url!}" target="_blank" title="${a.title!}"><img src="${a.typeImg!}" style="width:158px;height:82px;"></a>
+								                          <div class="daje">
+								                               <a href="${a.url!}" target="_blank">${a.description!}</a>
+								                          </div>
+					                          	 [/#list]
+				   							  [/@cms_content_list]		
+					                     </div>
+					                </div>
+					                <div class="dany">
+					                     <span class="huez">佩戴党员徽章</span>
+					                     <div class="dayu">
+					                     	  [@cms_content_list typeId='2' count='1' channelId='3754' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+			      								   [#list tag_list as a]		
+						                         	  <a class="dydj" href="${a.url}" target="_blank" title="${a.title!}"><img src="${a.typeImg!}" style="width:158px;height:82px;"></a>
+							                          <div class="daje">
+						                          		   <a href="${a.url}" target="_blank">${a.description!}</a>
+							                          </div>
+						                            [/#list]
+				   							  [/@cms_content_list]		
+					                     </div>
+					                </div>
+					                
+					                <div class="rongy">
+					                     <a href=""><img src="${base}/r/cms/www/risen/images/62.png" alt=""></a>
+					                     <a href=""><img src="${base}/r/cms/www/risen/images/63.png" alt=""></a>
+					                </div>
+					           </div>
+					      </div>
+					 </div>
+				</div>
+				<!--党建风采-->
+				
+				<!--网上党校-->
+				<div class="time5">
+					 <div class="time5_en">
+                          <!--网上党校第一列-->
+					      <div class="zhdiy">
+					           <div class="zhone">
+					               <div class="zhone_top"><span>习近平系列重要讲话</span><a target="_blank" href="${base}/xjpxlzyjh/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>  
+					               <div class="zhen">
+					               		[@cms_content_list Recommend='1' count='1' titLen='10' channelId='3536' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   							[#list tag_list as a]
+				                   			 <a href="${a.url!}" target="_blank" title="${a.title!}"><img src="${a.typeImg!}"></a>
+							                    <div class="zhtit">
+							                         <a href="${a.url!}" target="_blank" title="${a.title!}" class="zht">[@text_cut s=a.title len=titLen append='...'/]</a>
+							                         <a href="${a.url!}" target="_blank" title="${a.title!}">${a.description!}</a>
+							                    </div>
+					                    	[/#list]
+	   									[/@cms_content_list]
+					               </div>
+					               <ul>
+					               	 [@cms_content_list Recommend='2' count='4' titLen='23' channelId='3536' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+					   					   [#list tag_list as a]
+						                  	      <li><a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+	                                       [/#list]
+			   						 [/@cms_content_list]
+					               </ul>
+					           </div>
+					           <div class="zhtwo">
+                                   <ul class="menu6">
+                                       <li class="tabs me1">党史博览</li>                                                         
+                                       <li class="others me2">党务指南</li>
+                                       <li class="others me3">党规党章</li>
+                                   </ul>
+                                    <div class="tab6 tabs">
+                                          <ul class="ld">
+                                          	[@cms_content_list typeId='1' count='8' titLen='15' channelId='3554' orderBy='4' channelOption='1' dateFormat='MM-dd']
+	   											[#list tag_list as a]  
+	                                             	 <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+	                                           	[/#list]
+			   								[/@cms_content_list]
+                                          </ul>
+                                    </div>
+                                    <div class="tab6 tabs" style="display:none">
+                                          <ul class="ld">
+                                            [@cms_content_list typeId='1' count='8' titLen='15' channelId='636' orderBy='4' channelOption='1' dateFormat='MM-dd']
+	   											[#list tag_list as a]  
+                                               		  <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                           		[/#list]
+		   						  			 [/@cms_content_list]
+                                          </ul>
+                                    </div>
+                                    <div class="tab6 tabs" style="display:none">
+                                           <ul class="ld">
+                                             [@cms_content_list typeId='1' count='8' titLen='15' channelId='635' orderBy='4' channelOption='1' dateFormat='MM-dd']
+			   									   [#list tag_list as a]  
+	                                              		 <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+	                                               [/#list]
+			   							     [/@cms_content_list]
+                                           </ul>
+                                    </div>
+                                  </div>
+                                <div class="zhtwo">
+                                   <ul class="menu7">
+                                       <li class="tabs me1">党的知识</li>                                                         
+                                       <li class="others me2">党课荟萃</li>
+                                       <li class="others me3">党报要论</li>
+                                   </ul>
+                                    <div class="tab7 tabs">
+                                             <ul class="ld">
+                                               [@cms_content_list typeId='1' count='8' titLen='15' channelId='641' orderBy='4' channelOption='1' dateFormat='MM-dd']
+		   									      [#list tag_list as a]  
+                                              	 	 <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                                  [/#list]
+			   							       [/@cms_content_list]
+                                             </ul>
+                                    </div>
+                                    <div class="tab7 tabs" style="display:none">
+                                             <ul class="ld">
+                                               [@cms_content_list typeId='1' count='8' titLen='15' channelId='3574' orderBy='4' channelOption='1' dateFormat='MM-dd']
+		   									      [#list tag_list as a]  
+                                              	 	 <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                                  [/#list]
+			   							       [/@cms_content_list]
+                                             </ul>
+                                    </div>
+                                    <div class="tab7 tabs" style="display:none">
+                                             <ul class="ld">
+                                               [@cms_content_list typeId='1' count='8' titLen='15' channelId='638' orderBy='4' channelOption='1' dateFormat='MM-dd']
+			   									      [#list tag_list as a]  
+	                                              	 	 <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+	                                                  [/#list]
+			   							       [/@cms_content_list] 
+                                             </ul>
+                                    </div>
+                                  </div>
+					      </div>
+					      <!--网上党校第一列-->
+					      <!--网上党校第二列-->
+					      <div class="gxue">
+					           <div class="gue">
+                                      <div class="gue_top"><span>国学经典</span><a target="_blank" href="${base}/gxjd/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                      <div class="gue_tu">
+                                           <ul>
+                                           	[@cms_content_list typeId='1' count='8' titLen='20' channelId='645' orderBy='4' channelOption='1' dateFormat='MM-dd']
+			   									[#list tag_list as a]
+                                           			 <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                            	[/#list]
+				   						    [/@cms_content_list]
+                                           </ul>
+                                      </div>
+                                </div>
+                                <div class="gue">
+                                      <div class="gue_top"><span>他山之石</span><a target="_blank" href="${base}/tszs/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                      <div class="gue_tu">
+                                           <ul>
+                                             [@cms_content_list typeId='1' count='8' titLen='20' channelId='3594' orderBy='4' channelOption='1' dateFormat='MM-dd']
+		   									      [#list tag_list as a]  
+                                              	 	 <li><a href="${a.url!}" target="_blank" title="${a.title!}"><span>${a.date?string(dateFormat)}</span>[@text_cut s=a.title len=titLen append='...'/]</a></li>
+                                                  [/#list]
+		   							         [/@cms_content_list] 
+                                           </ul>
+                                      </div>
+                                </div>
+                                <div class="gue">
+                                      <div class="gue_top"><span>好书推荐</span><a target="_blank" href="${base}/hstj/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                                      <div class="hasu">
+                                           <div id="pic_list_2" class="haosh">
+                                                <div class="box">
+                                                    <ul class="list">
+			                                            <li><img src="${base}/r/cms/www/risen/images/book.png" alt=""><div><span>《谈治国理政1》</span><a>求实的目标定位是突出理论特色,既体现权威性、理论性、指导性 , 又体现时效性、开放性、...</a></div></li>
+                                                        <li><img src="${base}/r/cms/www/risen/images/book.png" alt=""><div><span>《谈治国理政2》</span><a>求实的目标定位是突出理论特色,既体现权威性、理论性、指导性 , 又体现时效性、开放性、...</a></div></li>
+                                                        <li><img src="${base}/r/cms/www/risen/images/book.png" alt=""><div><span>《谈治国理政3》</span><a>求实的目标定位是突出理论特色,既体现权威性、理论性、指导性 , 又体现时效性、开放性、...</a></div></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                      </div>
+                                </div>    
+					      </div>
+					      <!--网上党校第二列-->
+					      
+					      <!--网上党校第三列-->
+					      <div class="wsaim">
+					           <a href=""><img src="${base}/r/cms/www/risen/images/x1.png" alt="" style="width: 346px;height:86px; margin-top: 1px;margin-bottom: 1px; "></a>
+					           <a href=""><img src="${base}/r/cms/www/risen/images/x2.png" alt="" style="width: 346px;height:86px; margin-top: 1px;margin-bottom: 1px; "></a>
+					           <a href=""><img src="${base}/r/cms/www/risen/images/x3.png" alt="" style="width: 346px;height:86px; margin-top: 1px;margin-bottom: 1px; "></a>
+					      </div>
+					 </div>
+				</div>
+				<!--网上党校-->
+				<!--文化生活-->
+				<div class="time6">
+					 <div class="time6_en">
+                          <div class="teie_top">
+					      <div class="shuha" style="margin-right: 20px;">
+					           <div class="shuha_top"><span>书画作品</span><a target="_blank" href="${base}/shzp/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div> 
+					             [@cms_content_list typeId='2' count='2' titLen='20' description='46' channelId='647' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   					[#list tag_list as a]	
+					           			<div class="shuai"><a href="${a.url}" target="_blank"><img src="${a.typeImg!}" style="width:105px;height:105px;" title="${a.title!}" alt="${a.title!}"><span>[@text_cut s=a.description len=description append='...'/]</span></a></div>
+								 	[/#list]
+						   		 [/@cms_content_list]
+					      </div>
+					      
+					      
+					      <div class="zhone">
+					               <div class="zhone_top"><span>文学园地</span><a target="_blank" href="${base}/wxyd/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>  
+					               <div class="zhen">
+					               		[@cms_content_list Recommend='1' count='1' titLen='10' channelId='648' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+				   							[#list tag_list as a]
+				                   			 <a href="${a.url!}" target="_blank" title="${a.title!}"><img src="${a.typeImg!}"></a>
+							                    <div class="zhtit">
+							                         <a href="${a.url!}" target="_blank" title="${a.title!}" class="zht">[@text_cut s=a.title len=titLen append='...'/]</a>
+							                         <a href="${a.url!}" target="_blank" title="${a.title!}">${a.description!}</a>
+							                    </div>
+					                    	[/#list]
+	   									[/@cms_content_list]
+					               </div>
+					               <ul>
+					               	 [@cms_content_list Recommend='2' count='4' titLen='23' channelId='648' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+					   					   [#list tag_list as a]
+						                  	      <li><a href="${a.url!}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+	                                       [/#list]
+			   						 [/@cms_content_list]
+					               </ul>
+					       </div>
+					      <!-- <div class="shuha">
+					           <div class="shuha_top"><span>文学园地</span><a target="_blank" href="${base}/wxyd/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>  
+					           [@cms_content_list typeId='2' count='1' channelId='648' orderBy='4' dateFormat='yyyy-MM-dd']
+				   					[#list tag_list as a]
+							           <div class="wenxue">
+							                <a href="${a.url}" target="_blank"><img src="${a.typeImg!}" style="width:130px;height:100px;" align="left" alt="${a.title!}">${a.description!}</a>
+							           </div>
+					           		[/#list]
+						   	   [/@cms_content_list]
+					      </div> -->
+					      
+					      <div class="shuha">
+					           <div class="shuha_top"><span>健康养生</span><a target="_blank" href="${base}/jkys/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>  
+					           <div class="jiak">
+					                <ul>
+					                   [@cms_content_list typeId='1' count='8' titLen='20' channelId='649' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+		   									[#list tag_list as a]
+		                                 	 	<li><a href="${a.url}" target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...'/]</a></li>
+		                                 	[/#list]
+		   							   [/@cms_content_list]
+					                </ul>
+					           </div>
+					      </div>
+					      </div>
+					      
+					      <div class="teie_bot">
+                               <div class="shey">
+					                <div class="shey_top"><span>摄影作品</span><a target="_blank" href="${base}/syzp/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>  
+                                    <div id="banner">
+                                          <div id="banner_bg"></div>
+                                          <!--标题背景-->
+                                          <div id="banner_info"></div>
+                                          <!--标题-->
+                                          [@cms_content_list  channelId='651' orderBy='4' dateFormat='yyyy-MM-dd']
+		      								   [#list tag_list as a]	
+		                                          <ul>
+		                                            <li class="on"></li>
+		                                            <li>${a.title!}</li>
+		                                          </ul>
+		                                          <div id="banner_list"> 
+		                                           	 <a href="${a.url!}" target="_blank"><img src="${a.typeImg!}" style="width:324px;height:210px;" title="${a.title!}" alt="${a.title!}"/></a> 
+		                                         </div>
+                                          	   [/#list]
+	   							    	  [/@cms_content_list]
+                                   </div>
+					           </div>
+					           
+					           <div class="gemi">
+					                <div class="gemi_top"><span>革命圣地</span><a target="_blank" href="${base}/gmsd/index.jhtml"><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>    <div class="gemi_im">
+					                     [@cms_content_list  channelId='3714' orderBy='4' dateFormat='yyyy-MM-dd']
+		      								   [#list tag_list as a]
+					                          	 <a href="${a.url!}" target="_blank" title="${a.title!}"><img src="${a.typeImg!}" style="width:770px;height:310px;" alt="${a.title!}"></a>
+					               			   [/#list]
+		   							     [/@cms_content_list]
+					                </div>
+					           </div>
+					           
+					      </div>
+					 </div>
+				</div>
+				<!--文化生活-->
+			</div>
+			</div>
+		</div>
+</div>
+</div>
+[#include "../include/footer.html"/]
+<script>
+$("#pic_list_1").cxScroll();
+$("#pic_list_2").cxScroll({direction:"left",step:1});
+</script>
+<script type="text/javascript"> 
+$(document).ready(function(){
+	$('.carousel').carousel({
+		directionNav:true,
+		speed:500, 
+		carouselWidth:421,
+		carouselHeight:373,
+		frontWidth:160,
+		frontHeight:218,
+		hAlign:'center',
+		vAlign:'center',
+		autoplay:false,
+		autoplayInterval:5000,
+		shadow:false,
+		reflection:false,
+		reflectionHeight:0.2,
+		reflectionOpacity:0.5,
+		description:false,
+		descriptionContainer:'.carousel_description'
+	});
+});
+</script>
+<script>
+$(".menu li").click(function(){
+	$(".menu li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu li").index(this);
+	$(".tab").fadeOut(0);
+    $(".menu li a").fadeOut(0);
+	$(".tab").eq(index).fadeIn(0);
+    $(".menu li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu1 li").click(function(){
+	$(".menu1 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu1 li").index(this);
+	$(".tab1").fadeOut(0);
+    $(".menu1 li a").fadeOut(0);
+	$(".tab1").eq(index).fadeIn(0);
+    $(".menu1 li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu2 li").mousemove(function(){
+	$(".menu2 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu2 li").index(this);
+	$(".tab2").hide();
+    $(".menu2 li a").hide();
+	$(".tab2").eq(index).show();
+    $(".menu2 li a").eq(index).show();
+})
+</script>
+<script>
+$(".menu3 li").click(function(){
+	$(".menu3 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu3 li").index(this);
+	$(".tab3").hide();
+    $(".menu3 li a").hide();
+	$(".tab3").eq(index).show();
+    $(".menu3 li a").eq(index).show();
+})
+</script>
+<script>
+$(".menu4 li").click(function(){
+	$(".menu4 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu4 li").index(this);
+	$(".tab4").fadeOut(0);
+    $(".menu4 li a").fadeOut(0);
+	$(".tab4").eq(index).fadeIn(0);
+    $(".menu4 li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu5 li").click(function(){
+	$(".menu5 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu5 li").index(this);
+	$(".tab5").fadeOut(0);
+    $(".menu5 li a").fadeOut(0);
+	$(".tab5").eq(index).fadeIn(0);
+    $(".menu5 li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu6 li").click(function(){
+	$(".menu6 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu6 li").index(this);
+	$(".tab6").fadeOut();
+    $(".menu6 li a").fadeOut();
+	$(".tab6").eq(index).fadeIn();
+    $(".menu6 li a").eq(index).fadeIn();
+})
+</script>
+<script>
+$(".menu7 li").click(function(){
+	$(".menu7 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu7 li").index(this);
+	$(".tab7").fadeOut();
+    $(".menu7 li a").fadeOut();
+	$(".tab7").eq(index).fadeIn();
+    $(".menu7 li a").eq(index).fadeIn();
+})
+</script>
+<script type="text/javascript"> 
+function ScrollImgLeft(){ 
+    var speed=30; 
+    var scroll_begin = document.getElementById("scroll_begin"); 
+    var scroll_end = document.getElementById("scroll_end"); 
+    var scroll_div = document.getElementById("scroll_div"); 
+    scroll_end.innerHTML=scroll_begin.innerHTML; 
+    function Marquee(){ 
+        if(scroll_end.offsetWidth-scroll_div.scrollLeft<=0) 
+            scroll_div.scrollLeft-=scroll_begin.offsetWidth; 
+        else 
+            scroll_div.scrollLeft++; 
+    } 
+    var MyMar=setInterval(Marquee,speed); 
+    scroll_div.onmouseover=function() {clearInterval(MyMar);} 
+    scroll_div.onmouseout=function() {MyMar=setInterval(Marquee,speed);} 
+}
+ScrollImgLeft();
+</script>
+<script type="text/javascript">
+		jQuery(".txtMarquee-left").slide({mainCell:".bd ul",autoPlay:true,effect:"leftMarquee",vis:5,interTime:10});
+</script>
+<script type="text/javascript">jQuery(".slideTxtBox").slide({effect:"top",trigger:"click"});</script>
+<script type="text/javascript">
+var t = n =0, count;
+$(document).ready(function(){ 
+count=$("#banner_list a").length;
+$("#banner_list a:not(:first-child)").hide();
+$("#banner_info").html($("#banner_list a:first-child").find("img").attr('alt'));
+$("#banner_info").click(function(){window.open($("#banner_list a:first-child").attr('href'), "_blank")});
+$("#banner li").click(function() {
+var i = $(this).text() -1;//获取Li元素内的值，即1，2，3，4
+n = i;
+if (i >= count) return;
+$("#banner_info").html($("#banner_list a").eq(i).find("img").attr('alt'));
+$("#banner_info").unbind().click(function(){window.open($("#banner_list a").eq(i).attr('href'), "_blank")})
+$("#banner_list a").filter(":visible").fadeOut(500).parent().children().eq(i).fadeIn(1000);
+document.getElementById("banner").style.background="";
+$(this).toggleClass("on");
+$(this).siblings().removeAttr("class");
+});
+t = setInterval("showAuto()", 4000);
+$("#banner").hover(function(){clearInterval(t)}, function(){t = setInterval("showAuto()", 4000);});
+})
+function showAuto()
+{
+n = n >=(count -1) ?0 : ++n;
+$("#banner li").eq(n).trigger('click');
+}
+</script>
+
+</body>
+</html>

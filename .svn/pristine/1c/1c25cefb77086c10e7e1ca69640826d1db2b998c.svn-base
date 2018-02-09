@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenScore" table="RISEN_SCORE">
+	 <id name="id" type="integer" column="ID">
+			<generator class="sequence"><param name="sequence">RISEN_SCOREID</param></generator>
+		</id>
+		<property name="risenScDescribtion" column="RISENSC_DESCRIBTION" type="string"/>
+		<property name="risenScScore" column="RISENSC_Score" type="string" not-null="true"/>
+		<property name="departId" column="DEPART_ID" type="integer"/>
+		<many-to-one name="user" class="com.jeecms.core.entity.CmsUser" column="risensc_partyUserId" cascade="save-update"></many-to-one>
+		<many-to-one name="risenScQuota" class="com.risen.entity.RisenQuota" column="Quota_ID" unique="true" cascade="delete"/>
+	</class>
+</hibernate-mapping> 

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenQuota" table="RISEN_QUOTA">
+	 <id name="id" type="integer" column="ID">
+			<generator class="sequence"><param name="sequence">RISEN_QUOTAID</param></generator>
+		</id>
+		<property name="risenqtName" column="RISENQT_NAME" type="string" not-null="true" length="255"/>
+		<property name="risenqtType" column="RISENQT_TYPE" type="integer" not-null="true"/>
+		<property name="risenqtAddType" column="RISENQT_ADDTYPE" type="integer"/>
+		<property name="risenqtScore" column="RISENQT_Score" type="integer" not-null="true"/>
+		<property name="quotaDepartId" column="RISENQT_DepartId" type="integer" not-null="true"/>
+		<property name="quotaDepartName" column="RISENQT_DEPARTNAME" type="string" not-null="true" length="255"/>
+		<set name="risenScores" inverse="true" cascade="all">
+			<cache usage="read-write"/>
+			<key column="id"/>
+			<one-to-many class="RisenScore"/>
+		</set>
+	</class>
+</hibernate-mapping> 

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="com.risen.entity">
+    <class name="RisenPartyChange" table="risen_partychange">
+        <id name="risenpcId" type="integer" column="risenpc_id">
+			<generator class="sequence"><param name="sequence">CHANGETYPEID_SQ</param></generator>
+		</id>
+        <property name="risenpcUsername" column="RISENPC_UNAME" type="string" length="100" not-null="false"/>
+        <property name="risenpcEmail" column="RISENPC_Email" type="string" length="100" />
+        <property name="risenpcSex" column="RISENPC_SEX" type="string" length="2" not-null="false"/>
+        <property name="risenpcIdnumber" column="RISENPC_IDNUMBER" type="string" length="18" />
+        <property name="risenpcBirthday" column="RISENPC_BIRTHDAY" type="java.util.Date" />
+        <property name="risenpcNational" column="RISENPC_NATIONAL" type="string" length="200" />
+        <property name="risenpcPolicaltype" column="RISENPC_POLITICALTYPE" type="string" length="100" />
+        <property name="risenpcNative" column="RISENPC_NATIVE" type="string" length="200" />
+        <property name="risenpcEducation" column="RISENPC_EDUCATION" type="string" length="100" />
+        <property name="risenpcPhone" column="RISENPC_PHONE" type="string" length="20" />
+        <property name="risenpcMobile" column="RISENPC_MOBILE" type="string" length="20" />
+        <property name="risenpcOtherphone" column="RISENPC_OTHERPHONE" type="string" length="100" />
+        <property name="risenpcAddress" column="RISENPC_ADDRESS" type="string" length="500" />
+        <property name="risenpcExpands1" column="RISENPC_EXPANDS1" type="string" length="2000" />
+        <property name="risenpcExpands2" column="RISENPC_EXPANDS2" type="string" length="2000" />
+        <property name="risenpcExpands3" column="RISENPC_EXPANDS3" type="string" length="2000" />
+        <property name="risenpcExpands4" column="RISENPC_EXPANDS4" type="string" length="2000" />
+        <property name="risenpcExpands5" column="RISENPC_EXPANDS5" type="string" length="2000" />
+        <property name="risenpcExpands6" column="RISENPC_EXPANDS6" type="string" length="2000" />
+        <property name="risenpcExpands7" column="RISENPC_EXPANDS7" type="string" length="2000" />
+        <property name="risenpcExpands8" column="RISENPC_EXPANDS8" type="string" length="2000" />
+        <property name="risenpcExpands9" column="RISENPC_EXPANDS9" type="string" length="2000" />
+        <property name="risenpcChangetype" column="RISENPC_CHANGETYPE" type="string" length="1" not-null="false" />
+        <property name="risenpcDeptname" column="RISENPC_DEPTNAME" type="string" length="100" />
+        <many-to-one name="risenpcCuserid" class="com.jeecms.core.entity.CmsUser" column="RISENPC_CUSERID" cascade="save-update"></many-to-one>
+		<many-to-one name="risenpcDeptid" class="com.jeecms.core.entity.CmsDepartment" column="RISENPC_DEPTID" cascade="save-update"></many-to-one>
+    	<property name="risenpcOriginaldeptid" column="RISENPC_ORIGINALDEPTID" type="integer"/>
+    	<property name="risenpcCdate" column="RISENPC_CDATE" type="java.util.Date" not-null="false"/>
+    </class>            
+</hibernate-mapping>

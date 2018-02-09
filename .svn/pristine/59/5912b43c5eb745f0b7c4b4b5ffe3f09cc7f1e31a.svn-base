@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<style>
+	.btn{width:40px;height:30px;border:1px solid black;}
+	.btn_alink{
+		width:80px;
+		height:25px;
+		border:1px solid black;
+		border-radius:5px;
+		text-align:center;
+		line-height:25px;
+		display:block;
+		float:left;
+		background-color:#429fe2;
+	}
+</style>
+<script type="text/javascript" charset="utf-8" src="../thirdparty/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="../thirdparty/ueditor/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="../thirdparty/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function() {
+ 	//initUeditors();
+	$("#jvForm").validate();
+	
+});
+</script>
+
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 目标管理 - 留言管理 - 查看</div>
+</div>
+<div class="box-positon">
+	<form class="ropt">
+		<a href="../appealMail/v_list.do" class="btn_alink">返回</a>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="../appealMail/v_list.do">
+<tr>
+	<td>回复内容</td>
+	<td>
+		<textarea name="replay" cols="100" rows="5">${Replay.replay!''}</textarea>
+	</td>
+</tr>
+<tr>
+	<input type="hidden" name="appealId" value="${appealId!}"/>
+	<td colspan="2"><input type="submit" class="btn" value="关闭"></td>
+</tr>
+</@p.form>
+</div>
+<div id="departDialog" title="组织" style="display:none;">
+    <ul id="departTree" class="filetree"></ul>
+</div>
+</body>
+</html>

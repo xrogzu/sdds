@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+	$("#jvForm").submit(function(){
+		var score = $("[name='risentgdQualityscore']").val();
+		var maxscore = ${MaxScore!};
+		var testNumber = /^\d{1,2}$/;
+		if(!testNumber.test(score)){
+			alert("质量分数为数字！");
+			return false;
+		}
+		if(score>maxscore){
+			alert("质量分的最大分是:"+maxscore);
+			return false;
+		}
+	});
+});
+function jump(){
+	var pid = $("[name='pid']").val();
+	var url = "../risenTargetDetail/showNext.do?parentId="+pid;
+	window.location.href=url;
+}
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 目标管理 > 我的目标</div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_update.do?parentId=${ParentId!}">
+<@p.text label="内容" colspan="1" width="50" value="${RisenTargetDetail.risentgdContent!''}" name="risentgdContent" readonly="readonly" maxlength="100"/><@p.tr/>
+<@p.text label="完成时间" colspan="1" width="50" value="${RisenTargetDetail.risentgdFinishdate!''}" name="risentgdFinishdate" readonly="readonly" maxlength="100"/><@p.tr/>
+<@p.text label="上传文件" id="risentgdFile" value="${RisenTargetDetail.risentgdFile!''}" readonly="readonly" name="risentgdFile" /><@p.tr/>
+<@p.text label="质量得分" colspan="1" width="50" value="${RisenTargetDetail.risentgdQualityscore!''}" name="risentgdQualityscore" maxlength="100"/><@p.tr/>
+<!-- <tr><td class="pn-flabel pn-flabel-h">上传文件</td><td>
+<div>
+	<input type="text" id="docPath" name="risentgdFile" value="${RisenTargetDetail.risentgdFile!''}" style="width:265px"/>
+</div>
+<div style="margin-top: 5px;">
+	<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+	<input type="text" id="docFileText"/>  
+	<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+	<input onchange="$('#docFileText').val(this.value)" size="19" type="file" name="docFile" id="docFile" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+	<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc();" class="upload-button"/>
+	</span>
+</div>
+</td></tr> --><@p.tr/>
+<@p.td><@p.hidden name="id" value="${RisenTargetDetail.id!}"/>
+<@p.hidden name="risentgdPid" value="${RisenTargetDetail.risentgdPid!}"/>
+<@p.hidden name="risentgdParentId" value="${RisenTargetDetail.risentgdParentId!}"/>
+<@p.hidden name="risentgdOrgid"  value="${RisenTargetDetail.risentgdOrgid!}"/>
+<@p.hidden name="risentgdOrgname" value="${RisenTargetDetail.risentgdOrgname!}"/>
+<@p.submit code="global.submit"/>
+</@p.td>
+</@p.form>
+</div>
+</body>
+</html>

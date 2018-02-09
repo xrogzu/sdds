@@ -1,0 +1,116 @@
+package com.jeecms.cms.entity.assist;
+
+import java.util.Date;
+import java.util.Set;
+
+import com.jeecms.core.entity.CmsDepartment;
+import com.jeecms.core.entity.CmsUser;
+
+public class CmsBallot {
+	private Integer ballotId;
+	private Integer siteId;
+	private String title;
+	private String description;
+	private Date startTime;
+	private Date endTime;
+	private Date cdate;
+	private String multiSelect;
+	private Boolean isRestrictmember;
+	private Boolean isRestrictip;
+	private Boolean isRestrictcookie;
+	private Boolean isDisabled;
+	private CmsUser user;
+	private CmsDepartment depart;;
+	private Set<CmsBallotItem> item;
+	public Integer getBallotId() {
+		return ballotId;
+	}
+	public CmsDepartment getDepart() {
+		return depart;
+	}
+	public void setDepart(CmsDepartment depart) {
+		this.depart = depart;
+	}
+	public Set<CmsBallotItem> getItem() {
+		return item;
+	}
+	public void setItem(Set<CmsBallotItem> item) {
+		this.item = item;
+	}
+	public void setBallotId(Integer ballotId) {
+		this.ballotId = ballotId;
+	}
+	public Integer getSiteId() {
+		return siteId;
+	}
+	public void setSiteId(Integer siteId) {
+		this.siteId = siteId;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public Date getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+	public Date getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+	public Date getCdate() {
+		return cdate;
+	}
+	public void setCdate(Date cdate) {
+		this.cdate = cdate;
+	}
+	public String getMultiSelect() {
+		return multiSelect;
+	}
+	public void setMultiSelect(String multiSelect) {
+		this.multiSelect = multiSelect;
+	}
+	public Boolean getIsRestrictmember() {
+		return isRestrictmember;
+	}
+	public void setIsRestrictmember(Boolean isRestrictmember) {
+		this.isRestrictmember = isRestrictmember;
+	}
+	public Boolean getIsRestrictip() {
+		return isRestrictip;
+	}
+	public void setIsRestrictip(Boolean isRestrictip) {
+		this.isRestrictip = isRestrictip;
+	}
+	public Boolean getIsRestrictcookie() {
+		return isRestrictcookie;
+	}
+	public void setIsRestrictcookie(Boolean isRestrictcookie) {
+		this.isRestrictcookie = isRestrictcookie;
+	}
+	public Boolean getIsDisabled() {
+		return isDisabled;
+	}
+	public void setIsDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
+	}
+	public CmsUser getUser() {
+		return user;
+	}
+	public void setUser(CmsUser user) {
+		this.user = user;
+	}
+	
+}

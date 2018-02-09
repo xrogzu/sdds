@@ -1,0 +1,103 @@
+package com.risen.dao.impl;
+
+import java.util.List;
+
+import org.springframework.util.StringUtils;
+
+import com.jeecms.common.hibernate4.Finder;
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.IRisenTargetDao;
+import com.risen.entity.RisenTarget;
+import com.risen.entity.RisenVote;
+
+public class RisenTargetDao  extends HibernateBaseDao<RisenTarget, Integer> implements IRisenTargetDao{
+
+	@Override
+	protected Class<RisenTarget> getEntityClass() {
+		// TODO Auto-generated method stub
+		return RisenTarget.class;
+	}
+
+	@Override
+	public void batchUpdBaseScore(Integer[] orgId, Integer score) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public int confirmShare(Integer orgId, Integer score) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void delete(Integer id) {
+		// TODO Auto-generated method stub
+		RisenTarget entity=super.get(id);
+		if(entity!=null){
+			getSession().delete(entity);
+		}
+	}
+
+	@Override
+	public RisenTarget findById(Integer id) {
+		// TODO Auto-generated method stub
+		RisenTarget entity=get(id);
+		return entity;
+	}
+
+	@Override
+	public Pagination findByOrgId(int pageNo, int pageSize,Integer id) {
+		// TODO Auto-generated method stub
+		//Finder finder = Finder.create(" from risen_target target where 1=1 ");
+		String sql = " from risen_target target where 1=1";
+		Finder finder = Finder.create(sql);
+		if(StringUtils.hasText(String.valueOf(id))){
+			finder.append(" and target.risentg_corgid ="+id);
+		}
+		return find(finder, pageNo, pageSize);
+	}
+
+	@Override
+	public Pagination getPage(int pageNo, int pageSize,String startTime,String endTime) {
+		// TODO Auto-generated method stub
+		String sql = " from RisenTarget target where 1=1";
+		Finder finder = Finder.create(sql);
+		if(StringUtils.hasText(startTime)){
+			finder.append(" and target.risentg_sdate is not null");
+			finder.append(" and target.risentg_sdate >=to_date('" +startTime+"','yyyy-MM-dd')");
+		}
+		if(StringUtils.hasText(endTime)){
+			finder.append(" and target.risentg_edate is not null");
+			finder.append(" and target.risentg_edate <=to_date('" +endTime+"','yyyy-MM-dd')");
+		}
+		return find(finder, pageNo, pageSize);
+	}
+
+	@Override
+	public List<RisenTarget> getReportData(Integer orgId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RisenTarget save(RisenTarget voteQues) {
+		// TODO Auto-generated method stub
+		getSession().save(voteQues);
+		return voteQues;
+	}
+
+	@Override
+	public RisenTarget update(RisenTarget bean) {
+		// TODO Auto-generated method stub
+		getSession().update(bean);
+		return bean;
+	}
+
+	@Override
+	public void updateBaseScore(Integer orgId, Integer score) {
+		// TODO Auto-generated method stub
+		
+	}
+}

@@ -1,0 +1,687 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script typ3e="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+});
+</script>
+<style>
+	.bold{font-size:16px;}
+</style>
+</head>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 发展党员流程 - 修改</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';" class="return-button"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<#include "wenku_upload.html"/>
+<@p.form id="jvForm" action="o_update.do">
+<!-- ######edit html fields start###### -->	
+	<#assign mark = (risenDevparty.risendpExpands1)?number/>
+	 <table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0"> 
+   <tbody>
+    <tr> 
+     <!-- ######edit html fields start###### --> 
+     <td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>姓 名:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpName!}" name="risendpName" class="required" /></td>
+     <td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>身份证号码:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpIdnumber!}" name="risendpIdnumber" /></td>
+    </tr> 
+    <tr>
+     <td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>性 别:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><label><input name="risendpSex" type="radio" value="1"  <#if risenDevparty.risendpSex?? && risenDevparty.risendpSex =="1">checked="checked"<#else> </#if>  />男</label> <label><input type="radio" name="risendpSex"  value="0" <#if risenDevparty.risendpSex?? && risenDevparty.risendpSex =="0">checked="checked"<#else> </#if>   />女</label></td> 
+     <td width="20%" class="pn-flabel pn-flabel-h">出生日期:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpBirth!}" name="risendpBirth" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>
+    </tr> 
+    <tr>
+     <td width="20%" class="pn-flabel pn-flabel-h">所在党支部:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpBranch!}" name="risendpBranch" /></td>
+     <td width="20%" class="pn-flabel pn-flabel-h">民 族:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpNation!}" name="risendpNation" /></td>
+    </tr> 
+    <tr>
+     <td width="20%" class="pn-flabel pn-flabel-h">籍 贯:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpNative!}" name="risendpNative" /></td>
+     <td width="20%" class="pn-flabel pn-flabel-h">婚姻状况 :</td>
+     <td colspan="1" width="30%" class="pn-fcontent">
+     <label >
+     	<input name="risendpMarriage" type="radio" value="1" <#if risenDevparty.risendpMarriage?? && risenDevparty.risendpMarriage =="1">checked="checked"<#else> </#if>  />未婚
+     </label> 
+     <label >
+     	<input name="risendpMarriage" type="radio" value="2" <#if risenDevparty.risendpMarriage?? && risenDevparty.risendpMarriage =="2">checked="checked"<#else> </#if>  />已婚
+     </label>
+     </td> 
+    </tr> 
+     <!-- 第1步 --> 
+    <tr class="flow_1" style="display:none;">
+     <td width="20%" class="pn-flabel pn-flabel-h">提交申请入党时间（申请书落款时间）:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpSdate!}" name="risendpSdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>
+     <td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     <td colspan="1" width="30%" class="pn-fcontent">
+     <div>
+		<input type="text" id="docPath1" name="risendpInfo" value="${risenDevparty.risendpInfo!''}" style="width:265px"/>
+	</div>
+	<div style="margin-top: 5px;">
+		<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+		<input type="text" id="docFileText1"/>  
+		<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+		<input onchange="$('#docFileText1').val(this.value)" size="19" type="file" name="docFile" id="docFile1" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+		<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(1);" class="upload-button"/>
+		</span>
+	</div>
+	</td>
+    </tr> 
+     <!-- 第2步 --> 
+    <tr class="flow_2" style="display:none;">
+     <td width="20%" class="pn-flabel pn-flabel-h">谈话时间:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text"  value="${risenDevparty.risendpTalktime!}" name="risendpTalktime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>
+     <td width="20%" class="pn-flabel pn-flabel-h">谈话人:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text"   value="${risenDevparty.risendpTalkperson!}" name="risendpTalkperson" /></td>
+    </tr >
+    <tr class="flow_2" style="display:none;">
+     <td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     <td colspan="1" width="30%" class="pn-fcontent">
+     	<div>
+			<input type="text" id="docPath2" name="risendpTalkinfo" value="${risenDevparty.risendpTalkinfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText2"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText2').val(this.value)" size="19" type="file" name="docFile" id="docFile2" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(2);" class="upload-button"/>
+			</span>
+		</div>
+     </td> 
+    </tr> 
+    <!-- 第3步 --> 
+    <tr class="flow_3" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">确定积极分子时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text"  value="${risenDevparty.risendpActivetime!}" name="risendpActivetime"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent">
+     	<div>
+			<input type="text" id="docPath3" name="risendpActiveinfo" value="${risenDevparty.risendpActiveinfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText3"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText3').val(this.value)" size="19" type="file" name="docFile" id="docFile3" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(3);" class="upload-button"/>
+			</span>
+		</div>
+     	</td>
+    </tr>
+    <!-- 第4步 --> 
+    <tr class="flow_4" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">申请入党时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text"  value="${risenDevparty.risendpRegtime!}" name="risendpRegtime"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">公示时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text"  value="${risenDevparty.risendpNoticetime!}" name="risendpNoticetime"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"     /></td>
+    	
+    </tr>
+    <tr class="flow_4" style="display:none;"> 	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会召开时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text"  value="${risenDevparty.risendpConvoketime!}" name="risendpConvoketime"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">备案时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text"  value="${risenDevparty.risendpOnfiletime!}" name="risendpOnfiletime"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"   /></td>
+    </tr>	
+   	<tr class="flow_4" style="display:none;"> 
+    	<td width="20%" class="pn-flabel pn-flabel-h">培养联系人:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text"  value="${risenDevparty.risendpLinkman!}" name="risendpLinkman"  /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">党员推荐情况:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><textarea type="text"  name="risendpRecinfo"   >${risenDevparty.risendpRecinfo!}</textarea></td>
+     </tr> 
+    <tr class="flow_4" style="display:none;"> 
+    	<td width="20%" class="pn-flabel pn-flabel-h">群团组织推优情况:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><textarea type="text" name="risendpOrgrecinfo"  >${risenDevparty.risendpOrgrecinfo!}</textarea></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent">
+     	<div>
+			<input type="text" id="docPath4" name="risendpOnfileinfo" value="${risenDevparty.risendpOnfileinfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText4"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText4').val(this.value)" size="19" type="file" name="docFile" id="docFile4" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(4);" class="upload-button"/>
+			</span>
+		</div>
+     	</td>
+    </tr>
+    <!-- 第5步 --> 
+    <tr class="flow_5" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">所在党支部:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text"  value="${risenDevparty.risendpFiveBranch!}" name="risendpFiveBranch"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">姓		名:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text"  value="${risenDevparty.risendpFiveName!}" name="risendpFiveName"  /></td>
+   </tr>
+   <tr class="flow_5" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">性		别:</td>
+     	 <td colspan="1" width="30%" class="pn-fcontent"><label><input type="radio"  value="1"  name="risendpFiveSex" <#if risenDevparty.risendpFiveSex?? && risenDevparty.risendpFiveSex =="1">checked="checked"<#else> </#if>  />男</label> 
+     	 <label><input type="radio" value="0" name="risendpFiveSex" <#if risenDevparty.risendpFiveSex?? && risenDevparty.risendpFiveSex =="0">checked="checked"<#else> </#if> />女</label></td> 
+    	<td width="20%" class="pn-flabel pn-flabel-h">出生日期:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFiveBirth"  value="${risenDevparty.risendpFiveBirth!}"   onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>
+   </tr > 
+   <tr class="flow_5" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">学历:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFiveEducation"  value="${risenDevparty.risendpFiveEducation!}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">民族:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFiveNation"  value="${risenDevparty.risendpFiveNation!}"  /></td>
+  </tr> 
+  <tr class="flow_5" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFiveInpartytime"  value="${risenDevparty.risendpFiveInpartytime!}"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">与入党积极分子关系:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFiveRelation"   value="${risenDevparty.risendpFiveRelation!}"  /></td>
+   </tr>
+  <tr class="flow_6" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpSixTime"  value="${risenDevparty.risendpSixTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察人:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpSixPerson"  value="${risenDevparty.risendpSixPerson!}" /></td>
+   </tr>
+  <tr class="flow_6" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察情况:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><textarea type="text" name="risendpSixInfo"   >${risenDevparty.risendpSixInfo!}</textarea></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent">
+     	<div>
+			<input type="text" id="docPath6" name="risendpSixRelatedinfo" value="${risenDevparty.risendpSixRelatedinfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText6"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText6').val(this.value)" size="19" type="file" name="docFile" id="docFile6" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(6);" class="upload-button"/>
+			</span>
+		</div>
+     	</td>
+   </tr>
+  <tr class="flow_7" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会召开时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpSevenTime"  value="${risenDevparty.risendpSevenTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会参加人员:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpSevenName"  value="${risenDevparty.risendpSevenName!}"  /></td>
+   </tr>
+  <tr class="flow_7" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会意见:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><textarea type="text" name="risendpSevenOpinion"   >${risenDevparty.risendpSevenOpinion!}</textarea></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent">
+     	<div>
+			<input type="text" id="docPath7" name="risendpSevenInfo" value="${risenDevparty.risendpSevenInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText7"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText7').val(this.value)" size="19" type="file" name="docFile" id="docFile7" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(7);" class="upload-button"/>
+			</span>
+		</div>
+    	</td>
+   </tr>
+   <tr class="flow_8" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">申请入党时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpEightTime"   value="${risenDevparty.risendpEightTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会讨论通过时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpEightDiscusstime"  value="${risenDevparty.risendpEightDiscusstime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>
+   </tr>
+  <tr class="flow_8" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">列为积极分子时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpEightActivetime"   value="${risenDevparty.risendpEightActivetime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>
+   </tr>
+  <tr class="flow_9" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">所在党支部:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpNineBranch"   value="${risenDevparty.risendpNineBranch!}" /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">姓		名:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpNineName"   value="${risenDevparty.risendpNineName!}" /></td>
+   </tr>
+   <tr class="flow_9" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">性		别:</td>
+     	 <td colspan="1" width="30%" class="pn-fcontent"><label><input type="radio" value="1"  name="risendpNineSex" <#if risenDevparty.risendpNineSex?? && risenDevparty.risendpNineSex =="1">checked="checked"<#else> </#if> />男</label> <label><input type="radio" value="0" name="risendpNineSex" <#if risenDevparty.risendpNineSex?? && risenDevparty.risendpNineSex =="0">checked="checked"<#else> </#if> />女</label></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">出生日期:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpNineBirth"  value="${risenDevparty.risendpNineBirth!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>
+   </tr>
+   <tr class="flow_9" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">学		历:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpNineXl"   value="${risenDevparty.risendpNineXl!}"  /></td>    	
+	<td width="20%" class="pn-flabel pn-flabel-h">民		族:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpNineNation"   value="${risenDevparty.risendpNineNation!}" /></td>
+   </tr>
+   <tr class="flow_9" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpNineInpartytime"  value="${risenDevparty.risendpNineInpartytime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>    	
+		<td width="20%" class="pn-flabel pn-flabel-h">与发展对象关系:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpNineRelation"   value="${risenDevparty.risendpNineRelation!}" /></td>
+   </tr>
+   <tr class="flow_10" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath10" name="risendpTenInfo" value="${risenDevparty.risendpTenInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText10"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText10').val(this.value)" size="19" type="file" name="docFile" id="docFile10" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(10);" class="upload-button"/>
+			</span>
+		</div>
+		</td>
+   </tr>
+   <tr class="flow_11" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">培训时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpElevenTime"  value="${risenDevparty.risendpElevenTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">培训分数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpElevenScore"  value="${risenDevparty.risendpElevenScore!}"  /></td>    	
+   </tr>
+   <tr class="flow_11" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">培训地点:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpElevenAddress"  value="${risenDevparty.risendpElevenAddress!}"  /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">培训内容:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><textarea type="text" name="risendpElevenContent"   > ${risenDevparty.risendpElevenContent!}</textarea></td>    	
+   </tr>
+   <tr class="flow_11" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath11" name="risendpElevenInfo" value="${risenDevparty.risendpElevenInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText11"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText11').val(this.value)" size="19" type="file" name="docFile" id="docFile11" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(11);" class="upload-button"/>
+			</span>
+		</div>
+		</td>
+   </tr>
+   <tr class="flow_12" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会召开时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwelveTime"   value="${risenDevparty.risendpTwelveTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会参加人员:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwelvePer"   value="${risenDevparty.risendpTwelvePer!}" /></td>    	
+   </tr>
+   <tr class="flow_12" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会意见:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwelveOpinion"   value="${risenDevparty.risendpTwelveOpinion!}" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath12" name="risendpTwelveInfo" value="${risenDevparty.risendpTwelveInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText12"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText12').val(this.value)" size="19" type="file" name="docFile" id="docFile12" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(12);" class="upload-button"/>
+			</span>
+		</div>
+		</td> 
+   </tr>
+   <tr class="flow_13" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会召开时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpThirteenTime"  value="${risenDevparty.risendpThirteenTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会参加人员:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpThirteenPer"  value="${risenDevparty.risendpThirteenPer!}"  /></td>    	
+   </tr>
+   <tr class="flow_13" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">预审意见:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><textarea type="text" name="risendpThirteenOpinion"  >${risenDevparty.risendpThirteenOpinion!}</textarea></td>    	
+   </tr>
+   <tr class="flow_14" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党志愿书编号:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFourteenNo"   value="${risenDevparty.risendpFourteenNo!}" /></td>    	
+   </tr>
+   <tr class="flow_15" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">召开支部大会时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFifteenTime"  value="${risenDevparty.risendpFifteenTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">党员总数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFifteenCount"   value="${risenDevparty.risendpFifteenCount!}" /></td>    	
+   </tr>
+   <tr class="flow_15" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">应到党员数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFifteenShould"   value="${risenDevparty.risendpFifteenShould!}" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">实到党员总数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFifteenActual"  value="${risenDevparty.risendpFifteenActual!}"  /></td>    	
+   </tr>
+   <tr class="flow_15" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">实到有表决权党员数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFifteenPoweractual"  value="${risenDevparty.risendpFifteenPoweractual!}" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">同意票数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFifteenConsent"  value="${risenDevparty.risendpFifteenConsent!}"  /></td>    	
+   </tr>
+   <tr class="flow_15" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">不同意票数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFifteenDisagree"  value="${risenDevparty.risendpFifteenDisagree!}"  /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">弃权票数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpFifteenDefault"  value="${risenDevparty.risendpFifteenDefault!}"  /></td>    	
+   </tr>
+   <tr class="flow_15" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath15" name="risendpFifteenInfo" value="${risenDevparty.risendpFifteenInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText15"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText15').val(this.value)" size="19" type="file" name="docFile" id="docFile15" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(15);" class="upload-button"/>
+			</span>
+		</div>
+		</td> 
+   </tr>
+   <tr class="flow_16" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">谈话时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpSixteenTime"  value="${risenDevparty.risendpSixteenTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">谈话人:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpSixteenPerson"  value="${risenDevparty.risendpSixteenPerson!}" /></td>    	
+   </tr>
+   <tr class="flow_16" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">谈话情况:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><textarea type="text" name="risendpSixteenStatus"   >${risenDevparty.risendpSixteenStatus!}</textarea></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath16" name="risendpSixteenInfo" value="${risenDevparty.risendpSixteenInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText16"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText16').val(this.value)" size="19" type="file" name="docFile" id="docFile16" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(16);" class="upload-button"/>
+			</span>
+		</div>
+		</td>
+   </tr>
+   <tr class="flow_17" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批人:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpSeventeenPerson"  value="${risenDevparty.risendpSeventeenPerson!}" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpSeventeenTime"  value="${risenDevparty.risendpSeventeenTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>    	
+   </tr>
+   <tr class="flow_17" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批意见:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><textarea type="text" name="risendpSeventeenOpinion"  > ${risenDevparty.risendpSeventeenOpinion!}</textarea></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath17" name="risendpSeventeenInfo" value="${risenDevparty.risendpSeventeenInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText17"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText17').val(this.value)" size="19" type="file" name="docFile" id="docFile17" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(17);" class="upload-button"/>
+			</span>
+		</div>
+		</td>
+   </tr>
+   <tr class="flow_18" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">工作单位:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpEighteenDept"  value="${risenDevparty.risendpEighteenDept!}" ></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">职		务:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpEighteenPost"  value="${risenDevparty.risendpEighteenPost!}" /></td>    	
+   </tr>
+   <tr class="flow_18" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党志愿书编号:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpEighteenNo"  value="${risenDevparty.risendpEighteenNo!}" ></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党申请时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpEighteenTime"  value="${risenDevparty.risendpEighteenTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  /></td>    	
+   </tr>
+   <tr class="flow_18" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">列为积极分子时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpEighteenActivetime"  value="${risenDevparty.risendpEighteenActivetime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  ></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">预备党员接收时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpEighteenInpartytime"  value="${risenDevparty.risendpEighteenInpartytime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>    	
+   </tr>
+   <tr class="flow_18" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">确定为发展对象时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpEighteenObjtime"  value="${risenDevparty.risendpEighteenObjtime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"  ></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">是否两地公示:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpEighteenNoticestatus"  value="${risenDevparty.risendpEighteenNoticestatus!}" /></td>    	
+   </tr>
+   <tr class="flow_18" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath18" name="risendpEighteenInfo" value="${risenDevparty.risendpEighteenInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText18"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText18').val(this.value)" size="19" type="file" name="docFile" id="docFile18" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(18);" class="upload-button"/>
+			</span>
+		</div>
+		</td>
+   </tr>
+   <tr class="flow_19" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">编入党小组时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpNineteenTime"  value="${risenDevparty.risendpNineteenTime!}"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">编入党小组名称:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpNineteenName"  value="${risenDevparty.risendpNineteenName!}"  ></td>    	
+   </tr>
+   <tr class="flow_19" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath19" name="risendpNineteenInfo" value="${risenDevparty.risendpNineteenInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText19"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText19').val(this.value)" size="19" type="file" name="docFile" id="docFile19" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(19);" class="upload-button"/>
+			</span>
+		</div>
+		</td>
+   </tr>
+   <tr class="flow_20" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党宣誓时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentyTime"   value="${risenDevparty.risendpTwentyTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" ></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath20" name="risendpTwentyInfo" value="${risenDevparty.risendpTwentyInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText20"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText20').val(this.value)" size="19" type="file" name="docFile" id="docFile20" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(20);" class="upload-button"/>
+			</span>
+		</div>
+		</td>
+   </tr>
+   <tr class="flow_21" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentyoneTime"  value="${risenDevparty.risendpTwentyoneTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" ></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察人:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentyonePer"  value="${risenDevparty.risendpTwentyonePer!}" ></td>    	
+   </tr>
+   <tr class="flow_21" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察情况:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><textarea type="text" name="risendpTwentyoneStatus" >${risenDevparty.risendpTwentyoneStatus!}</textarea></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath21" name="risendpTwentyoneInfo" value="${risenDevparty.risendpTwentyoneInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText21"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText21').val(this.value)" size="19" type="file" name="docFile" id="docFile21" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(21);" class="upload-button"/>
+			</span>
+		</div>
+		</td> 
+   </tr>
+   <tr class="flow_22" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">转正申请时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentytwoTime"   value="${risenDevparty.risendpTwentytwoTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath22" name="risendpTwentytwoInfo" value="${risenDevparty.risendpTwentytwoInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText22"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText22').val(this.value)" size="19" type="file" name="docFile" id="docFile22" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(22);" class="upload-button"/>
+			</span>
+		</div>
+		</td>
+   </tr>
+   <tr class="flow_23" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">召开支部党员大会时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentythreeTime"  value="${risenDevparty.risendpTwentythreeTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">党员总数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentythreeCount"  value="${risenDevparty.risendpTwentythreeCount!}" ></td>    	
+   </tr>
+   <tr class="flow_23" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">应到正式党员:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentythreeShoult"  value="${risenDevparty.risendpTwentythreeShoult!}" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">实到有表决权的党员总数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentythreePower"  value="${risenDevparty.risendpTwentythreePower!}"  ></td>    	
+   </tr>
+   <tr class="flow_23" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">实到正式党员:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentythreeActual"   value="${risenDevparty.risendpTwentythreeActual!}" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">同意票数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentythreeConsent"   value="${risenDevparty.risendpTwentythreeConsent!}" ></td>    	
+   </tr>
+   <tr class="flow_23" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">不同意票数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentythreeDisagree"  value="${risenDevparty.risendpTwentythreeDisagree!}" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">弃权票数:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentythreeDefault"   value="${risenDevparty.risendpTwentythreeDefault!}" ></td>    	
+   </tr>
+   <tr class="flow_23" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">党组织书记名称:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentythreeName"  value="${risenDevparty.risendpTwentythreeName!}"/></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">书记签字时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentythreeMarktime"  value="${risenDevparty.risendpTwentythreeMarktime!}"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"></td>    	
+   </tr>
+   <tr class="flow_23" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">延长预备期:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentythreeLengthen"  value="${risenDevparty.risendpTwentythreeLengthen!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath23" name="risendpTwentythreeInfo" value="${risenDevparty.risendpTwentythreeInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText23"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText23').val(this.value)" size="19" type="file" name="docFile" id="docFile23" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(23);" class="upload-button"/>
+			</span>
+		</div>
+		</td>
+   </tr>
+   <tr class="flow_24" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">党龄开始计算时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentyfourTime"  value="${risenDevparty.risendpTwentyfourTime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">转正支部大会时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentyfourBranch"  value="${risenDevparty.risendpTwentyfourBranch!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" ></td>    	
+   </tr>
+   <tr class="flow_24" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批人:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentyfourPerson"   value="${risenDevparty.risendpTwentyfourPerson!}"/></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批时间:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpTwentyfourMarktime"  value="${risenDevparty.risendpTwentyfourMarktime!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" ></td>    	
+   </tr>
+   <tr class="flow_24" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批意见:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><textarea type="text" name="risendpTwentyfourOpinion"  >${risenDevparty.risendpTwentyfourOpinion!}</textarea></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath24" name="risendpTwentyfourInfo" value="${risenDevparty.risendpTwentyfourInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText24"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText24').val(this.value)" size="19" type="file" name="docFile" id="docFile24" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(24);" class="upload-button"/>
+		</span>
+		</div>
+		</td>
+   </tr>
+   <tr class="flow_25" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">材料存放地点:</td>
+		<td colspan="1" width="30%" class="pn-fcontent"><textarea type="text" name="risendpTwentyfiveAddress"  >${risenDevparty.risendpTwentyfiveAddress!}</textarea></td>    	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+		<td colspan="1" width="30%" class="pn-fcontent">
+		<div>
+			<input type="text" id="docPath25" name="risendpTwentyfiveInfo" value="${risenDevparty.risendpTwentyfiveInfo!''}" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText25"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText25').val(this.value)" size="19" type="file" name="docFile" id="docFile25" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc(25);" class="upload-button"/>
+			</span>
+		</div>
+		</td>
+   </tr>
+    <tr>
+     <input type="hidden" name="id" value="${risenDevparty.id!}" /> 
+     <input type="hidden" name="risendpExpands1" value="${risenDevparty.risendpExpands1!}" />
+     <span id="addInput"></span> 
+     <td colspan="2" class="pn-fbutton"> <input type="bottom" id="saveBottom" value="保存" class="submit" /> &nbsp; <input type="submit" value="下一步" class="submit" />&nbsp;  <input type="reset" value="重置" class="reset" /></td> 
+    </tr>
+	 </tbody>
+  </table>
+</@p.form>
+</div>
+<script>
+	$(function(){
+		$("#saveBottom").click(function(){
+			$("#addInput").append("<input type='hidden' name='updateMark' value='save'/>");
+			$("#jvForm").submit();
+		});
+	});
+</script>
+<script>
+	$(function(){
+		var mark = "${risenDevparty.risendpExpands1}" ;
+		if(mark != "" && mark != null ){
+			mark = parseInt(mark);
+			$(".flow_"+mark).show();
+		}
+	});
+</script>
+</body>
+</html>

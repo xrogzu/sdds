@@ -1,0 +1,4 @@
+/**
+ @ Copyright 2010
+*/
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0;}body,button,input,select,textarea{font:12px/1.5 tahoma,arial,'\5b8b\4f53',sans-serif;}h1,h2,h3,h4,h5,h6{font-size:14px;}address,cite,dfn,em,var{font-style:normal;}code,kbd,pre,samp{font-family:courier new,courier,monospace;}small{font-size:12px;}ul,ol{list-style:none;}a:link,a:visited{text-decoration:none;color:#333333;}a:hover,a:active{text-decoration:none;color:#333333;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}legend{display:none;}fieldset,img{border:0;}button,input,select,textarea{font-size:100%;}

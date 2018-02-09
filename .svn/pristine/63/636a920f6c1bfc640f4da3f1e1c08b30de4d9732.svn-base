@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+
+<!-- <link href="${base}/res/common/css/jquery.flot.css" rel="stylesheet" type="text/css"/>
+[if lte IE 8]><![endif]
+<script src="${base}/res/common/js/excanvas.min.js" type="text/javascript" ></script>
+<script src="${base}/res/common/js/jquery.flot.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.time.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.categories.min.js" type="text/javascript"></script> -->
+<script src="${base}/res/echarts/echarts.js" type="text/javascript"></script>
+<link href="${base}/res/common/css/loading.css" rel="stylesheet" type="text/css"/>
+<script class="code" type="text/javascript">
+
+
+/* $(function() {
+	plotAccordingToChoices();
+	$("<div id='tooltip'></div>").css({
+		position: "absolute",
+		display: "none",
+		border: "1px solid #fdd",
+		padding: "2px",
+		"background-color": "#fee",
+		opacity: 0.80
+	}).appendTo("body");
+	$("#placeholder").bind("plothover", function (event, pos, item) {
+		if (item) {
+			var x = item.datapoint[0].toFixed(0),
+				y = item.datapoint[1].toFixed(0);
+			$("#tooltip").html(item.series.label  + " = " + y)
+			.css({top: item.pageY+5, left: item.pageX+5})
+			.fadeIn(200);
+		} else {
+			$("#tooltip").hide();
+		}
+	});
+}); */
+/* $(function(){
+	$.plot("#placeholder", data: [1,2,3] ,{
+			series: {
+				bars: {
+					show: true
+				},
+				points: {
+					show: true
+				}
+			},
+			grid: {
+				hoverable: true
+			},
+			yaxis: {
+				min: 0,tickDecimals: 0
+			},
+			pageX:"<@s.m 'cms.statistic.date'/>",
+			xaxis: {
+				ticks: [1, 2, 3, 4, 5,6,7,8,9,10,11,12],
+				min:1,
+				max:12,
+				tickDecimals: 0,
+			    tickFormatter:function (val, axis) {
+			    	  return val;
+			    }
+			}
+		});
+}); */
+var names=[];
+     var scores=[];
+$(function(){  
+		//showLoading();
+     var root = "${root!''}";
+     url = "getData.do";
+     if(root != ""){
+     	url = url + "?root="+root;
+     }
+	 /** $.ajax({  
+         type : "post",  
+          url : url,  
+          async : false,  
+          success : function(result){ 
+         
+          closeLoading();
+			for(var i=0;i<result.length;i++){
+				if(root==""){
+					var name = "";
+					if(result[i].risenitOrgname.indexOf("市局机关党委")>-1){
+						name = result[i].risenitOrgname.replace("市局机关党委","");
+					}else if(result[i].risenitOrgname.indexOf("市地方税务局")>-1){
+						name = result[i].risenitOrgname.replace("市地方税务局","");
+					}else{
+						name = result[i].risenitOrgname;
+					}
+					names[i]=name;
+					scores[i]=result[i].risenitScore;
+				}else if(root=="1"){
+					var name1 = result[i].risenitOrgname.replace("党支部","");
+					names[i]=name1;
+					scores[i]=result[i].risenitScore;
+				}else{
+					names[i]=result[i].risenitOrgname;
+					scores[i]=result[i].risenitScore;
+				}
+			}
+			
+          },
+        error:function(){
+        closeLoading();//关闭加载框
+        	$.alert("数据加载失败，请稍后重试");
+ 	 	}  
+     });**/
+         // 基于准备好的dom，初始化echarts实例
+    /**    var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+    title: {
+        x: 'center',
+        text: '党建绩效积分统计'
+       
+    },
+    tooltip: {
+        trigger: 'item'
+    },
+    toolbox: {
+        show: true,
+        feature: {
+            dataView: {show: false, readOnly: false},
+            restore: {show: false},
+            saveAsImage: {show: true}
+        }
+    },
+    calculable: true,
+    grid: {
+        borderWidth: 0,
+        y: 80,
+        y2: 60
+    },
+    grid:{bottom:150},
+    xAxis: [
+        {
+            type: 'category',
+           	data:names,
+ 
+            axisLabel:{
+              interval:0,  //类目全显
+              formatter:function(val){
+              //debugger;
+              	var s=val.substring(0,val.length/2);
+              	var s1=val.substring(val.length/2,val.length);
+			    return s+"\n"+s1;
+			    },
+              rotate:-45   //顺时针旋转45度
+            }
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value'
+        }
+    ],
+    series: [
+        {
+            name: '党建绩效积分统计',
+            type: 'bar',
+            itemStyle: {
+                normal: {
+                    color: function(params) {
+                        // build a color map as your need.
+                        var colorList = [
+                          '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+                           '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+                           '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+                        ];
+                        return colorList[params.dataIndex]
+                    },
+                    label: {
+                        show: true,
+                        position: 'top'
+                    }
+                }
+            },
+            data: scores,
+            markPoint: {
+                tooltip: {
+                    trigger: 'item'
+                },
+                 data : [
+                    {type : 'max', name: '最高积分'},
+                    {type : 'min', name: '最低积分'}
+                ]
+            }
+        }
+    ]
+};
+                    
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);    **/
+      
+    });  
+</script>
+<script type="text/javascript">
+ function showLoading()
+        {
+           $("#over").css("display","block");
+           $("#zhezhao").css("display","block");
+            $("#loding").css("display","block");
+          //  document.getElementById("loding").style.display = "block";
+            
+        }
+ function closeLoading()
+        {
+        	 $("#zhezhao").css("display","none");
+        	$("#over").css("display","none");
+        	$("#loding").css("display","none");
+           // document.getElementById("over").style.display = "none";
+            //document.getElementById("loding").style.display = "none";
+        }
+    </script>
+</head>
+<body>
+<div class="page-positon ove">
+<!-- 
+<#if "${ischildren?string('true', 'false')}" == "false">
+<div style="height: 50px; margin-top: 10px; margin-left: 20px;">
+	<a href="../partyBuild/report.do" style="width: 120px; height: 40px; background:#ddd; text-align: center; line-height: 40px; font-size: 16px; display: block; float: left;">系统</a>
+	<a href="../partyBuild/report.do?root=1" style="width: 120px; height: 40px; background: #ddd; text-align: center; line-height: 40px; font-size: 16px; display: block; float: left; margin-left: 20px;">机关</a>
+</div>
+</#if>
+ --> 
+    <!-- 加载框 -->
+</div>
+       <iframe src="${base}/admin/department/v_list_xtIndexzhibu.do?root=1" style="float:left; width:99%;height:2000px;" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
+	  <!--<div id="main"  style="float:left; width:99%;height:650px;"></div>  为ECharts准备一个具备大小（宽高）的Dom -->
+    
+    
+</div>
+</body>
+</html>

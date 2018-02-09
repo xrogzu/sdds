@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+	var html = $("#jvForm table tbody tr:eq(2) td:eq(1)").html();
+	var seeSource = "<a style='margin-left:10px;' download='上传文件' href='${base}${RisenTargetDetail.risentgdFile!}'>查看附件</a>";
+	$("#jvForm table tbody tr:eq(2) td:eq(1)").html(html+seeSource)
+	$("#jvForm").submit(function(){
+		var score = $("[name='risentgdQualityscore']").val();
+		var maxscore = ${MaxScore!};
+		var testNumber = /^\d{1,2}$/;
+		if(!testNumber.test(score)){
+			alert("质量分数为数字！");
+			return false;
+		}
+		if(score>maxscore){
+			alert("质量分的最大分是:"+maxscore);
+			return false;
+		}
+	});
+});
+function jump(){
+	var pid = $("[name='pid']").val();
+	var url = "../risenTargetDetail/showNext.do?parentId="+pid;
+	window.location.href=url;
+}
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 目标管理 > 我的目标</div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_update.do?parentId=${ParentId!}">
+<@p.text label="内　　容" colspan="1" width="50" value="${RisenTargetDetail.risentgdContent!''}" name="risentgdContent" readonly="readonly" maxlength="100"/><@p.tr/>
+<@p.text label="完成时间" colspan="1" width="50" value="${RisenTargetDetail.risentgdFinishdate?date}" name="risentgdFinishdate" readonly="readonly" maxlength="100"/><@p.tr/>
+<@p.text label="上传文件" id="risentgdFile" value="${RisenTargetDetail.risentgdFile!''}" readonly="readonly" name="risentgdFile" />
+<@p.text label="质量得分" colspan="1" width="50" value="${RisenTargetDetail.risentgdQualityscore!''}" name="risentgdQualityscore" maxlength="100"/><@p.tr/>
+<@p.tr/>
+<@p.td><@p.hidden name="id" value="${RisenTargetDetail.id!}"/>
+<@p.hidden name="risentgdPid" value="${RisenTargetDetail.risentgdPid!}"/>
+<@p.hidden name="risentgdParentId" value="${RisenTargetDetail.risentgdParentId!}"/>
+<@p.hidden name="risentgdOrgid"  value="${RisenTargetDetail.risentgdOrgid!}"/>
+<@p.hidden name="risentgdOrgname" value="${RisenTargetDetail.risentgdOrgname!}"/>
+<@p.submit code="global.submit"/>
+</@p.td>
+</@p.form>
+</div>
+</body>
+</html>

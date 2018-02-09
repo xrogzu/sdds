@@ -1,0 +1,32 @@
+<#if isRoot>
+[{
+	"text": "<a href='../changeremind/changeRemind_list.do' target='changeRemindRightFrame'>山东地税智慧党建平台</a>",
+	"classes": "folder"
+	<#if list?size gt 0>,
+	"expanded": true,
+	"children": [
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<a href='../changeremind/changeRemind_list.do?departid=${depart.id}' target='changeRemindRightFrame'>${depart.name}</a>",
+		"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+		"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+	</#if>
+}]
+<#else>
+	<#if list?size gt 0>
+	[
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<a href='../changeremind/changeRemind_list.do?departid=${depart.id}' target='changeRemindRightFrame'>${depart.name}</a>",
+		"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+		"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+	</#if>
+</#if>

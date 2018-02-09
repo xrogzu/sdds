@@ -1,0 +1,93 @@
+package com.jeecms.cms.dao.assist.impl;
+
+import java.util.List;
+
+import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
+import com.jeecms.cms.dao.assist.CmsBallotItemDao;
+import com.jeecms.cms.entity.assist.CmsBallot;
+import com.jeecms.cms.entity.assist.CmsBallotItem;
+import com.jeecms.common.hibernate4.Finder;
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.jeecms.common.page.Pagination;
+
+@Repository
+public class CmsBallotItemDaoImpl extends HibernateBaseDao<CmsBallotItem, Integer> implements CmsBallotItemDao {
+
+	@Override
+	public Pagination getPage(Integer ballotId, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		Finder f = Finder.create(" from CmsBallotItem where 1=1");
+		if(!StringUtils.isEmpty(ballotId)){
+			f.append(" and ballot_id = "+ballotId+"order by item_id asc");
+		}
+		return find(f,pageNo,pageSize);
+	}
+
+	@Override
+	public CmsBallotItem findById(Integer id) {
+		// TODO Auto-generated method stub
+		CmsBallotItem bean = get(id);
+		return bean;
+	}
+
+	@Override
+	public CmsBallotItem save(CmsBallotItem bean) {
+		// TODO Auto-generated method stub
+		getSession().save(bean);
+		return bean;
+	}
+
+	@Override
+	public CmsBallotItem update(CmsBallotItem bean) {
+		// TODO Auto-generated method stub
+		getSession().update(bean);
+		return bean;
+	}
+
+	@Override
+	public CmsBallotItem deleteById(Integer id) {
+		// TODO Auto-generated method stub
+		CmsBallotItem entity = super.get(id);
+		if (entity != null) {
+			getSession().delete(entity);
+		}
+		return entity;
+	}
+
+	@Override
+	protected Class<CmsBallotItem> getEntityClass() {
+		// TODO Auto-generated method stub
+		return CmsBallotItem.class;
+	}
+
+	@Override
+	public boolean existBallotItem(String name, Integer ballotId) {
+		// TODO Auto-generated method stub
+		Finder f = Finder.create(" from CmsBallotItem where 1=1");
+		if(!StringUtils.isEmpty(ballotId)){
+			f.append(" and ballot_id = "+ballotId);
+		}
+		if(!StringUtils.isEmpty(name)){
+			f.append(" and item = '"+name+"'");
+		}
+		Pagination pagination = find(f,1,20000);
+		List<CmsBallotItem> list = (List<CmsBallotItem>) pagination.getList();
+		if(list.size()>0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	@Override
+	public void deleteAllItem(Integer itemId) {
+		// TODO Auto-generated method stub
+		String hql = "delete from CmsBallotItem bean where bean.ballot=:ballot";
+		Query query = getSession().createQuery(hql);
+		query.setParameter("ballot", itemId);
+		query.executeUpdate();
+	}
+
+}

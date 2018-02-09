@@ -1,0 +1,93 @@
+#ji_list_new{width:1280px; margin: 0 auto; background:url(../images/wsrys_bg.png) no-repeat center top; height:715px;  }
+#ji_list{width:1280px; margin: 0 auto; background:url(../images/bgsk_list.png) no-repeat center top; height:715px;  }
+.list_ym{width:1187px; float: left; height:700px;  margin:10px; margin-left:44px;   overflow: hidden; margin-right:20px; margin-top:8px;   }
+.list_ym .ym_top{width:100%;height:40px; border-bottom:solid 1px #d8d8d8; line-height:40px; height:41px;  }
+.list_ym .ym_top span{font-size:18px; font-weight: bold; color:#bb976d; border-bottom:solid #bb976d 3px; float: left; }
+.list_ym .ym_top a{float: right; margin-top:8px; }
+.list_ym .ym_tu ul{margin-top:15px; }
+.list_ym .ym_tu li{line-height:34px;height: 36px;overflow: hidden;border-bottom:solid 1px #ccc;}
+.list_ym .ym_tu li a{font-size:14px; padding-left:10px; line-height:34px; height:234px; background:url(../images/16.png) no-repeat 0 16px; /*  width:810px; */ float: left; overflow: hidden;}
+.list_ym .ym_tu li span{float: right;}
+
+.list_ym2{width:1128px; float: left; height:700px;  margin:10px; margin-left:70px;   overflow: hidden; margin-right:20px; margin-top:8px;   }
+.list_ym2 .ym_top{width:100%;height:40px; border-bottom:solid 1px #d8d8d8; line-height:40px; height:41px;  }
+.list_ym2 .ym_top span{font-size:18px; font-weight: bold; color:#bb976d; border-bottom:solid #bb976d 3px; float: left; }
+.list_ym2 .ym_top a{float: right; margin-top:8px; }
+.list_ym2 .ym_tu ul{margin-top:15px;height:276px }
+.list_ym2 .ym_tu li{line-height:45px; height:45px; overflow: hidden; border-bottom:solid 1px #ccc;   }
+.list_ym2 .ym_tu li a{font-size:16px; padding-left:10px; line-height:42px; height:42px; background:url(../images/16.png) no-repeat 0 16px;  width:810px; float: left; overflow: hidden;}
+.list_ym2 .ym_tu li span{float: right;font-size:14px}
+
+
+.list_ym3{width:900px; float: left; height:700px;  margin:10px; margin-left:20px;   overflow: hidden; margin-right:20px; margin-top:8px;   }
+.list_ym3 .ym_top{width:100%;height:40px; border-bottom:solid 1px #d8d8d8; line-height:40px; height:41px;  }
+.list_ym3 .ym_top span{font-size:18px; font-weight: bold; color:#bb976d; border-bottom:solid #bb976d 3px; float: left; }
+.list_ym3 .ym_top a{float: right; margin-top:8px; }
+
+.list_pic_con li{float:left; width:340px; height:auto; margin:2px -4px;padding-left: 58px;}
+.list_pic_con{width:auto;padding-top:7px;height:594px;}
+.list_pic_con li div{width:270px; height:200px; padding:3px;}
+.list_pic_con li div a{width:auto;display:block;}
+.list_pic_con li div a img{width:270px;display:block;height:162px;}
+.list_pic_con li div a span{display:block; width:100%; height:25px; position:relative;  font:normal 12px/25px 新宋体; text-align:center;}
+
+
+
+.list_rc{width:300px; float: left; height:273px;  overflow: hidden; margin-top:8px;   }
+.list_rc .rc_top{width:100%;height:40px; border-bottom:solid 1px #d8d8d8; line-height:40px; height:41px;  }
+.list_rc .rc_top span{font-size:18px; font-weight: bold; color:#bb976d; border-bottom:solid #bb976d 3px; float: left; }
+.list_rc .rc_top a{float: right; margin-top:8px; }
+.list_rc .rc_tu ul{margin-top:15px; }
+.list_rc .rc_tu li{line-height:34px; height:34px; overflow: hidden; border-bottom:solid 1px #ccc;   }
+.list_rc .rc_tu li a{font-size:14px; padding-left:10px; line-height:34px; height:34px; background:url(../images/16.png) no-repeat 0 10px;}
+
+/* 2017.2.27修改大事记调整样式
+.article{width:90%; float: left; height:660px;  overflow-y:scroll; margin:10px; margin-left:67px;    margin-right:20px; margin-top:8px; }
+*/
+.article{width:90%; float: left; height:660px; margin:10px; margin-left:20px; margin-right:20px; margin-top:8px;}
+.tens{text-align: center;}
+.tens a{margin:0 10px;}
+.art_tit{text-align: center; height:50px; display: block; line-height:50px; font-size:20px; font-weight: bold; color:#bb976d; }
+.artinr{line-height:30px; height:600px; font-size:14px; display: block; padding:10px;  }
+/**网上荣誉室**/
+.list_wsrys{width:1187px; float: left; height:700px;  margin:10px; margin-left:44px;   overflow: hidden; margin-right:20px; margin-top:8px;   }
+.list_wsrys .wsrys_top{width:100%;height:40px; border-bottom:solid 1px #d8d8d8; line-height:40px; height:41px;  }
+.list_wsrys .wsrys_top span{font-size:18px; font-weight: bold; color:#bb976d; border-bottom:solid #bb976d 3px; float: left; }
+.list_wsrys .wsrys_top a{float: right; margin-top:8px; }
+.list_wsrys .wsrys_tu ul{margin-top:15px; }
+.list_wsrys .wsrys_tu li{line-height:34px;height: 192px;overflow: hidden;}
+.list_wsrys .wsrys_tu li a{font-size:14px; padding-left:10px; line-height:34px; height:234px; background:url(../images/16.png) no-repeat 0 16px; /*  width:810px; */ float: left; overflow: hidden;}
+.list_wsrys .wsrys_tu li span{float: right;}
+
+
+/**大事记**/
+.article_dsj{width:900px; float: left; height:660px;  overflow-y:scroll; margin:10px; margin-left:20px; margin-right:20px; margin-top:8px;}
+.cente{width:1240px; margin:0 auto; height:100%; position: relative;}
+.cente .con_le{width:150px; float: left; overflow: hidden; min-height:200px; display: block; background:url(../imagds/2.png) repeat-y center;  margin-top:40px; text-align: center; line-height:50px; font-size:14px; color:#fff;    }
+.cente #die{width:100px; background:#d53340; position: absolute; bottom:0px; left:22px; height:30px; line-height:30px; color:#fff;       }
+.cente .con_le span{display: block; width:52px; height:52px; background:url(../imagds/1.png) no-repeat; margin-left:50px;     float: left;}
+.cente .con_ri{width:1240px; position: absolute; top:0px; right: 30px;  margin-top:30px; }
+.cente .con_ri .kuae{width:1040px;  float: right; height:60px; border-bottom:solid 2px #f45656;   }
+.cente .con_ri .daoh{width:950px; height:40px; float: right; overflow: hidden; position: relative;}
+.cente .con_ri .daoh ul{width:950px; border-radius:5px;  float:left;  height:40px; position: absolute; left:0px; }
+.cente .con_ri .daoh li{float: left; width:160px; height:40px; line-height:40px; font-size:14px; background:url(../imagds/time1.png) 100% 0  no-repeat;  text-align: center; margin-right:35px; }
+.cente .con_ri .daoh li a{color:#fff; display: block; }
+.cente .con_ri .daoh li.on{background:url(../imagds/time2.png) 100% 0  no-repeat; border-radius:5px;  }
+.cente .con_ri .shig{float: right; width:1210px; margin-top:20px; }
+.cente .con_ri .shig li{width:100%; background:url(../imagds/4.png) no-repeat 72px 50%; margin-top:15px;  min-height:50px;    overflow: hidden; }
+.cente .con_ri .shig li span{width:60px; height:15px; color:#fff; background:#f45656; padding: 2px 5px;  }
+.cente .con_ri .shig li .month{width:1030px; float: right;}
+.cente .con_ri .shig li .Cdi{width:1030px; float: right; background:#f3f3f3; border:solid 1px #e8e8e8; line-height:20px; padding:5px; margin-top:5px;  }
+
+#prev{width:40px; margin-top:2px;  height:36px; background:url(../imagds/prev.png) no-repeat; display: block; float: left;}
+#next{width:40px; margin-top:2px;  height:36px; background:url(../imagds/next.png) no-repeat 100% 0; display: block; float: right;}
+.artit{width:100%; height:30px; text-align: center; font-size:20px; line-height:30px; margin-top:10px;    }
+.artit span{color:#bb976d; font-weight: bold;}
+
+.Electronic{padding:0 10px; font-size:14px; line-height:30px; margin-top:10px;  }
+
+
+
+
+
+

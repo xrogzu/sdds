@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>${channel.title!channel.name} - ${site.name}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" ></meta>
+    <script src="${base}/r/cms/www/risen/script/jquery1.42.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.SuperSlide.2.1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jQuery.autoIMG.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+    <script>
+	$(function(){
+		$('.demo').autoIMG();
+	})
+    </script>
+</head>
+<body>
+
+[#include "../include/header_shengju_channel.html"/]
+
+<div class="coen" id="container">
+	<div class="content">
+ 		<div class="slideTxtBox" id="conter" >
+    		<div class="" id="ji_list">
+       			<div class="list_wsrys">
+            		<div class="wsrys_top"><span>${channel.name!}</span><a href=""><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                    [@cms_content_page count='9' orderBy='4' channelId=channel.id dateFormat='yyyy-MM-dd' currPageClass="currPageClass" norPageClass="norPageClass"]
+                	<div class="wsrys_tu">
+                 		<ul class="list_pic_con">
+        				[#list tag_pagination.list as a]
+                      		<li>
+	                    		<div class="demo">
+	                    			<a href="${a.url!}" target="_blank"><img src="${a.typeImg!site.defImg}" /><span>[@text_cut s=a.title len=15 append=append/]</span></a>
+								</div>
+                       		</li>
+                    	[/#list]
+                 		</ul>
+               		</div>
+                	<div style="font-size: 14px; font-family: 微软雅黑; width:800px; height: 50px; line-height: 50px; margin-left: 15px;">
+                        [@cms_pagination sysPage='1'/]
+                        [/@cms_content_page]
+                 	</div>
+            	</div>
+         	</div>
+    	</div>
+	</div>
+</div>
+
+[#include "../include/footer_shengju.html"/]
+
+</body>
+</html>

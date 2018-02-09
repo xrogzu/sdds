@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd"
+	default-lazy-init="true">
+	<!--HttpSession-->
+	<bean id="sessionProvider" class="com.jeecms.common.web.session.HttpSessionProvider"/>
+	<!-- 
+	<bean id="sessionProvider" class="com.jeecms.common.web.session.CacheSessionProvider">
+		<property name="sessionCache" ref="sessionCache"/>
+		<property name="sessionIdGenerator" ref="sessionIdGenerator"/>
+	</bean>
+	<bean id="sessionCache" class="com.jeecms.common.web.session.cache.MemcachedDangaCache">		
+		<property name="servers">
+			<list>
+				<value>127.0.0.1:11211</value>
+			</list>
+		</property>
+		<property name="weights">
+			<list>
+				<value>1</value>
+			</list>
+		</property>
+	</bean>
+	-->
+	<!--Ehcache缓存
+	<bean id="sessionCache" class="com.jeecms.common.web.session.cache.EhcacheSessionCache">
+		<property name="cache" ref="ehSessionCache"/>
+	</bean>
+	-->
+	<!--SessionId生成器
+	<bean id="sessionIdGenerator" class="com.jeecms.common.web.session.id.JdkUUIDGenerator"/>
+	 -->
+	<!--图片处理-->
+	<bean id="imageScale" class="com.jeecms.common.image.ImageScaleImpl" init-method="init">
+		<property name="tryMagick" value="true"/>
+	</bean>
+	<!--密码加密器-->
+	<bean id="pwdEncoder" class="com.jeecms.common.security.encoder.Md5PwdEncoder"/>
+		
+	<!--执行时间标签-->
+	<bean id="uuid" class="com.jeecms.common.web.freemarker.UUIDDirective"/>
+	<bean id="process_time" class="com.jeecms.common.web.freemarker.ProcessTimeDirective"/>
+	<bean id="text_cut" class="com.jeecms.common.web.freemarker.TextCutDirective"/>
+	<bean id="html_cut" class="com.jeecms.common.web.freemarker.HtmlCutDirective"/>
+	
+	<bean id="realPathResolver" class="com.jeecms.common.web.springmvc.ServletContextRealPathResolver"/>
+	<bean id="fileRepository" class="com.jeecms.common.upload.FileRepository"/>
+	<!--文件模板-->
+	<bean id="tplManager" class="com.jeecms.core.tpl.FileTplManagerImpl"/>
+	<!--数据库模板
+		<bean id="dbTplDao" class="com.jeecms.core.dao.impl.DbTplDaoImpl"/>
+		<bean id="tplManager" class="com.jeecms.core.manager.impl.DbTplMngImpl"/>
+		-->
+
+	<bean id="ipSeeker" class="com.jeecms.common.ipseek.IPSeekerImpl" init-method="init">
+		<property name="dir" value="/WEB-INF/ipseek"/>
+		<property name="filename" value="QQWry.Dat"/>
+	</bean>
+	<!-- ========================================= Dao begin ======================================= -->
+	<bean id="authenticationDao" class="com.jeecms.core.dao.impl.AuthenticationDaoImpl"/>
+	<bean id="dbFileDao" class="com.jeecms.core.dao.impl.DbFileDaoImpl"/>
+	<bean id="unifiedUserDao" class="com.jeecms.core.dao.impl.UnifiedUserDaoImpl"/>
+	<bean id="ftpDao" class="com.jeecms.core.dao.impl.FtpDaoImpl"/>
+	<bean id="configDao" class="com.jeecms.core.dao.impl.ConfigDaoImpl"/>
+	<bean id="configItemDao" class="com.jeecms.core.dao.impl.CmsConfigItemDaoImpl"/>
+	
+	<bean id="cmsSiteDao" class="com.jeecms.core.dao.impl.CmsSiteDaoImpl"/>
+	<bean id="cmsConfigDao" class="com.jeecms.core.dao.impl.CmsConfigDaoImpl"/>
+	<bean id="cmsUserDao" class="com.jeecms.core.dao.impl.CmsUserDaoImpl"/>
+	<bean id="cmsUserExtDao" class="com.jeecms.core.dao.impl.CmsUserExtDaoImpl"/>
+	<bean id="cmsUserSiteDao" class="com.jeecms.core.dao.impl.CmsUserSiteDaoImpl"/>
+	<bean id="cmsGroupDao" class="com.jeecms.core.dao.impl.CmsGroupDaoImpl"/>
+	<bean id="cmsRoleDao" class="com.jeecms.core.dao.impl.CmsRoleDaoImpl"/>
+	<bean id="cmsLogDao" class="com.jeecms.core.dao.impl.CmsLogDaoImpl"/>
+	<bean id="cmsDepartmentDao" class="com.jeecms.core.dao.impl.CmsDepartmentDaoImpl"/>
+	<bean id="cmsDictionaryDao" class="com.jeecms.core.dao.impl.CmsDictionaryDaoImpl"/>
+	<bean id="cmsSiteCompanyDao" class="com.jeecms.core.dao.impl.CmsSiteCompanyDaoImpl"/>
+	<bean id="cmsUserResumeDao" class="com.jeecms.core.dao.impl.CmsUserResumeDaoImpl"/>
+	<bean id="cmsWorkflowDao" class="com.jeecms.core.dao.impl.CmsWorkflowDaoImpl"/>
+	<bean id="cmsWorkflowEventDao" class="com.jeecms.core.dao.impl.CmsWorkflowEventDaoImpl"/>
+	<bean id="cmsWorkflowEventUserDao" class="com.jeecms.core.dao.impl.CmsWorkflowEventUserDaoImpl"/>
+	<bean id="cmsWorkflowRecordDao" class="com.jeecms.core.dao.impl.CmsWorkflowRecordDaoImpl"/>
+
+	<bean id="authenticationMng" class="com.jeecms.core.manager.impl.AuthenticationMngImpl"/>
+	<bean id="dbFileMng" class="com.jeecms.core.manager.impl.DbFileMngImpl"/>
+	<bean id="unifiedUserMng" class="com.jeecms.core.manager.impl.UnifiedUserMngImpl"/>
+	<bean id="ftpMng" class="com.jeecms.core.manager.impl.FtpMngImpl"/>
+	<bean id="configMng" class="com.jeecms.core.manager.impl.ConfigMngImpl"/>
+	<bean id="configItemMng" class="com.jeecms.core.manager.impl.CmsConfigItemMngImpl"/>
+	
+	<bean id="cmsSiteMng" class="com.jeecms.core.manager.impl.CmsSiteMngImpl"/>
+	<bean id="cmsConfigMng" class="com.jeecms.core.manager.impl.CmsConfigMngImpl"/>
+	<bean id="cmsUserMng" class="com.jeecms.core.manager.impl.CmsUserMngImpl"/>
+	<bean id="cmsUserExtMng" class="com.jeecms.core.manager.impl.CmsUserExtMngImpl"/>
+	<bean id="cmsUserSiteMng" class="com.jeecms.core.manager.impl.CmsUserSiteMngImpl"/>
+	<bean id="cmsGroupMng" class="com.jeecms.core.manager.impl.CmsGroupMngImpl"/>
+	<bean id="cmsRoleMng" class="com.jeecms.core.manager.impl.CmsRoleMngImpl"/>
+	<bean id="cmsLogMng" class="com.jeecms.core.manager.impl.CmsLogMngImpl"/>
+	<bean id="cmsDepartmentMng" class="com.jeecms.core.manager.impl.CmsDepartmentMngImpl"/>
+	<bean id="cmsDictionaryMng" class="com.jeecms.core.manager.impl.CmsDictionaryMngImpl"/>
+	<bean id="cmsSiteCompanyMng" class="com.jeecms.core.manager.impl.CmsSiteCompanyMngImpl"/>
+	<bean id="cmsUserResumeMng" class="com.jeecms.core.manager.impl.CmsUserResumeMngImpl"/>
+	<bean id="cmsWorkflowMng" class="com.jeecms.core.manager.impl.CmsWorkflowMngImpl"/>
+	<bean id="cmsWorkflowEventMng" class="com.jeecms.core.manager.impl.CmsWorkflowEventMngImpl"/>
+	<bean id="cmsWorkflowEventUserMng" class="com.jeecms.core.manager.impl.CmsWorkflowEventUserMngImpl"/>
+	<bean id="cmsWorkflowRecordMng" class="com.jeecms.core.manager.impl.CmsWorkflowRecordMngImpl"/>
+	<!-- 发展党员流程管理 -->
+	<bean id="risenDevelopmentDao" class="com.risen.dao.impl.RisenDevelopmentDao"/>
+	<!-- 申请入党/志愿 -->
+	<bean id="risenPartyapplicationDao" class="com.risen.dao.impl.RisenPartyapplicationDaoImpl"/>	
+	<!-- 入党之前的谈话  -->
+	<bean id="risenTalkDao" class="com.risen.dao.impl.RisenTalkDaoImpl"/>
+	<!-- 党员流动流出  -->
+	<bean id="cmsFloatingDao" class="com.risen.dao.impl.CmsFloatingDaoImp"/>
+	<!-- 确定入党积极分子 -->
+	<bean id="risenActiveDao" class="com.risen.dao.impl.RisenActiveDaoImpl"/>
+	<!-- 上级党委备案 -->
+	<bean id="risenPartyrecordDao" class="com.risen.dao.impl.RisenPartyrecordDaoImpl"/>
+	<!-- 指定培养联系人 -->
+	<bean id="risenContactDao" class="com.risen.dao.impl.RisenContactDaoImpl"/>
+	<!-- 培养教育考虑 -->
+	<bean id="risenFostereducationDao" class="com.risen.dao.impl.RisenFostereducationDaoImpl"/>
+	<!-- 确认发展对象 -->
+	<bean id="risenConfirmobjectDao" class="com.risen.dao.impl.RisenConfirmobjectDaoImpl"/>
+	<!-- 确认入党介绍人 -->
+	<bean id="risenPartyintroducerDao" class="com.risen.dao.impl.RisenPartyintroducerDaoImpl"/>
+	<!-- 政治审查 -->
+	<bean id="risenPoliticalcheckDao" class="com.risen.dao.impl.RisenPoliticalcheckDaoImpl"/>
+	<!-- 集中培训 -->
+	<bean id="risenCentralizedtrainDao" class="com.risen.dao.impl.RisenCentralizedtrainDaoImpl"/>
+	<!-- 支部委员会审查 -->
+	<bean id="risenCommitteereviewDao" class="com.risen.dao.impl.RisenCommitteereviewDaoImpl"/>
+	<!-- 上级党委预审 第一次上级党委审批（第17步）3.第二次上级党委审-->
+	<bean id="risenCommitteepreDao" class="com.risen.dao.impl.RisenCommitteepreDaoImpl"/>
+	<!-- 支部大会讨论 -->
+	<bean id="risenMeetingdiscussDao" class="com.risen.dao.impl.RisenMeetingdiscussDaoImpl"/>
+	<!-- 编入党小组 -->
+	<bean id="risenJoinorgDao" class="com.risen.dao.impl.RisenJoinorgDaoImpl"/>
+	<!-- 入党宣誓 -->
+	<bean id="risenOathDao" class="com.risen.dao.impl.RisenOathDaoImpl"/>
+	<!-- 继续教育考察 -->
+	<bean id="risenEducationcheckDao" class="com.risen.dao.impl.RisenEducationcheckDaoImpl"/>
+	<!-- 材料归档 -->
+	<bean id="risenMaterialfilingDao" class="com.risen.dao.impl.RisenMaterialfilingDaoImpl"/>
+	<!-- 查询输入的身份证号在数据库中是否存在 -->
+	<bean id="risenCheckIdentityIdDao" class="com.risen.dao.impl.RisenCheckIdentityIdDao"/>
+	<bean id="risenPublicnotifyDao" class="com.risen.dao.impl.RisenPublicnotifyDaoImpl"></bean>
+	<!-- 发展党员流程结束 -->
+	<!-- 组织生活日历 -->
+	<bean id="risenOrgLifeCalendarDao" class="com.risen.dao.impl.RisenOrgLifeCalendarDaoImpl"/>
+	<!-- 核心数据字典 -->
+	<bean id="coreDictionaryDao" class="com.risen.dao.impl.CoreDictionaryDaoImpl"></bean>
+	<!-- 积分 -->
+	<bean id="risenIntegralDao" class="com.risen.dao.impl.RisenIntegralDaoImpl"></bean>
+	<!-- 积分记录 -->
+	<bean id="risenIntegralRecordDao" class="com.risen.dao.impl.RisenIntegralRecordDaoImpl"></bean>
+	<!-- 换届记录 -->
+	<bean id="risenChangeremindrecordDao" class="com.risen.dao.impl.RisenChangeremindrecordDaoImpl" />
+	<!-- 在线投票 -->
+	<bean id="voteDao" class="com.risen.dao.impl.RisenVoteDao"/>
+	<bean id="itemDao" class="com.risen.dao.impl.RisenVoteItemDao"/>
+	<bean id="quesDao" class="com.risen.dao.impl.RisenVoteQuesDao"/>
+	<bean id="quescontentDao" class="com.risen.dao.impl.RisenVoteQuesContentDao"/>
+	<bean id="recordDao" class="com.risen.dao.impl.RisenVoteRecordDao"/>
+	<bean id="detailDao" class="com.risen.dao.impl.RisenVoteRecordDetailDao"/>
+	<!-- 在线调查 -->
+	<bean id="qairesDao" class="com.risen.dao.impl.RisenQairesDao"/>
+	<bean id="topicDao" class="com.risen.dao.impl.RisenQairesTopicDao"/>
+	<bean id="qairesitemDao" class="com.risen.dao.impl.RisenQairesItemDao"/>
+	<bean id="qairescontentDao" class="com.risen.dao.impl.RisenQairesContentDao"/>
+	<bean id="qairesrecordDao" class="com.risen.dao.impl.RisenQairesRecordDao"/>
+	<bean id="qairesdetailDao" class="com.risen.dao.impl.RisenQairesDetailDao"/>
+	<!-- 年度评议 -->
+	<bean id="discussionDao" class="com.risen.dao.impl.RisenDiscussionImpl"/>
+	<!-- 党组织设定目标 -->
+	<bean id="targetDao" class="com.risen.dao.impl.RisenTargetDao"/>
+	<bean id="targetdetailDao" class="com.risen.dao.impl.RisenTargetDetailDao"/>
+	<!-- 发展党员流程 -->
+	<bean id="risenDevpartyDao" class="com.risen.dao.impl.RisenDevpartyDaoImpl"/>
+	<!-- 留言管理 -->
+	<bean id="appealMailDao" class="com.risen.dao.impl.CmsAppealMailDaoImpl"/>
+	<bean id="CmsAppealMailReplayDao" class="com.jeecms.cms.dao.assist.impl.CmsAppealMailReplayDaoImpl"/>
+	<bean id="appealMailReplayDao" class="com.risen.dao.impl.CmsAppealMailReplayDaoImpl"/>
+	<bean id="CmsAppealMailDao" class="com.jeecms.cms.dao.assist.impl.CmsAppealMailDaoImpl"/>
+	<!-- 先锋分 -->
+	<bean id="quotaDao" class="com.risen.dao.impl.RisenQuotaDao"/>
+	<bean id="scoreDao" class="com.risen.dao.impl.RisenScoreDao"/>
+	<!-- 发展党员 -->
+	<bean id="fzcommperDao" class="com.risen.dao.impl.RisenFzcommperDao"/>
+	<bean id="CmsBallotDao" class="com.jeecms.cms.dao.assist.impl.CmsBallotDaoImpl"/>
+	<bean id="CmsBallotItemDao" class="com.jeecms.cms.dao.assist.impl.CmsBallotItemDaoImpl"/>
+	<bean id="CmsBallotRecordDao" class="com.jeecms.cms.dao.assist.impl.CmsBallotRecordDaoImpl"/>
+	<!-- 公告签收 -->
+	<bean id="risenSignforDao" class="com.risen.dao.impl.RisenSignforDaoImpl"/>
+	<!-- ========================================= Dao end ======================================= -->
+	<!-- ========================================= Service  begin ========================================= -->
+	<!-- 公告签收 -->
+	<bean id="risenSignforService" class="com.risen.service.impl.RisenSignforService"/>
+	<!-- 发展党员流程管理 -->
+	<bean id="risenDevelopmentService" class="com.risen.service.impl.RisenDevelopmentService"/>
+	<!-- 申请入党/志愿 -->
+	<bean id="risenPartyapplicationService" class="com.risen.service.impl.RisenPartyapplicationMngImpl"/>	
+	<!-- 入党之前的谈话  -->
+	<bean id="risenTalkService" class="com.risen.service.impl.RisenTalkMngImpl"/>
+	<!-- 确定入党积极分子 -->
+	<bean id="risenActiveService" class="com.risen.service.impl.RisenActiveMngImpl"/>
+	<!-- 党员流动流出 -->
+	<bean id="cmsFloatingMng" class="com.risen.service.impl.CmsFloatingMngImpl"/>
+	<!-- 上级党委备案 -->
+	<bean id="risenPartyrecordService" class="com.risen.service.impl.RisenPartyrecordMngImpl"/>
+	<!-- 指定培养联系人 -->
+	<bean id="risenContactService" class="com.risen.service.impl.RisenContactMngImpl"/>
+	<!-- 培养教育考虑 -->
+	<bean id="risenFostereducationService" class="com.risen.service.impl.RisenFostereducationMngImpl"/>
+	<!-- 确认发展对象 -->
+	<bean id="risenConfirmobjectService" class="com.risen.service.impl.RisenConfirmobjectMngImpl"/>
+	<!-- 确认入党介绍人 -->
+	<bean id="risenPartyintroducerService" class="com.risen.service.impl.RisenPartyintroducerMngImpl"/>
+	<!-- 政治审查 -->
+	<bean id="risenPoliticalcheckService" class="com.risen.service.impl.RisenPoliticalcheckMngImpl"/>
+	<!-- 集中培训 -->
+	<bean id="risenCentralizedtrainService" class="com.risen.service.impl.RisenCentralizedtrainMngImpl"/>
+	<!-- 支部委员会审查 -->
+	<bean id="risenCommitteereviewService" class="com.risen.service.impl.RisenCommitteereviewMngImpl"/>
+	<!-- 上级党委预审 第一次上级党委审批（第17步）3.第二次上级党委审-->
+	<bean id="risenCommitteepreService" class="com.risen.service.impl.RisenCommitteepreMngImpl"/>
+	<!-- 支部大会讨论 -->
+	<bean id="risenMeetingdiscussService" class="com.risen.service.impl.RisenMeetingdiscussMngImpl"/>
+	<!-- 编入党小组 -->
+	<bean id="risenJoinorgService" class="com.risen.service.impl.RisenJoinorgMngImpl"/>
+	<!-- 入党宣誓 -->
+	<bean id="risenOathService" class="com.risen.service.impl.RisenOathMngImpl"/>
+	<!-- 继续教育考察 -->
+	<bean id="risenEducationcheckService" class="com.risen.service.impl.RisenEducationcheckMngImpl"/>
+	<!-- 材料归档 -->
+	<bean id="risenMaterialfilingService" class="com.risen.service.impl.RisenMaterialfilingMngImpl"/>
+	<!-- 发展党员流程结束 -->
+	
+	<!-- 查询输入的身份证号在数据库中是否存在 -->
+     <bean id="risenCheckIdentityIdService" class="com.risen.service.impl.RisenCheckIdentityIdService"/>
+	
+	<bean id="risenPublicnotifyService" class="com.risen.service.impl.RisenPublicnotifyServiceImpl"/>
+	
+	<!-- 组织生活日历 -->
+	<bean id="risenOrgLifeCalendarService" class="com.risen.service.impl.RisenOrgLifeCalendarServiceImpl"/>
+	<!-- 核心数据字典 -->
+	<bean id="coreDictionaryService" class="com.risen.service.impl.CoreDictionaryServiceImpl"></bean>
+	<!-- 积分 -->
+	<bean id="risenIntegralService" class="com.risen.service.impl.RisenIntegralServiceImpl"></bean>
+	<!-- 积分记录 -->
+	<bean id="risenIntegralRecordService" class="com.risen.service.impl.RisenIntegralRecordServiceImpl"></bean>
+	<!-- 换届记录 -->
+	<bean id="risenChangeremindrecordService" class="com.risen.service.impl.RisenChangeremindrecordServiceImpl" />
+	<!-- 在线投票  -->
+	<bean id="voteService" class="com.risen.service.impl.RisenVoteService"/>
+	<bean id="itemService" class="com.risen.service.impl.RisenVoteItemService"/>
+	<bean id="quesService" class="com.risen.service.impl.RisenVoteQuesService"/>
+	<bean id="quescontentService" class="com.risen.service.impl.RisenVoteQuesContentService"/>
+	<bean id="recordService" class="com.risen.service.impl.RisenVoteRecordService"/>
+	<bean id="detailService" class="com.risen.service.impl.RisenVoteRecordDetailService"/>
+	<!--在线 调查  -->
+	<bean id="qairesService" class="com.risen.service.impl.RisenQairesService"/>
+	<bean id="topicService" class="com.risen.service.impl.RisenQairesTopicService"/>
+	<bean id="qairesitemService" class="com.risen.service.impl.RisenQairesItemService"/>
+	<bean id="qairesrecordService" class="com.risen.service.impl.RisenQairesRecordService"/>
+	<bean id="qairescontentService" class="com.risen.service.impl.RisenQairesContentService"/>
+	<bean id="qairesDetailService" class="com.risen.service.impl.RisenQairesDetailService"/>
+	<!-- 年度评议 -->
+	<bean id="discussionService" class="com.risen.service.impl.RisenDiscussionServiceImpl"/>
+	<!-- 党组织设定目标 -->
+	<bean id="targetService" class="com.risen.service.impl.RisenTargetService"/>
+	<bean id="targetdetailService" class="com.risen.service.impl.RisenTargetDetailService"/> 
+	<!-- 发展党员流程 -->
+	<bean id="risenDevpartyService" class="com.risen.service.impl.RisenDevpartyMngImpl"/>
+	<!-- 留言管理 -->
+	<bean id="appealMailMngImpl" class="com.risen.service.impl.CmsAppealMailMngImpl"/>
+	<bean id="appealMailReplayMngImpl" class="com.risen.service.impl.CmsAppealMailReplayMngImpl"/>
+	<bean id="CmsAppealMailMng" class="com.jeecms.cms.manager.assist.impl.CmsAppealMailMngImpl"/>
+	<bean id="CmsAppealMailReplayMng" class="com.jeecms.cms.manager.assist.impl.CmsAppealMailReplayMngImpl"/> 
+	<!-- 先锋分 -->
+	<bean id="quotaService" class="com.risen.service.impl.RisenQuotaService"/>
+	<bean id="scoreService" class="com.risen.service.impl.RisenScoreService"/> 
+	<!-- 发展党员 -->
+	<bean id="fzcommperService" class="com.risen.service.impl.RisenFzcommperService"/>
+	<bean id="CmsBallotMng" class="com.jeecms.cms.manager.assist.impl.CmsBallotMngService"/>
+	<bean id="CmsBallotItemMng" class="com.jeecms.cms.manager.assist.impl.CmsBallotItemMngService"/>
+	<bean id="CmsBallotRecordMng" class="com.jeecms.cms.manager.assist.impl.CmsBallotRecordMngService"/>
+	<bean id="cmsAppealMailMng" class="com.risen.service.impl.CmsAppealMailMngImpl"/>
+	
+	<!-- ========================================= Service  end ========================================= -->
+	
+</beans>

@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<link href="${base}/res/common/css/jquery.flot.css" rel="stylesheet" type="text/css"/>
+<!--[if lte IE 8]><![endif]-->
+<script src="${base}/res/common/js/excanvas.min.js" type="text/javascript" ></script>
+<script src="${base}/res/common/js/jquery.flot.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.time.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.categories.min.js" type="text/javascript"></script>
+<script src="${base}/thirdparty/echarts/echarts.js" type="text/javascript" ></script>
+<script class="code" type="text/javascript">
+	$(function() {
+		var years = [];
+		var year = new Date().getFullYear();
+		years.push(year-2);
+		years.push(year-1);
+		years.push(year);
+		years.push(year+1);
+		years.push(year+2);
+		var myChart_basicInfo = echarts.init(document.getElementById('tab_basicInfo'));
+		option_basicInfo = {
+		    title: {
+		        text: '近五年党员总数变化',
+		        left:'center'
+		    },
+		    tooltip: {
+		        trigger: 'axis'
+		    },
+		    toolbox: {
+		        show: true,
+		        feature: {
+		            dataZoom: {
+		                yAxisIndex: 'none'
+		            },
+		            dataView: {readOnly: false},
+		            magicType: {type: ['line', 'bar']},
+		            restore: {},
+		            saveAsImage: {}
+		        }
+		    },
+		    xAxis:  {
+		        type: 'category',
+		        boundaryGap: true,
+		        data: years
+		    },
+		    yAxis: {
+		        type: 'value',
+		        axisLabel: {
+		            formatter: '{value}'
+		        }
+		    },
+		    series: [
+		        {
+		            name:'党员总人数',
+		            type:'line',
+		            data:[
+						<#if list??>
+		            		<#list list as info>
+		            			<#list info as s>
+		            				${s!'0'},
+		            			</#list>
+							</#list>
+		            	</#if>
+					],
+		            markPoint: {
+		                data: [
+		                    {type: 'max', name: '最大值'},
+		                    {type: 'min', name: '最小值'}
+		                ]
+		            }
+		        }
+		    ]
+		};
+		myChart_basicInfo.setOption(option_basicInfo);
+	});	
+</script>
+<style>
+	table{border-collapse:collapse;}
+	td { width: 89px; text-align: center; font-size: 15px; display: block; float: left; height: 30px; border-bottom: 1px solid #ccc;
+	 border-right: 1px solid #ccc; line-height: 30px; border-collapse：collapse;}
+	.rightTd{ border-left: 1px solid #ccc; width: 95px;}
+	tr { display: block; margin-bottom: 20px;}
+	.fristTr{ border-top: 1px solid #ccc;}
+	.province{float:left;width:60px;height:30px;font-size:16px;border:1px solid #DCF0FF;margin-left:5px;text-align:center;line-height:30px;}
+</style>	
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: <@s.m "cms.function.statistic"/> > 党员年度变化情况分析</div>
+</div>
+<div class="statistic">
+  <div class="five" style="width:1267px;">
+  	<#if yearlist??>
+  	<table>
+  		<tr class="fristTr">
+  			<td class="rightTd" style="width:210px;">年份</td>
+  			<#list yearlist as year>
+  				<td style="width:210px;">${year!}</td>
+  			</#list>
+  		</tr>
+  		<tr>
+  			<td class="rightTd" style="width:210px;">总人数</td>
+  			<#if list??>
+          		<#list list as info>
+          			<#list info as s>
+          				<#if s_index==0>
+          				<td style="width:210px;">${s!'0'}</td>
+          				<#else>
+          				<td style="width:210px;">${s!'0'}</td>
+          				</#if>
+          			</#list>
+				</#list>
+          	</#if>
+  		</tr>
+  	</table>
+  	</#if>
+  </div>
+  <div class="sta-tab" style="width:1267px;">
+    
+    <div class="tab-con" style="width:1267px;">
+     
+      <div class="tab-main" style="height:445px;width:1267px;">
+        <div>
+        	<div id="tab_basicInfo" style="float:left; width:99%;height:444px;"></div>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

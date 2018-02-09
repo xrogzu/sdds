@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenChangeremindrecord" table="risen_changeremindrecord">
+		<meta attribute="sync-DAO">false</meta>
+		<cache usage="read-write"/>
+		<id name="id" type="integer" column="id">
+			<generator class="sequence"><param name="sequence">CHANGEREMIND_SQ</param></generator>
+		</id>
+		<property name="sddsccOrgname" column="sddscc_orgname" type="string" not-null="true" length="255"/>
+		<property name="sddsccOrgid" column="sddscc_orgid" type="integer" not-null="false" length="20"/>
+		<property name="sddsccOsecretaryname" column="sddscc_osecretaryname" type="string" not-null="false" length="50"/>
+		<property name="sddsccOsecretaryidc" column="sddscc_osecretaryidc" type="string" not-null="false" length="20"/>
+		<property name="sddsccOsecretaryid" column="sddscc_osecretaryid" type="string" not-null="false" length="20"/>
+		<property name="sddsccNsecretaryname" column="sddscc_nsecretaryname" type="string" not-null="false" length="50"/>
+		<property name="sddsccNsecretaryidc" column="sddscc_nsecretaryidc" type="string" not-null="false" length="20"/>
+		<property name="sddsccNsecretaryid" column="sddscc_nsecretaryid" type="string" not-null="false" length="20"/>
+		<property name="sddsccRecoddate" column="sddscc_recoddate" type="timestamp" not-null="false" length="7"/>
+		<property name="sddsccRemark" column="sddscc_remark" type="string" not-null="false" length="2000"/>
+			<property name="sddsccFile" column="sddscc_file" type="string" not-null="false" length="200"/>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,609 @@
+package com.risen.action;
+
+import static com.jeecms.common.page.SimplePage.cpn;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.jeecms.cms.dao.main.ChannelDao;
+import com.jeecms.cms.entity.main.ContentShareCheck;
+import com.jeecms.cms.manager.main.ContentShareCheckMng;
+import com.jeecms.common.page.Pagination;
+import com.jeecms.common.web.CookieUtils;
+import com.jeecms.common.web.ResponseUtils;
+import com.jeecms.core.dao.CmsDepartmentDao;
+import com.jeecms.core.entity.CmsDepartment;
+import com.jeecms.core.entity.CmsSite;
+import com.jeecms.core.entity.CmsUser;
+import com.jeecms.core.manager.CmsDepartmentMng;
+import com.jeecms.core.web.WebErrors;
+import com.jeecms.core.web.util.CmsUtils;
+import com.risen.dao.IRisenIntegralRecordDao;
+import com.risen.entity.RisenIntegral;
+import com.risen.entity.RisenIntegralRecord;
+import com.risen.service.IRisenIntegralRecordService;
+import com.risen.service.IRisenIntegralService;
+
+@Controller
+public class RisenPartyBuildPerformanceAct {
+	private static final Logger log = LoggerFactory.getLogger(RisenPartyBuildPerformanceAct.class);
+
+	@RequiresPermissions("partyBuild:v_list")
+	@RequestMapping("/partyBuild/v_list.do")
+	public String list(Integer pageNo, HttpServletRequest request, ModelMap model,RisenIntegralRecord bean) {
+		//CmsUser user = CmsUtils.getUser(request);
+		bean.setRisenirTargetorgid(CmsUtils.getUser(request).getDepartment().getId());
+		bean.setRisenirResult(1);
+		Pagination pagination = manager.getPage(cpn(pageNo), CookieUtils
+					.getPageSize(request),bean);
+		model.addAttribute("pagination",pagination);
+		model.addAttribute("pageNo",pagination.getPageNo());
+		return "pbd/list";
+	} 
+	//<积分记录>查看各栏目共享后产生的分数
+	@RequiresPermissions("partyBuild:v_list")
+	@RequestMapping("/partyBuild/list/v_list.do")
+	public String scoreList(Integer pageNo, HttpServletRequest request, ModelMap model,RisenIntegralRecord bean) {
+		//CmsUser user = CmsUtils.getUser(request);
+		bean.setRisenirTargetorgid(CmsUtils.getUser(request).getDepartment().getId());
+		bean.setRisenirResult(1);
+		try{
+			List<RisenIntegralRecord> list = manager.getPageNum(cpn(pageNo), request, CookieUtils
+				.getPageSize(request), pageNo, bean);
+		model.addAttribute("list",list);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "pbd/score_list";
+	}
+	@RequiresPermissions("partyBuild:shareContent")
+	@RequestMapping("/partyBuild/shareContent.do")
+	public String shareContent(Integer pageNo, HttpServletRequest request, ModelMap model,RisenIntegralRecord bean){
+		Integer deptId = null;
+		if(org.apache.commons.lang.StringUtils.isBlank(request.getParameter("deptId"))){
+			deptId = CmsUtils.getUser(request).getDepartment().getId();
+		}else{
+			deptId = new Integer(request.getParameter("deptId"));
+		}
+		bean.setRisenirTargetorgid(deptId);
+		bean.setRisenirResult(0);
+		Pagination pagination = manager.getPage(cpn(pageNo), CookieUtils
+				.getPageSize(request),bean);
+		model.addAttribute("pagination",pagination);
+		model.addAttribute("pageNo",pagination.getPageNo());
+		model.addAttribute("deptId",deptId);
+		return "shareContent/list";
+	}
+	//已共享内容
+	@RequiresPermissions("partyBuild:shareContent")
+	@RequestMapping("/partyBuild/shareContenths.do")
+	public String shareContenths(Integer pageNo, HttpServletRequest request, ModelMap model,RisenIntegralRecord bean){
+		Integer deptId = null;
+		if(org.apache.commons.lang.StringUtils.isBlank(request.getParameter("deptId"))){
+			deptId = CmsUtils.getUser(request).getDepartment().getId();
+		}else{
+			deptId = new Integer(request.getParameter("deptId"));
+		}
+		bean.setRisenirTargetorgid(deptId);
+		try{
+			Pagination pagination = manager.getPagehs(cpn(pageNo), request, CookieUtils
+					.getPageSize(request),deptId, bean);
+			model.addAttribute("pagination",pagination);
+			model.addAttribute("pageNo",pagination.getPageNo());
+			model.addAttribute("deptId",deptId);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "shareContent/hshared_list";
+	}
+	//页面查看所有积分（积分记录调此方法）
+	@RequiresPermissions("partyBuild:shareContent")
+	@RequestMapping("/partyBuild/shareContenthsMonth.do")
+	public String shareContenthsMonth(Integer pageNo, HttpServletRequest request, ModelMap model,RisenIntegralRecord bean){
+		Integer deptId = null;
+		if(org.apache.commons.lang.StringUtils.isBlank(request.getParameter("deptId"))){
+			deptId = CmsUtils.getUser(request).getDepartment().getId();
+		}else{
+			deptId = new Integer(request.getParameter("deptId"));
+		}
+		Integer orgId=null;
+		if(org.apache.commons.lang.StringUtils.isBlank(request.getParameter("orgId"))){
+			orgId = CmsUtils.getUser(request).getDepartment().getId();
+		}else{
+			orgId = new Integer(request.getParameter("orgId"));
+		}
+		Integer channelIdInteger = null;
+		try {
+			channelIdInteger = Integer.parseInt(request.getParameter("channelId"));
+		} catch (Exception e) {
+		}
+		bean.setRisenirOrgid(deptId);
+		bean.setRisenirTargetorgid(orgId);
+		//页面点击积分记录取ID查
+		if (channelIdInteger != null) {
+			if (channelIdInteger.intValue() == 1) {
+				bean.setRisenirTargetchannel("图片新闻");
+			} else if (channelIdInteger.intValue() == 2) {
+				bean.setRisenirTargetchannel("党建动态");
+			} else if (channelIdInteger.intValue() == 3) {
+				bean.setRisenirTargetchannel("经验交流");
+			} else if (channelIdInteger.intValue() == 4) {
+				bean.setRisenirTargetchannel("媒体宣传");
+			} else if (channelIdInteger.intValue() == 5) {
+				bean.setRisenirTargetchannel("理论研讨");
+			} else if (channelIdInteger.intValue() == 6) {
+				bean.setRisenirTargetchannel("网上荣誉室");
+			} else if (channelIdInteger.intValue() == 7) {
+				bean.setRisenirTargetchannel("支部动态");
+			} else if (channelIdInteger.intValue() == 8) {
+				bean.setRisenirTargetchannel("党费缴纳");
+			} else if (channelIdInteger.intValue() == 9) {
+				bean.setRisenirTargetchannel("党务公开");
+			} else if (channelIdInteger.intValue() == 10){
+				bean.setRisenirTargetchannel("特色工作");
+			}
+		}
+		try{
+			Pagination pagination = manager.getPagehsMonth(cpn(pageNo), request, CookieUtils
+					.getPageSize(request),deptId, bean);
+			model.addAttribute("pagination",pagination);
+			model.addAttribute("pageNo",pagination.getPageNo());
+			model.addAttribute("deptId",deptId);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "shareContent/hshared_list";
+	}
+	@RequiresPermissions("partyBuild:confirmShare")
+	@RequestMapping("/partyBuild/confirmShare.do")
+	@ResponseBody
+	public Object confirmShare(Integer[]ids,Integer type,Integer score, HttpServletRequest request){
+		ContentShareCheck shareCheck;
+		if(ids!=null&&ids.length>0){
+			for(Integer pid:ids){
+				RisenIntegralRecord model = new RisenIntegralRecord();
+				model=manager.findById(pid);
+				int id = model.getRisenirSharecheck();
+				shareCheck=contentShareCheckMng.findById(id);
+				//非本站源内容 而且是待审核的共享信息
+				if(shareCheck.getCheckStatus()==ContentShareCheck.CHECKING){
+					shareCheck.setCheckStatus(ContentShareCheck.CHECKED);
+					shareCheck.setShareValid(true);
+				}
+				contentShareCheckMng.update(shareCheck);
+			}
+		}
+		return manager.confirmShare(ids,type,score);
+	}
+	//前台修改积分后进此方法
+	@RequiresPermissions("partyBuild:confirmSharehs")
+	@RequestMapping("/partyBuild/confirmSharehs.do")
+	@ResponseBody
+	public Object confirmSharehs(Integer[]ids,Integer type,Integer score, HttpServletRequest request){
+		ContentShareCheck shareCheck;
+		if(ids!=null&&ids.length>0){
+			for(Integer pid:ids){
+				RisenIntegralRecord model = new RisenIntegralRecord();
+				model=manager.findById(pid);
+				int id = model.getRisenirSharecheck();
+				shareCheck=contentShareCheckMng.findById(id);
+				contentShareCheckMng.update(shareCheck);
+			}
+		}
+		return manager.confirmShare(ids,type,score);
+	}
+	@RequiresPermissions("partyBuild:partybuild_main")
+	@RequestMapping("/partyBuild/report.do")
+	public String report(ModelMap model, HttpServletRequest request, String root){
+		CmsUser user = CmsUtils.getUser(request);
+		List<CmsDepartment>list=new ArrayList<CmsDepartment>();
+		boolean isnullorg = deptMng.findlistByPid(user.getDepartment().getId());
+		if(StringUtils.hasText(root)){
+			model.addAttribute("root", root);
+		}
+		list=deptMng.getList(user.getDepartment().getId(), false);
+		int[] pid = new int[list.size()];
+		for(int i=0; i<list.size(); i++){
+			pid[i] = list.get(i).getId();
+		}
+		boolean ischa = cmsDepartmentDao.findChildrenIsBoolean(pid);
+		if(!ischa && user.getDepartment().getPriority() != 1){
+			isnullorg = true;
+		}
+		model.addAttribute("ischildren",isnullorg);
+		return "report/list";
+	}
+	
+	@RequiresPermissions("partyBuild:partybuild_main")
+	@RequestMapping("/partyBuild/partybuild_main.do")
+	public String partybuild_main(){
+		System.out.println("come in");
+		return "pbd/partybuild_main";
+	}
+	
+	@RequiresPermissions("partyBuild:v_list_share")
+	@RequestMapping("/partyBuild/v_list_share.do")
+	public String v_list_share(){
+		return "shareContent/partybuild_main";
+	}
+	
+	@RequiresPermissions("partyBuild:v_left")
+	@RequestMapping("/partyBuild/v_left.do")
+	public String left(){
+		return "pbd/left";
+	}
+	
+	@RequiresPermissions("partyBuild:share_left")
+	@RequestMapping("/partyBuild/share_left.do")
+	public String share_left(){
+		return "shareContent/left";
+	}
+	
+	@RequiresPermissions("partyBuild:v_add")
+	@RequestMapping("/partyBuild/v_add.do")
+	public String add(ModelMap model) {
+		return "pbd/add";
+	}
+	@RequiresPermissions("partyBuild:baseScore")
+	@RequestMapping("/partyBuild/baseScore.do")
+	public String baseScore(String root, ModelMap model,HttpServletRequest request) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+		String year = sdf.format(new Date());
+		CmsUser user = CmsUtils.getUser(request);
+		CmsDepartment depart = user.getDepartment();
+		List<CmsDepartment> xtDept = new ArrayList<CmsDepartment>();
+		List<CmsDepartment> jgDept = new ArrayList<CmsDepartment>();
+		String type=request.getParameter("type");
+		if("admin".equals(user.getUsername()) || ("省局机关党委".equals(user.getUsername()))){
+			xtDept = deptMng.getAllJgdwDept();
+			jgDept = deptMng.getAllZhiBuById(1);
+		}else{
+			Integer parentId = depart.getParent().getId();
+			Integer zbParentId = parentId;
+			boolean isShiju = true;
+			if(depart.getParent().getParent()!=null){
+				isShiju = false;
+			}
+			if(depart.getParent().getParent()==null){
+				zbParentId = depart.getId();
+			}
+			xtDept = deptMng.getAllJgdwDeptById(parentId,isShiju);
+			jgDept = deptMng.getAllZhiBuById(zbParentId);
+		}
+		String xtDepartId = "";
+		String zbDepartId = "";
+		if(type==null || type==""){
+			type="xt";
+		}
+		if(type.equals("xt")){
+			if(xtDept!=null && (xtDept.size()>0)){
+				for (CmsDepartment cmsDepartment : xtDept) {
+					xtDepartId = xtDepartId + String.valueOf(cmsDepartment.getId())+",";
+				}
+				xtDepartId = xtDepartId.substring(0,xtDepartId.length()-1);
+			}else{
+				xtDepartId = String.valueOf(depart.getId());
+			}
+		}else{
+			if(jgDept!=null && (jgDept.size()>0)){
+				for (CmsDepartment cmsDepartment : jgDept) {
+					zbDepartId = zbDepartId + String.valueOf(cmsDepartment.getId())+",";
+				}
+				zbDepartId = zbDepartId.substring(0,zbDepartId.length()-1);
+			}else{
+				zbDepartId = String.valueOf(depart.getId());
+			}
+		}
+		List<RisenIntegral> list = new ArrayList<RisenIntegral>();
+		if(type.equals("xt")){
+			list = integralManager.getYearInfo(year,xtDepartId);
+		}else{
+			list = integralManager.getYearInfo(year,zbDepartId);
+		}
+		model.addAttribute("list", list);
+		model.addAttribute("year", year);
+		return "pbd/baseScore";
+	}
+	@RequestMapping(value="/partyBuild/getData.do")
+	@ResponseBody
+	public Object getReportDate(HttpServletRequest request, String root) {
+		List<CmsDepartment>list=new ArrayList<CmsDepartment>();
+		CmsUser user = CmsUtils.getUser(request);
+		boolean isnullorg = deptMng.findlistByPid(user.getDepartment().getId());
+		if(isnullorg){
+			list.add(deptMng.findById(user.getDepartment().getId()));
+			if("机关党委".equals(list.get(0).getSddspoOrgtype()) || "党总支".equals(list.get(0).getSddspoOrgtype())){
+				list = deptMng.getList(user.getDepartment().getParent()!=null?user.getDepartment().getParent().getId():0, false);
+			}
+		}else {
+			if(root == null || "".equals(root)){
+				list=deptMng.getList(user.getDepartment().getId(), false);
+				int[] pid = new int[list.size()];
+				for(int i=0; i<list.size(); i++){
+					pid[i] = list.get(i).getId();
+				}
+				boolean ischa = cmsDepartmentDao.findChildrenIsBoolean(pid);
+				if(!ischa && user.getDepartment().getPriority() != 1){
+					isnullorg = true;
+					list=deptMng.getList(user.getDepartment().getId(), false);
+					list.add(0, user.getDepartment());
+				}else if(user.getDepartment().getParent() == null && user.getDepartment().getId() != 1){
+					
+				}else if(user.getDepartment().getId() == 1){
+					List<CmsDepartment> cdtList =deptMng.getList(null, false);
+					List<CmsDepartment> returnList = new ArrayList<CmsDepartment>();
+					for (CmsDepartment cmsDepartment : cdtList) {
+						for (CmsDepartment child : cmsDepartment.getChild()) {
+							if (child.getName().endsWith("局机关党委")) {
+								returnList.add(child);
+							}
+						}
+					}
+					for (CmsDepartment de : returnList) {
+						if(de.getId()==2637){
+							returnList.remove(de);
+							break;
+						}
+					}
+					list = returnList;
+				}else{
+					//list=deptMng.getList(user.getDepartment().getParent()!=null?user.getDepartment().getParent().getId():null, false);
+					list=deptMng.findXtForJGDWByDeptId(user.getDepartment().getParent()!=null?user.getDepartment().getParent().getId():null);
+					list.add(0, user.getDepartment());
+				}
+			}else{
+				if(user.getDepartment().getParent() == null && user.getDepartment().getId() != 1){
+					int deptidd = cmsDepartmentDao.findChildrenFirstDeptidByPid(user.getDepartment().getId());
+					list = deptMng.getList(deptidd, false);
+				}else{
+					list=deptMng.getList(user.getDepartment().getId(), false);
+					/**
+					for (CmsDepartment cmsDepartment : list) {
+						String deptName = cmsDepartment.getName();
+						deptName = deptName.replace("党支部", "");
+						cmsDepartment.setName(deptName);
+					}
+					*/
+				}
+			}
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+		List<RisenIntegral> li = new ArrayList<RisenIntegral>();
+			for(int i=0; i<list.size();i++){
+				RisenIntegral ri = list.get(i).getRisenintegral();
+				if(ri == null){
+					RisenIntegral it = new RisenIntegral();
+					
+					it.setRisenitBase(1);
+					it.setRisenitOrgid(list.get(i).getId());
+					it.setRisenitOrgname(list.get(i).getName());
+					it.setRisenitScore(0);
+					it.setRisenitYear(new Integer(sdf.format(new Date())));
+					it.setRisenitDesc("");
+					it = itManager.save(it);
+					CmsDepartment dept = list.get(i);
+					dept.setRisenintegral(it);
+					deptMng.update(dept);
+					li.add(it);
+				}else{
+					RisenIntegral ril = new RisenIntegral();
+					ril.setRisenitBase(ri.getRisenitBase());
+					ril.setRisenitOrgname(ri.getRisenitOrgname());
+					ril.setRisenitScore(ri.getRisenitScore());
+					ril.setRisenitYear(new Integer(sdf.format(new Date())));
+					ril.setRisenitDesc("");
+					li.add(ril);
+				}
+				//System.out.println(ri.getRisenitOrgname()+"--"+ri.getRisenitScore());
+			}
+		return li;
+	}
+	@RequiresPermissions("partyBuild:v_edit")
+	@RequestMapping("/partyBuild/v_edit.do")
+	public String edit(Integer id, Integer pageNo, HttpServletRequest request, ModelMap model) {
+		/*WebErrors errors = validateEdit(id, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		model.addAttribute("RisenIntegralRecord", manager.findById(id));
+		model.addAttribute("pageNo",pageNo);
+		return "partyBuild/edit";*/
+		RisenIntegralRecord bean=new RisenIntegralRecord();
+		bean.setRisenirOrgid(id);
+		//CmsUser user = CmsUtils.getUser(request);
+				Pagination pagination = manager.getPage(cpn(pageNo), CookieUtils
+							.getPageSize(request),bean);
+				model.addAttribute("pagination",pagination);
+				model.addAttribute("pageNo",pagination.getPageNo());
+				
+				return "pbd/list";
+	}
+
+	@RequiresPermissions("partyBuild:o_save")
+	@RequestMapping("/partyBuild/o_save.do")
+	public String save(RisenIntegralRecord bean, HttpServletRequest request, ModelMap model) {
+		WebErrors errors = validateSave(bean, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		//CmsUser user = CmsUtils.getUser(request);
+		
+		bean = manager.save(bean);
+		log.info("save partyBuild id={}", bean.getRisenirUuid());
+		return "redirect:v_list.do";
+	}
+
+	@RequiresPermissions("partyBuild:o_update")
+	@RequestMapping("/partyBuild/o_update.do")
+	public String update(RisenIntegralRecord bean, Integer pageNo, HttpServletRequest request,
+			ModelMap model) {
+		WebErrors errors = validateUpdate(bean.getRisenirUuid(), request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		bean = manager.update(bean);
+		log.info("update partyBuild id={}.", bean.getRisenirUuid());
+		return list(pageNo, request, model,null);
+	}
+	
+
+	@RequiresPermissions("partyBuild:o_delete")
+	@RequestMapping("/partyBuild/o_delete.do")
+	public String delete(Integer id, Integer pageNo, HttpServletRequest request,
+			ModelMap model) {
+		
+		 manager.delete(id);
+		 
+			log.info("delete partyBuild id={}",id);
+		
+		return list(pageNo, request, model,null);
+	}
+	
+	@Transactional
+	@RequiresPermissions("partyBuild:o_deletenew")
+	@RequestMapping("/partyBuild/o_deletenew.do")
+	@ResponseBody
+	public Object deleteNew(Integer[] ids, Integer pageNo, HttpServletRequest request,
+			ModelMap model) {
+
+		List<RisenIntegralRecord> list= risenIntegralRecordDao.findByIds(ids);
+		Integer[]scids = new Integer[list.size()];
+		for(int i=0; i<list.size(); i++){
+			scids[i] = list.get(i).getRisenirSharecheck();
+		}
+		contentShareCheckMng.deleteByIds(scids);
+		for(int i=0; i<ids.length;i++){
+			manager.delete(ids[i]);
+			RisenIntegralRecord record =  manager.findById(ids[i]);
+		}
+		
+		return 1;
+	}
+	
+	private WebErrors validateSave(RisenIntegralRecord bean, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		CmsSite site = CmsUtils.getSite(request);
+//		bean.setSite(site);
+		return errors;
+	}
+	
+	private WebErrors validateEdit(Integer id, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		CmsSite site = CmsUtils.getSite(request);
+		if (vldExist(id, site.getId(), errors)) {
+			return errors;
+		}
+		return errors;
+	}
+
+	private WebErrors validateUpdate(Integer id, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		CmsSite site = CmsUtils.getSite(request);
+		if (vldExist(id, site.getId(), errors)) {
+			return errors;
+		}
+		return errors;
+	}
+
+	
+
+	private boolean vldExist(Integer id, Integer siteId, WebErrors errors) {
+		if (errors.ifNull(id, "id")) {
+			return true;
+		}
+		RisenIntegralRecord entity = manager.findById(id);
+		if(errors.ifNotExist(entity, RisenIntegralRecord.class, id)) {
+			return true;
+		}
+//		if (!entity.getSite().getId().equals(siteId)) {
+//			errors.notInSite(RisenIntegralRecord.class, id);
+//			return true;
+//		}
+		return false;
+	}
+	@RequiresPermissions("partyBuild:updScore")
+	@RequestMapping("/partyBuild/updScore.do")
+	public void updateBaseScore(ModelMap model,HttpServletRequest request, HttpServletResponse response,Integer orgId,Integer score){
+		RisenIntegral bean=itManager.findByOrgId(orgId);
+		CmsDepartment dept = deptMng.findById(orgId);
+		if(!StringUtils.isEmpty(bean)){//有记录
+			itManager.updateBaseScore(orgId, score);
+		}else{//没有记录
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+			bean=new RisenIntegral();
+			bean.setRisenitOrgid(orgId);
+			bean.setRisenitScore(0);
+			bean.setRisenitBase(score);
+			bean.setRisenitOrgname(dept.getName());
+			bean.setRisenitYear(new Integer(sdf.format(new Date())));
+			bean.setRisenitDesc("");
+			itManager.save(bean);
+		}
+		try {
+			response.getWriter().write("success");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@RequiresPermissions("partyBuild:updScore")
+	@RequestMapping("/partyBuild/batchUpdScore.do")
+	public String BatchUpdBaseScore(ModelMap model,HttpServletRequest request,String ids,Integer score){
+		RisenIntegral bean=null;
+		String [] id=ids.split(",");
+		Integer[] orgids=new Integer[id.length];
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+		for (int i = 0; i < id.length; i++) {
+			orgids[i]=Integer.valueOf(id[i]);
+			bean=itManager.findByOrgId(Integer.valueOf(Integer.valueOf(id[i])));
+			if(StringUtils.isEmpty(bean)){//没有记录
+				CmsDepartment dept=deptMng.findById(Integer.valueOf(id[i]));
+				bean=new RisenIntegral();
+				bean.setRisenitOrgid(Integer.valueOf(id[i]));
+				bean.setRisenitOrgname(dept.getName());
+				bean.setRisenitScore(0);
+				bean.setRisenitBase(score);
+				bean.setRisenitYear(new Integer(sdf.format(new Date())));
+				bean.setRisenitDesc("");
+				itManager.save(bean);
+			}
+		}
+		itManager.batchUpdBaseScore(orgids, score);
+		
+		return baseScore("",model,request);
+	}
+	@Autowired
+	private IRisenIntegralService integralManager;
+	@Autowired
+	private IRisenIntegralRecordService manager;
+	@Autowired
+	private IRisenIntegralRecordDao risenIntegralRecordDao;
+	@Autowired
+	private IRisenIntegralService itManager;
+	@Autowired
+	private CmsDepartmentMng deptMng;
+	@Autowired
+	private ContentShareCheckMng contentShareCheckMng;
+	@Autowired
+	private CmsDepartmentDao cmsDepartmentDao;
+	@Autowired
+	private ChannelDao channelDao;
+}

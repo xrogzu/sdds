@@ -1,0 +1,8 @@
+package com.risen.dao;
+
+import com.risen.entity.RisenChangeremindrecord;
+
+public interface IRisenChangeremindrecordDao {
+	
+	RisenChangeremindrecord save(RisenChangeremindrecord model);
+}

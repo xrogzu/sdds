@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+	
+	$('#mb1').click(function(){
+	    var content1= "<img src='${base}/r/cms/www/risen/images/tpmb1.png' width='800' height='550' />";//弹出图片
+	    TINY.box.show(content1,0,0,0,0.5);
+	});
+	$('#mb2').click(function(){
+	    var content2= "<img src='${base}/r/cms/www/risen/images/tpmb2.png' width='700' height='550' />";//弹出图片
+	    TINY.box.show(content2,0,0,0,0.5);
+	});
+	$('#mb3').click(function(){
+	    var content3= "<img src='${base}/r/cms/www/risen/images/tpmb3.png' width='700' height='550' />";//弹出图片
+	    TINY.box.show(content3,0,0,0,0.5);
+	});
+});
+
+function chanMb(i){
+    if(i==1) $("#mblx").css('display','');
+    else $("#mblx").css('display','none');
+}
+</script>
+<style type="text/css">
+.items{padding-top:1px;}
+
+.divcss5_list_title{background:#eeeeee; border:1px solid #cccccc; padding:1em;}
+.divcss5_list_content{padding:1em;}
+#tinybox{position:absolute; display:none; padding:10px; background:#ffffff url(${base}/r/cms/www/risen/images/preload.gif) no-repeat 50% 50%; border:10px solid #e3e3e3; z-index:2000;}
+#tinymask{position:absolute; display:none; top:0; left:0; height:100%; width:100%; background:#000000; z-index:1500;}
+#tinycontent{background:#ffffff; font-size:1.1em;}
+
+#n{margin:10px auto; width:920px; border:1px solid #CCC;font-size:12px; line-height:30px;}
+#n a{ padding:0 4px; color:#333}
+</style>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 网上投票 - 修改</div>
+	<form class="ropt">
+	    <input name="startTime" value="${startTime!}" type="hidden"/>
+	    <input name="endTime" value="${endTime!}" type="hidden"/>
+	    <input name="pageNo" value="${pageNo!}" type="hidden"/>
+		<input type="submit" class="return-button" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="update.do">
+<input name="startDate" value="${startDate!}" type="hidden"/>
+<input name="endDate" value="${endDate!}" type="hidden"/>
+<input name="pageNo" value="${pageNo!}" type="hidden"/>
+<@p.text colspan="2" label="标题" name="voteTitle" value=vote.voteTitle required="true" class="required" style="width:400px" maxlength="255"/>
+<tr>
+<td class="pn-flabel pn-flabel-h">摘要</td>
+<td class="pn-fcontent" colspan="3" >
+<textarea id="voteDes" name="voteDes" style="visibility: hidden; display: none;">${vote.voteDes!}</textarea>
+<script type="text/javascript">
+$(function() {
+   	CKEDITOR.replace( 'voteDes' ,
+   			{
+		   		filebrowserUploadUrl : '${base}/jeeadmin/jeecms/fck/upload.do',  
+		   		filebrowserImageUploadUrl : '${base}/jeeadmin/jeecms/fck/upload.do?Type=Image',  
+		   		filebrowserFlashUploadUrl : '${base}/jeeadmin/jeecms/fck/upload.do?Type=Flash',
+		   		filebrowserMediaUploadURL : '${base}/jeeadmin/jeecms/fck/upload.do?Type=Media'
+   		     }
+   	);  
+ });
+</script>
+</td>
+</tr>
+<@p.td label="投票时间" colspan="2" >
+<table>
+	<tr>
+		<td>开始时间</td>
+		<td><input type="text" name="startTime" value="${(vote.startTime?string('yyyy-MM-dd HH:mm:ss'))!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate"/></td>
+		<td rowspan="2" valign="middle"><span class="pn-fhelp">留空不限制</span></td>
+	</tr>
+	<tr>
+		<td>结束时间</td>
+		<td><input type="text" name="endTime" value="${(vote.endTime?string('yyyy-MM-dd HH:mm:ss'))!}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate"/></td>
+	<tr/>
+</table>
+</@p.td>
+<tr>
+<td colspan="1" width="12%" class="pn-flabel pn-flabel-h">模板:</td>
+<td colspan="1" width="38%" class="pn-fcontent"><label><input onclick="chanMb(1);" type="radio" value="1" <#if vote.voteType==1>checked="checked"</#if>  name="voteType"/>模板1[<a href="###" id="mb1"><span style="color:red;" >预览</span></a>]</label> 
+      <label><input onclick="chanMb(2);" type="radio" value="2" <#if vote.voteType==2>checked="checked"</#if> name="voteType"/>模板2[<a href="###" id="mb2"><span style="color:red;" >预览</span></a>]</label><label><input onclick="chanMb(3);" type="radio" value="3" <#if vote.voteType==3>checked="checked"</#if> name="voteType"/>模板3[<a href="###" id="mb3"><span style="color:red;" >预览</span></a>]</label>
+</td>
+<td colspan="1" width="12%" class="pn-flabel pn-flabel-h">启用:</td>
+<td colspan="1" width="38%" class="pn-fcontent"><label><input type="radio" value="true" <#if vote.status>checked="checked"</#if> name="status"/>是</label> 
+      <label><input type="radio" value="false" <#if !vote.status>checked="checked"</#if> name="status"/>否</label>
+</td>
+</tr>
+
+<tr id="mblx" <#if vote.voteType!=1>style="display:none;"</#if>>
+<td colspan="1" width="12%" class="pn-flabel pn-flabel-h">类型:</td>
+<td colspan="3" width="88%" class="pn-fcontent"><label><input type="radio" value="1"  <#if vote.voteNature??><#if vote.voteNature==1>checked="checked"</#if></#if>   name="voteNature"/>单选</label> 
+      <label><input type="radio" value="2" <#if vote.voteNature??><#if vote.voteNature==2>checked="checked"</#if></#if>  name="voteNature"/>多选</label>
+</td>
+</tr>
+
+
+<tr><@p.td colspan="2"><@p.hidden name="id" value=vote.id/><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td></tr>
+</@p.form>
+</div>
+
+</body>
+</html>

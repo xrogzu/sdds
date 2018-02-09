@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "../head.html"/>
+<#include "wenku_upload.html"/>
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/layer/skin/default/layer.css" />
+<script src="${base}/r/cms/layer/layer.js"></script>
+<script type="text/javascript">
+$(function() {
+	$(".changeImg").hide();
+	$(".normalImg").hide();
+	
+	$("[name='changeBackImg']").click(function(){
+		$(".changeImg").show();
+	});
+	$("[name='cancelOperate']").click(function(){
+		$("[name='backgroundImg']").val("");
+		$(".changeImg").hide();
+	});
+	$("[name='getNormalImg']").click(function(){
+		layer.open({
+                type: 1 //Page层类型
+                    ,
+                area: ['1250px', '220px'],
+                title: '原标题图',
+                maxmin: false, //允许全屏最小化
+                content: $(".normalImg").html()
+        });
+	});
+	$("#jvForm").validate();
+	$("#jvForm").submit(function(){
+		var reg = new RegExp("^[0-9]*$");  
+       	var multiSelect = $("[name='multiSelect']").val();
+       	if(!/^[0-9]*$/.test(multiSelect)){ 
+        	alert("最大投票数请输入数字!"); 
+        	return false; 
+    	}else{
+    		return true;
+    	}
+	});
+});
+</script>
+
+</head>
+<body>
+<div class="normalImg" style="display:none;">
+	<img src="${base}${ballot.backgroundImg!}" style="background-repeat:no-repeat;width:1200px;height:170px;"/>
+</div>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: E票通 - 在线投票 - 修改</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';" class="return-button"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_update.do"><!-- readonly="readonly" -->
+<@p.text label="标题" colspan="1" width="200" value="${ballot.title!}" name="title" required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="开始时间" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:$dp.$('endTime').value})" value="${ballot.startTime?date}" colspan="1" width="50" name="startTime" id="startTime" /><@p.tr/>
+<@p.text label="结束时间" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:$dp.$('startTime').value})" value="${ballot.endTime?date}" colspan="1" width="50" name="endTime" id="endTime" /><@p.tr/>
+<@p.text label="最大投票数" value="${ballot.multiSelect}" name="multiSelect" required="true" required="true" /><@p.tr/>
+<#if loginUser?? && loginUser=="省局机关党委">
+ <tr>
+ 	<td>标题图</td>
+ 	<td class="pn-flabel pn-flabel-h">
+ 		<input class="browse" type='button' name="getNormalImg" value="查看原图" style="width:120px;"/>
+ 		<input class="browse" type='button' name="changeBackImg" value="替换原图" style="width:120px;"/>
+ 		<input class="browse" type='button' name="cancelOperate" value="取消"/>
+ 		<div class="changeImg" style="margin-top:5px;">
+			<input type="text" id="docPath" name="backgroundImg" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;" class="changeImg">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText').val(this.value)" size="19" type="file" name="docFile" id="docFile" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc();" class="upload-button"/>
+			</span>
+		</div>
+ 	</td>
+ </tr>
+ </#if>
+<@p.editor name="introduction" value="${ballot.introduction!''}" label="导语"></@p.editor>
+<!-- 
+<@p.textarea label="描述" id="description" name="description" cols="100" rows="6" value="${ballot.description!}"></@p.textarea>
+ -->
+<@p.td><@p.hidden  name="ballotId" value="${ballot.ballotId!}"/>
+<@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+</@p.form>
+</div>
+</body>
+</html>

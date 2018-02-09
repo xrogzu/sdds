@@ -1,0 +1,494 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="renderer" content="webkit"/>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1″ >
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<link rel="stylesheet" href="${base}/res/jeecms/layui/css/layui.css" type="text/css">
+<link rel="stylesheet" href="${base}/res/jeecms/css/css.css" type="text/css">
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+<style>
+	.outPartyUser{margin-top:10px;width:90%;height:40px;margin-left:40px;}
+</style>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+//获取选中的checkbox选中的值
+$(function(){
+	var year = '${risendsYear!''}';
+	if(year==null || year==""){
+		year = new Date().getFullYear();
+	}
+	$("[name='risendsYear']").attr("value",year);
+	$("input[name='ids']:checkbox").click(function(){
+		var ids = "";
+		$("input[name='ids']:checkbox").each(function() {
+			if($(this).is(":checked")){
+				ids += $(this).attr('value')+","; 
+			}
+		}); 
+		if(ids != null && ids.length > 1){
+			ids = ids.substring(0,ids.length-1); 
+		}
+		$("#ids1").attr("value",ids);
+	});
+});
+
+function doDelete(){
+	var f = getTableForm();
+	f.action="o_delete.do";
+	f.submit();
+}
+function optCheck(){
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doCheck,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.check'/>");
+}
+function doCheck(){
+	var f = getTableForm();
+	f.action="o_check.do";
+	f.submit();
+}
+function outexcel(name,idcard){
+	var f = getTableForm();
+	var page=$("[name='pageNo1']").val();
+	var pageSize=$("[name='pageSize']").val();
+	var ids=$("#ids1").val();
+	var url="";
+	if(page==""){
+		page=1;
+	}
+	url = "getexcel.do?username=${username!}&departId=${departId!}&sddscpIdnumber=${sddscpIdnumber!}&sddscpIsinjob=${sddscpIsinjob!}&pageNo="+page+"&pageSize="+pageSize;
+	if(ids!=null && ids!=""&& ids!=undefined){
+		url= url+"&ids="+ids;
+	}
+	f.action=url;
+	
+	f.submit();
+}
+function importUser(){
+	$("#loading").show();
+	$.ajax({
+			type : "post",  
+			url : "importuser.do",  
+			data : $('#addForm').serialize(),
+			dataType : "json" , 
+			 error: function(){
+					$("#loading").css("display","none");
+			 		alert("网络异常");
+			 		},
+			success : function(data){
+				$("#loading").css("display","none");
+				alert(data);
+				location.reload(); 
+ 			}
+		});
+}
+function showdialog(){
+		$("#dialog-edit-form input").val("");
+		$("#liulan").attr("value","浏览");
+		$("#shangchuan").attr("value","上传");
+		$( "#dialog-edit-form" ).dialog("open");
+	}
+$(function(){
+	$("td").css({"align":"center"});
+	$("#dialog-edit-form").dialog({
+		autoOpen: false,
+		height: 220,
+		width: 430,
+		modal: true,
+		buttons: {
+			"开始导入": function() {
+						importUser();
+				var errorlength=$(".error").length;
+				if(errorlength<=0){
+					 $( this ).dialog( "close" );
+				}
+			},
+			"<@s.m code='global.reset'/>": function() {
+				$("#addForm")[0].reset();
+			}
+		}
+	});
+});
+function uploadMb(){
+	window.open("${base}/r/cms/www/risen/importmb/mb.xls");
+}
+function recovery(id){
+	$("#loading").show();
+	$.ajax({
+			type : "post",  
+			url : "recovery.do?id="+id,  
+			data : $('#addForm').serialize(),
+			dataType : "json" , 
+			 error: function(){
+					$("#loading").css("display","none");
+			 		alert("网络异常");
+			 		},
+			success : function(data){
+				$("#loading").css("display","none");
+				alert(data);
+				location.reload(); 
+ 			}
+		});
+}
+			function zuze(obj){
+			 	$(".targetDeptId").val("");
+				$(".targetDeptName").val("");
+				$( "#dwlis3" ).dialog("open");
+                $(".userid").val(obj);
+			}
+			function tuihui(obj){
+				$(".userid").val(obj);
+				$("#dwlis4").show();
+				
+			}
+			function tuihuiyy(obj,obj2){
+				$(".userid").val(obj);
+				$("#dwlis5").show();
+				$("#SDDSCPTHSM2").val(obj2);
+			}
+			$(function(){
+				$("#departDialog3").dialog({
+					autoOpen: false,
+					modal: true,
+					width: 280,
+					height: 420,
+					position: ["center",20],
+					buttons: {
+						"OK": function() {
+							$(".targetDeptId").val($("input[name='departId']:checked").val());
+							var targetDeptNameValue = $("input[name='departId']:checked+span").html();
+							var targetDeptType = $("input[name='departId']:checked").next().next().html();
+							alert(targetDeptType);
+							if(targetDeptNameValue!="" && targetDeptNameValue.indexOf("党组党建工作指导组")>-1){
+	                            alert("请选择支部或机关党委");
+	                            $(".targetDeptName").val("");     
+							}
+							else {
+								$(".targetDeptName").val(targetDeptNameValue);
+							}
+							$(this).dialog("close");
+							//$(this).dialog("close");
+						},"清除":function(){
+							$(".targetDeptId").val(0);
+							$(".targetDeptName").val("");
+							$(this).dialog("close");
+						}
+					}
+				});
+				$("#dwlis3").dialog({
+					autoOpen: false,
+					modal: false,
+					width: 500,
+					height: 200,
+					position: ["center",150],
+				});
+				var parent_opened = false;
+				var parent_opened1 = false;
+				var parent_opened2 = false;
+				var parent_opened3 = false;
+				
+	             $("#dwlis3 a").click(function(){
+	                 $("#dwlis3").hide();
+	                 $(".zhezca").hide();
+                 	 $(".targetDeptId").val("");
+					 $(".targetDeptName").val("");
+					 $(".userid").val("");
+	             });
+	              $("#dwlis4 .dw_tit2 a").click(function(){
+	                 $("#dwlis4").hide();
+	                 $(".userid").val("");
+	                 $("#SDDSCPTHSM").val("");
+	             });
+	              $("#dwlis5 .dw_tit2 a").click(function(){
+	                 $("#dwlis5").hide();
+	                 $(".userid").val("");	
+	                 $("#SDDSCPTHSM2").val("");
+	             });
+				$(".jxxt").click(function(){
+					 $(".outPartyUser").show();
+					 this.style.backgroundColor='#4876FF';
+					$(".jxjg").css({"background":"#ffffff"});
+					$(".zjstatus").val("1");
+				});
+				$(".jxjg").click(function(){
+					  $(".outPartyUser").hide();
+					  this.style.backgroundColor='#4876FF';
+					 $(".jxxt").css({"background":"#ffffff"});
+					  $(".zjstatus").val("2");
+				});
+				$(".depart").click(function(){
+					//第一次打开，需要获取数据。
+					if(!parent_opened) {
+						$("#departTree3").treeview({
+							url: "../admin_global/v_depart_add.do"
+						});
+						parent_opened = true;
+						$("#departDialog3").show();
+					}
+					$('#departDialog3').dialog('open');
+					return false;
+				});	
+				$(".subimt").click(function(){
+					var zjstatus = $(".zjstatus").val();
+					var targetDeptId = $(".targetDeptId").val();
+					var userid = $(".userid").val();
+					var url = "o_zhuanchu.do?id="+userid+"&targetDeptId="+targetDeptId+"&zjstatus="+zjstatus;
+					window.location.href=url;
+				});
+				$(".subimt1").click(function(){
+					var zjstatus =4;
+					var SDDSCPTHSM = $("#SDDSCPTHSM").val();
+					if(SDDSCPTHSM!=null && SDDSCPTHSM!="" &&SDDSCPTHSM!="请输入..."){
+						var userid = $(".userid").val();
+						var url = "o_zhuanchu.do?id="+userid+"&SDDSCPTHSM="+SDDSCPTHSM+"&zjstatus="+zjstatus;
+						window.location.href=url;
+					}else{
+						alert("请输入退回说明！");
+						return false;
+					}
+				});
+				$(".subimt2").click(function(){
+					var zjstatus =5;
+					var userid = $(".userid").val();
+					var url = "o_zhuanchu.do?id="+userid+"&zjstatus="+zjstatus;
+					window.location.href=url;
+				});
+			});
+</script>
+<style >
+.dwlis2{overflow:hidden;margin-top:20px;
+border:#909090 1px solid;background:#fff;color:#333;
+filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=4);/*兼容ie*/
+-moz-box-shadow: 2px 2px 10px #909090;/*兼容firefox*/
+-webkit-box-shadow: 2px 2px 10px #909090;/*兼容safari或chrome*/
+box-shadow:2px 2px 10px #909090;/*兼容opera或ie9*/
+} 
+
+</style>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 党员管理 > <@s.m "global.list"/></div>
+</div>
+<div class="box-positon">
+	<form class="ropt">
+		<!-- <input class="add" <#if (sddscpIsinjob)?? && sddscpIsinjob=="1"> type="submit" <#else> type="hidden" </#if> value="<@s.m "global.add"/>" onclick="this.form.action='v_add.do?sddscpIsinjob=1';"/> -->
+		<input class="add" <#if (sddscpAll)?? && sddscpAll=="1"> type="submit" <#else> type="hidden" </#if> value="<@s.m "global.add"/>" onclick="this.form.action='v_add.do?sddscpAll=1';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<#include "wenku_upload.html"/>
+<form action="new_v_list.do?departId=${departId!}&sddscpIsinjob=${sddscpIsinjob!}&sddscpChanges=${sddscpChanges!}&sddscpAssess=${sddscpAssess!}&sddscpAll=${sddscpAll!}" method="post">
+
+<div style="padding-bottom:10px; text-indent:6px;">
+<input type="hidden" id="ids1" name="ids1" value="${ids!}"/>
+<input type="hidden" name="pageSize" value="${pageSize!}"/>
+<input type="hidden" name="pageNo1" value="${pageNo!}"/>
+党员姓名: <input type="text" value="${username!}" name="username" style="width:100px; margin-right:10px;"/>
+身份证号: <input type="text" value="" name="sddscpIdnumber" style="width:180px; margin-right:10px;"/>
+<#if sddscpAssess?? && ((sddscpAssess=="1") || (sddscpAssess=="2"))>
+	年份: <input type="text" value="" name="risendsYear" onclick="WdatePicker({dateFmt:'yyyy'})" style="width:180px; margin-right:10px;"/>
+</#if>
+<!-- <@p.select name="queryGroupId" value=queryGroupId list=groupList listKey="id" listValue="name" headerKey="" headerValue="cmsUser.group.all" style="height:24px;"/> -->
+<input class="query" type="submit" value="<@s.m "global.query"/>"/>
+<#if (sddscpAll)?? && sddscpAll=="1">
+	<input type="button" onclick="uploadMb();" value="模板下载" style="width:70px;height: 28px;color: #fff;font-size: 13px;line-height: 28px;text-align: center;border: none;cursor: pointer;background: #429fe2;outline: none;margin-left: 20px;font-family: Arial, Helvetica, sans-serif;"/>
+	<input type="button" onclick="showdialog();" value="导入党员" style="width:70px;height: 28px;color: #fff;font-size: 13px;line-height: 28px;text-align: center;border: none;cursor: pointer;background: #429fe2;outline: none;margin-left: 20px;font-family: Arial, Helvetica, sans-serif;"/>
+	<input type="button" onclick="outexcel('','');" value="导出党员" style="width:70px;height: 28px;color: #fff;font-size: 13px;line-height: 28px;text-align: center;border: none;cursor: pointer;background: #429fe2;outline: none;margin-left: 20px;font-family: Arial, Helvetica, sans-serif;"/>
+<#else>
+</#if>
+</div>
+<div id="loading" style="width:100px;height:100px;position:absolute;top:50%;left:50%;margin-left:-50px;margin-top:-50px;display:none;"><img src="${base}/r/cms/www/risen/images/ajax-loader.gif" /></div>
+</form>
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<@p.table value=pagination listAction="new_v_list.do?departId=${departId!}&sddscpIsinjob=${sddscpIsinjob!}&sddscpChanges=${sddscpChanges!}&sddscpAssess=${sddscpAssess!}&sddscpAll=${sddscpAll!}";cmsUser,i,has_next><#rt/>
+	<#if ((sddscpIsinjob)?? && sddscpIsinjob=="1")||((sddscpAll??) && sddscpAll=="1")>
+		<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="25" align="center">
+			<input type='checkbox' name='ids' value='${cmsUser.id}' onclick="Pn.selectCheckBox('${cmsUser.id}',this.checked)"/><#t/>
+		</@p.column><#t/>
+	<#else>
+	</#if>
+	<@p.column title="ID" align="center">${cmsUser.id}</@p.column><#t/>
+	<@p.column code="姓名" style="width:10%;" align="center">${cmsUser.username}</@p.column><#t/>
+	<@p.column code="联系方式" style="width:20%;" align="center">
+		<#if (cmsUser.phone??) && (cmsUser.mobile??) >
+			座机:${cmsUser.phone!}<br/>
+		<#elseif (cmsUser.phone??) && (cmsUser.sddscpOtherphone??)>
+			座机:${cmsUser.phone!}<br/>
+		<#elseif cmsUser.phone??>
+			座机:${cmsUser.phone!}
+		<#else>
+		</#if>
+		<#if (cmsUser.mobile??) && (cmsUser.sddscpOtherphone??)>
+			手机: ${cmsUser.mobile!}<br/>
+		<#elseif cmsUser.mobile??>
+			手机: ${cmsUser.mobile!}
+		<#else>
+		</#if>
+		<#if cmsUser.sddscpOtherphone??>
+			其他: ${cmsUser.sddscpOtherphone!}
+		<#else>
+		</#if>
+	</@p.column><#t/>
+	<@p.column code="学历" style="width:15%;" align="center">
+		<#if cmsUser.sddscpEducation??>
+			<#if cmsUser.sddscpEducation=="1">
+				研究生
+			<#elseif cmsUser.sddscpEducation=="2">
+				大学本科
+			<#elseif cmsUser.sddscpEducation=="3">
+				大学专科
+			<#elseif cmsUser.sddscpEducation=="4">
+				专科以下
+			<#else>
+				无
+			</#if>
+		<#else>
+		</#if>
+	</@p.column><#t/>
+	<@p.column code="所在组织" align="center">
+		<#if (cmsUser.sddscpJgdwname??) &&(cmsUser.sddscpDzzname??)>
+			${cmsUser.sddscpJgdwname!}<br/>
+		<#elseif (cmsUser.sddscpJgdwname??) &&(cmsUser.sddscpZbname??)>
+			${cmsUser.sddscpJgdwname!}<br/>
+		<#elseif cmsUser.sddscpJgdwname??>
+			${cmsUser.sddscpJgdwname!}
+		<#else>
+		</#if>
+		<#if (cmsUser.sddscpDzzname??) && (cmsUser.sddscpZbname??)>
+			${cmsUser.sddscpDzzname!}<br/>
+		<#elseif cmsUser.sddscpDzzname??>
+			${cmsUser.sddscpDzzname!}
+		<#else>
+		</#if>
+		<#if cmsUser.sddscpZbname??>
+			${cmsUser.sddscpZbname!}
+		<#else>
+		</#if>
+	</@p.column><#t/>
+	<@p.column code="global.operate" align="center">
+		<#if (sddscpIsinjob)?? && sddscpIsinjob=="1">
+			<a href="v_edit.do?id=${cmsUser.id}&pageNo=${pageNo!}&ischeck=1&sddscpIsinjob=1" class="pn-opt">查看</a> 
+		<#elseif (sddscpIsinjob)?? && sddscpIsinjob=="2">
+			<a href="v_edit.do?id=${cmsUser.id}&pageNo=${pageNo!}&ischeck=1&sddscpIsinjob=2" class="pn-opt">查看</a> 
+		<#else>
+			<#if sddscpAssess ?? && sddscpAssess!="">
+				<a href="v_edit.do?id=${cmsUser.id}&pageNo=${pageNo!}&ischeck=1&sddscpAssess=${sddscpAssess!}" class="pn-opt">查看</a>
+			</#if>
+			<#if sddscpChanges ?? && sddscpChanges!="">
+				<a href="v_edit.do?id=${cmsUser.id}&pageNo=${pageNo!}&ischeck=1&sddscpChanges=${sddscpChanges!}" class="pn-opt">查看</a>
+			</#if>
+			<#if (sddscpIsinjob)?? && sddscpIsinjob=="0">
+				<a href="v_edit.do?id=${cmsUser.id}&pageNo=${pageNo!}&ischeck=1&sddscpIsinjob=0" class="pn-opt">查看</a>
+			<#else>
+			</#if>
+			<#if (sddscpAll??) && sddscpAll=="1">
+				<#if cmsUser.sddscpZjStatus??>
+					<a  id="${cmsUser.id}"   href="###" onclick="tuihuiyy(${cmsUser.id},'${cmsUser.sddscpThsm}')">查看退回原因</a>
+				<#else>
+				<#if cmsUser.sddscpNewaddyd??>
+					<#if cmsUser.sddscpNewaddyd==logindepartId>
+						<a class="zuze" id="${cmsUser.id}"  href="v_edit.do?id=${cmsUser.id}&zjstatus=3&ischeck=0&sddscpAll=1">接收</a>
+						<a class="zuze" id="${cmsUser.id}"  onclick="tuihui(${cmsUser.id})" href="###" >退回</a> 
+					<#else>
+						<a href="###">申请结转中</a>
+					</#if>
+				<#else>
+					<a href="v_edit.do?id=${cmsUser.id}&pageNo=${pageNo!}&ischeck=1" class="pn-opt">查看</a>
+					|<#rt/> <a href="v_edit.do?id=${cmsUser.id}&pageNo=${pageNo!}&ischeck=0&sddscpAll=1" class="pn-opt"><@s.m "global.edit"/></a> 
+					<#if "admin"==loginUsername>
+					| <#rt/><a href="o_delete.do?ids=${cmsUser.id}&pageNo=${pageNo!}&departid=${departId!}&sddscpAll=1" onclick="if(!$.confirmToUrl(this.href)) {return false;}" class="pn-opt"><@s.m "global.delete"/></a><#t/>
+					</#if>
+					| <#rt/><a class="zuze" id="${cmsUser.id}" onclick="zuze(${cmsUser.id})" href="###">转出</a>
+				</#if>
+			</#if>
+			<#else></#if>
+		</#if>
+	</@p.column><#t/>
+</@p.table>
+<div>
+<#if "admin"==loginUsername>
+	<input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/ style="float:left; margin-right:6px;">
+<#else>
+</#if>
+</div>
+</form>
+<div style="display:none;" id="dialog-edit-form" title="导入">
+	<@p.form id="addForm" action="importuser.do" >
+	<tr>
+		<td class="pn-flabel pn-flabel-h">上传Excel文件</td>
+		<td>
+			<div>
+				<input type="text" id="docPath" name="filepath" value="" style="width:265px"/>
+				<input type="hidden" id="msg" value="" />
+			</div>
+			<div style="margin-top: 5px;">
+				<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+				<input type="text" id="docFileText"/>  
+				<input id="liulan" class="browse" type='button' value='浏览'/>
+				<input onchange="$('#docFileText').val(this.value)" size="19" type="file" name="docFile" id="docFile" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+				<input id="shangchuan" type="button" value="上传并导入" onclick="uploadDoc();" class="upload-button"/>
+				</span>
+			</div>
+		</td>
+	</tr>
+	</@p.form>
+</div>
+<div id="dwlis3" title="党员结转" style="display:none;height: 300px;width:500px;z-index: 999;">
+	<div style="font-size: 22px; line-height:40px; margin-left:14px;width:95%;height:40px;" >
+    	<div class="jxxt"  style="width:170px; float:left;margin:0 10px;text-align:center;border:solid 1px #e5e5e5;cursor:pointer;background:#4876FF;"><font size="14px;">全省地税系统内结转</font></div>
+    	<div class="jxjg" id="zcxt" style="width:170px;float:left;margin:0 10px;text-align:center;border:solid 1px #e5e5e5;cursor:pointer;"><font size="14px;">转出山东地税系统</font></div>
+    </div>
+    <div class="outPartyUser">
+	   	<form action="o_zhuanchu.do">
+		      <table>
+		        <td>转出</td>
+				<td name="target">目标组织</td>
+				<td name="target">
+					<input class="targetDeptName" name="targetDeptName" readonly="readonly" type="text"><input class="depart" type="button" id="depart3" value="请选择"/>
+					<input type="hidden" name="targetDeptId" class="targetDeptId" />
+					<input type="hidden" name="userid" class="userid" />
+					<input type="hidden" name="zjstatus" class="zjstatus" value="1"/>
+				</td>
+		       </table>
+	       </form>
+    </div>
+    <div style="margin-top:10px;"><input type="submit" class="subimt" value="提交" style="width:70px;height: 28px;color: #fff;font-size: 13px;line-height: 28px;text-align: center;border: none;cursor: pointer;background: #429fe2;outline: none;margin-left: 224px;font-family: Arial, Helvetica, sans-serif;"/></div>
+</div>
+<div class="dwlis2" id="dwlis4" style="height: 300px;width:500px;z-index: 999">
+	<div class="dw_tit2"><span>编写退回说明</span><a href="javascript:;">×</a></div>
+	<div><textarea rows="10" cols="81" name="SDDSCPTHSM" id="SDDSCPTHSM">请输入...</textarea></div>
+	<input type="hidden" name="userid" class="userid" />
+	<div><input type="submit" class="subimt1" value="退回" style="width:70px;height: 28px;color: #fff;font-size: 13px;line-height: 28px;text-align: center;border: none;cursor: pointer;background: #429fe2;outline: none;margin-left: 224px;font-family: Arial, Helvetica, sans-serif;margin-top: 50px;"/></div>
+</div>
+<div class="dwlis2" id="dwlis5" style="height: 300px;width:500px;z-index: 999">
+	<div class="dw_tit2"><span>查看退回说明</span><a href="javascript:;">×</a></div>
+	<div><textarea rows="10" cols="81" name="SDDSCPTHSM" id="SDDSCPTHSM2"></textarea></div>
+	<input type="hidden" name="userid" class="userid" />
+	<div><input type="submit" class="subimt2" value="确认收到" style="width:70px;height: 28px;color: #fff;font-size: 13px;line-height: 28px;text-align: center;border: none;cursor: pointer;background: #429fe2;outline: none;margin-left: 224px;font-family: Arial, Helvetica, sans-serif;margin-top: 50px;"/></div>
+</div>
+</div>
+<!-- 弹出框start -->
+
+<div id="departDialog3" title="组织" style="display:none;z-index:999999; margin-right: 20px;">
+    <ul id="departTree3" class="filetree"></ul>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

@@ -1,0 +1,15 @@
+package com.jeecms.cms.dao.assist;
+
+import com.jeecms.cms.entity.assist.CmsBallot;
+import com.jeecms.common.page.Pagination;
+
+public interface CmsBallotDao {
+	public Pagination getPage(Integer departId,int pageNo,int pageSize);
+	public CmsBallot findById(Integer id);
+	public CmsBallot save(CmsBallot bean);
+	public CmsBallot update(CmsBallot bean);
+	public CmsBallot deleteById(Integer id);
+	//验证是否存在相同的项目
+	public boolean existBallot(String ballotName,Integer departId);
+	Pagination getPages(Integer departId, int pageNo, int pageSize);
+}

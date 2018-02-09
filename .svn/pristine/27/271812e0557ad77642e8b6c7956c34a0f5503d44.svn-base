@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>${channel.title!channel.name} - ${site.name}</title>
+<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+<meta http-equiv="keywords" content="${site.keywords!}"/>
+<meta http-equiv="description" content="${site.description!}"/>
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/currency/css/css.css">
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+<script type="text/javascript" src="${base}/r/cms/currency/script/jquery-1.6.3.min.js"></script>
+<script type="text/javascript" src="${base}/r/cms/currency/script/jquery.SuperSlide.2.1.1.js"></script>
+<script type="text/javascript" src="${base}/r/cms/currency/My97DatePicker/WdatePicker.js"></script>
+<head>
+<!-- 滚动条样式 -->
+<style type="text/css"> 
+#gongao{width:290px;height:50px;overflow:hidden;line-height:30px;font-size:13px;font-family:'宋体';color:#0C77CF;font-weight:bold;} 
+#gongao #scroll_begin, #gongao #scroll_end{display:inline} 
+
+.ym_tu ul{margin-top:15px;}
+.ym_tu li{line-height:35px; height:36px; overflow: hidden; border-bottom:solid 1px #ccc;font-size:14px;padding:0 10px;}
+.ym_tu li a{font-size:14px; line-height:35px; height:35px; float: left;}
+.ym_tu li span{float: right;color:#343535;font-size:14px;}
+</style> 
+<!-- 滚动条样式 -->
+<body>
+<div class="zezo"></div>
+
+[#include "../include/header_zhibu_channel.html"/]
+    
+<div class="conter" id="container">
+	[@cms_channel_list parentId='${channel.parentId}' orderBy='4']
+		[#assign i="tag_list_index"/]
+		[#list tag_list as c]
+	        [#if c_index==1] [#assign zbdt="${c.id}"/][#assign zbdtu="${c.url}"/][/#if]
+	        [#if c_index==2] [#assign tzgg="${c.id}"/][#assign tzggu="${c.url}"/][/#if]
+	    [/#list]
+	[/@cms_channel_list]
+	  			  
+	<div class="" id="ji_list" style="width:1040px;">
+		<div class="article" style="height:99%; width:1040px; margin:0px; overflow: hidden;">
+			<div class="ym_top">
+				<span class="art_tit"><a>${channel.name!}</a></span><br/><hr/>
+			</div>
+	        [@cms_content_page count='15' orderBy='4' titLen='46' channelId=channel.id dateFormat='yyyy-MM-dd' currPageClass="currPageClass" norPageClass="norPageClass"]
+	        <div class="ym_tu">
+	            <ul>
+	        	[#list tag_pagination.list as a]
+	                <li><a href='${a.url}' target="_blank" title="${a.title!}">[@text_cut s=a.title len=titLen append='...' /]</a><span >${a.date?string(dateFormat)}</span></li>
+	          	[/#list]
+	            </ul>
+	        </div>
+			<div style="font-size: 14px; font-family: 微软雅黑; width:auto; height: 50px; line-height: 50px; margin-left: 10px;">
+	            [@cms_pagination sysPage='1'/]
+	        </div>
+	        [/@cms_content_page]
+		</div>
+		<!-- 
+		<div class="time1" style="width: 25%;margin:0;">
+		    <div class="ti2">
+	            <span><a href="${zbdtu}" target="_blank">支部动态</a></span>
+	            <ul>
+	            [@cms_content_list count='6' channelId='${zbdt}' orderBy='4' titLen='18' dateFormat='yyyy-MM-dd']
+					[#list tag_list as a]
+					<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+					[/#list]
+				[/@cms_content_list]
+	            </ul>
+			</div>
+		</div>
+	    <div class=" time1" style="width: 25%;margin:0;">
+			<div class="ti2">
+	            <span><a href="${tzggu}" target="_blank">通知公告</a></span>
+	            <ul>
+	            [@cms_content_list count='6' channelId='${tzgg}' orderBy='4' titLen='18' dateFormat='yyyy-MM-dd']
+					[#list tag_list as a]
+					<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+					[/#list]
+				[/@cms_content_list]
+	            </ul>
+			</div>
+		</div>
+		 -->
+	</div>
+</div>
+	    
+[#include "../include/footer_zhibu.html"/]
+
+</body>
+</html>

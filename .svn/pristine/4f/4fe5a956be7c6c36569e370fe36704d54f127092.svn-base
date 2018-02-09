@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+});
+</script>
+<style type="text/css">
+.items{padding-top:1px;}
+</style>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 问卷调查- <@s.m "global.add"/></div>
+	<form class="ropt">
+	    <input name="status" value="1" type="hidden"/>
+		<input type="submit" class="return-button" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="saveQaires.do">
+<@p.text label="标题" colspan="2" name="title" required="true" class="required" style="width:400px" maxlength="255"/>
+<tr><@p.textarea label="描述" colspan="2" name="description" rows="3" style="width:400px" maxlength="255"/></tr>
+<tr><@p.td label="问卷时间" colspan="2">
+<table>
+	<tr>
+		<td>开始时间</td>
+		<td><input type="text" name="startTime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate"/></td>
+		<td rowspan="2" valign="middle"><span class="pn-fhelp">留空不限制</span></td>
+	</tr>
+	<tr>
+		<td>结束时间</td>
+		<td><input type="text" name="endTime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate"/></td>
+	<tr/>
+</table>
+</@p.td>
+</tr>
+<tr>
+<td colspan="1" width="12%" class="pn-flabel pn-flabel-h">启用:</td>
+<td colspan="1" width="38%" class="pn-fcontent"><label><input type="radio" value="true" checked="checked" name="disabled"/>是</label> 
+      <label><input type="radio" value="false" name="disabled"/>否</label>
+</td>
+<td colspan="1" width="12%" class="pn-flabel pn-flabel-h">类型:</td>
+<td colspan="1" width="38%" class="pn-fcontent"><label>问卷</label><input type="hidden" value="1" name="status" />
+</td>
+</tr>
+<@p.td  colspan="2"><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+</@p.form>
+</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title> ${site.name}</title>
+<meta http-equiv="keywords" content="${site.keywords!}"/>
+<meta http-equiv="description" content="${site.description!}"/>
+<script src="${base}/r/cms/jquery.js" type="text/javascript"></script>
+<script src="${base}/r/cms/front.js" type="text/javascript"></script>
+<script src="${base}/r/cms/layer/jquery-1.12.1.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.SuperSlide.2.1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+<script type="text/javascript">
+$(function() {
+	Cms.channelViewCount("${base}","${channel.id}");
+	Cms.siteFlow("${base}", location.href, document.referrer,"${site.config.flowSwitch?string}");
+});
+</script>
+<!-- <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/default/css/index.css" /> -->
+
+<!--[if lt IE 9]> 
+<script src="/${res}/js/html5shiv.min.js"></script>
+<script src="/${res}/js/respond.min.js"></script>
+<![endif]-->
+
+<head>
+<body>
+
+[#include "../include/header.html"/]
+<div class="main container survey clearfix"> 
+  <section class="survey_w840">
+    <h1>${channel.name!}</h1>
+    <div class="survey_con">
+      [#include "../include/vote.html"/]
+    </div>
+  </section>
+  [#include "../include/vote_right.html"/]
+</div>
+[#include "../include/footer.html"/]
+
+</body>
+</html>

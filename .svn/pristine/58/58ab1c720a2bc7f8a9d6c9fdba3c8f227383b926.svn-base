@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script src="${base}/res/common/js/ProvinceAndCityJson.js" type="text/javascript"></script>
+<script type="text/javascript">
+ $(function() {
+	$("#jvForm").validate();
+	}
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 流动党员 > <@s.m "global.add"/></div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input type="submit" value="<@s.m "global.backToList"/>" onclick="history.back();" class="return-button"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+
+<@p.form id="jvForm" action="o_save.do" labelWidth="12" class="formDefStyle">
+<@p.text width="50" colspan="1" label="人员姓名" name="sddsfiUsername" required="true" maxlength="100"/>
+<@p.text width="50" colspan="1" label="组织名称" name="sddsfiOrgname" maxlength="100"/>
+<@p.text width="50" colspan="1" label="年" onclick="WdatePicker({dateFmt:'yyyy'})" name="sddsfiYear" maxlength="100"/>
+<@p.text width="50" colspan="1" label="月" onclick="WdatePicker({dateFmt:'MM'})" name="sddsfiMonth" maxlength="100"/>
+<@p.text width="50" colspan="1" label="日" onclick="WdatePicker({dateFmt:'dd'})"  name="sddsfiDay" maxlength="100"/>
+
+
+<@p.td colspan="2">
+<input type="submit" value="提交" class="return-button"/>
+</@p.td>
+</@p.form>
+</div>
+
+</body>
+</html>

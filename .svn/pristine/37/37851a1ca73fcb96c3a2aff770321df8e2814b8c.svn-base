@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var f = getTableForm();
+	f.action="o_delete.do";
+	f.submit();
+}
+
+function optPriority() {
+	getTableForm().action="o_priority.do";
+}
+function updScore(orgid){
+	$("#"+orgid+"form").submit();
+}
+function batchUpd(){
+	var ids='';
+	var checkeds=$("input[name='ids']:checked");
+	var year = $("#year").val();
+	for(var i=0;i<checkeds.length;i++){
+		ids+=$(checkeds[i]).val()+","; 
+	}
+	if(ids==null||ids==""){
+		$.alert("提示","请选择要修改分数的部门信息");
+	}else{
+		ids=ids.substring(0, ids.length-1);
+		window.location.href="../risenIntegral/batchUpdScore.do?ids="+ids+"&score="+$("#batchScore").val()+"&year="+year;
+	}
+}
+function batchAdd(){
+	$( "#dialog-edit-form").dialog("open");
+}
+function getOtherInfo(){
+	var year = $("#year").val();
+	var type=$("input[name='type']").val();
+	if(year==null || year==""){
+		alert("请选择年份");
+	}else{
+		window.location.href="../risenIntegral/getOtherRule.do?year="+year+"&type="+type;
+	}
+}
+function showRules(uuid){
+	var url = "../risenIntegral/getRule.do?uuid="+uuid;
+	$("input[name='changeUuid']").attr("value",uuid);
+	$.post(url,function(result){
+		if(result!=null){
+			$("#ruleDesc").val(result);
+			$("#descDialog").dialog("open");
+		}else{
+			alert("请稍后再试");
+		}
+	});
+}
+function check(){
+	var year = $("#risenitYear").val();
+	var baseScore = $("#risenitBase").val();
+	var desc = $("#risenitDesc").val();
+	if(year==null || year==""){
+		alert("请选择年份");
+		$("[name='risenitYear']").focus();
+	}else if(baseScore==null || (baseScore=="")){
+		alert("请设置基数");
+		$("[name='risenitBase']").focus();
+	}else{
+		var url = "${base}/admin/risenIntegral/batchSave.do?year="+year;
+		$.post(url,{desc:desc,base:baseScore},function(result){
+			if(result=="success"){
+				alert("保存成功！");
+				location.reload(); 
+			}else{
+				alert("添加失败，请稍后再试！");
+			}
+		});
+	}
+}
+function changeRules(){
+	var changeUuid = $("input[name='changeUuid']").val();
+	var ruleDesc = $("#ruleDesc").val();
+	var url = "../risenIntegral/changeRule.do?changeUuid="+changeUuid+"&ruleDesc="+ruleDesc;
+	$.post(url,function(result){
+		if(result=="success"){
+			alert("修改成功！");
+			location.reload(); 
+		}else{
+			alert("修改失败，请稍后再试！");
+		}
+	});
+}
+function updScore(orgid){
+	$("#"+orgid+"form").submit();
+}
+$(function(){
+	$("#dialog-edit-form").dialog({
+		autoOpen: false,
+		height: 360,
+		width: 430,
+		modal: true,
+		buttons: {
+			"<@s.m code='global.submit'/>": function() {
+				check();
+				var errorlength=$(".error").length;
+				if(errorlength<=0){
+					 $( this ).dialog( "close" );
+				}
+			},
+			"<@s.m code='global.reset'/>": function() {
+				$("#risenitYear").val("");
+				$("#risenitDesc").val("");
+			}
+		}
+	});
+	$("#descDialog").dialog({
+		autoOpen: false,
+		height: 360,
+		width: 430,
+		modal: true,
+		buttons: {
+			"<@s.m code='global.submit'/>": function() {
+				changeRules();
+				var errorlength=$(".error").length;
+				if(errorlength<=0){
+					 $( this ).dialog( "close" );
+				}
+			},
+			"<@s.m code='global.reset'/>": function() {
+				$("#ruleDesc").val("");
+			}
+		}
+	});
+});
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 设置绩效规则 > <@s.m "global.list"/></div>
+</div>
+<div class="body-box">
+<form style="margin-bottom: 10px;">
+年份：<input id="year" name="year" type="text" value="${year!}" onclick="WdatePicker({dateFmt:'yyyy'})" />
+类型：<input type="radio" name="type" value="xt" checked>系统 <input type="radio" name="type" value="jg">机关
+<input type="submit" class="query" onclick="getOtherInfo()" value="查询" style="width:70px;" />
+<input type="button" class="query" onclick="batchAdd()" value="设置绩效规则" style="width:120px;" />
+</form>
+<div style="margin-bottom: 10px;">
+基数：<input type="number" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" id="batchScore" min="1" value="1" style="width: 50px; " />
+<input class="query" type="button" onclick="batchUpd()" value="批量修改加分基数" style="width: 120px; " />
+</div>
+<@p.table value=list;depart,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="25" align="center">
+		<input type='checkbox' name='ids' value='${depart.risenitUuid!}' onclick="Pn.selectCheckBox('${depart.risenitUuid}',this.checked)"/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center">${depart.risenitUuid!}<input type="hidden" name="wids" value="${depart.risenitUuid!}"/></@p.column><#t/>
+	<@p.column code="组织名称" align="center">${depart.risenitOrgname!}</@p.column><#t/>
+	<@p.column code="加分基数" align="center">${depart.risenitBase!'1'}
+		<!-- 
+		<form action="../risenIntegral/updScore.do" id="${depart.risenitUuid}form" method="post">
+		<input type="number" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" name="base"  style="width: 30px;" min="1" value="${depart.risenitBase!'1'}"/>
+		<input type="hidden" name="changeUuid" value="${depart.risenitUuid}"/>
+		<input type="hidden" name="year" value="${depart.risenitYear}"/>
+		<a href="javascript:0" onclick="updScore(${depart.risenitUuid!});">保存</a>
+		</form>
+	 -->
+	</@p.column><#t/>
+	<@p.column code="分数" align="center">
+		${depart.risenitScore!'0'}
+	</@p.column><#t/>
+	<@p.column code="说明" align="center">
+			<#if depart.risenitDesc??>
+				<a onclick="showRules(${depart.risenitUuid});" title="${depart.risenitDesc!}">
+				<#if depart.risenitDesc?length gt 10>${depart.risenitDesc?substring(0,10)}...<#else>${depart.risenitDesc!}</#if>
+			<#else>
+			</#if>
+	</@p.column><#t/>
+</@p.table>
+<!-- <div style="margin-top:20px;">
+	<input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/ style="float:left; margin-right:6px;">
+	<input class="bcplxx-button" type="submit" value="<@s.m "global.saveOrder"/>" onclick="optPriority();"/ style="float:left;">
+</div> -->
+</div>
+<div id="dialog-edit-form" title="添加" style="display:none;">
+	<@p.form id="addForm" action="" >
+		<tr>
+			<td>年份：</td>
+			<td>
+				<input id="risenitYear" name="risenitYear" type="text" onclick="WdatePicker({dateFmt:'yyyy'})" value="">默认显示当前年度
+			</td>
+		</tr>
+		<tr>
+			<td>基数：</td>
+			<td>
+				<input id="risenitBase" name="risenitBase" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  type="number" min="1" value="1">
+			</td>
+		</tr>
+		<tr>
+			<td>说明：</td>
+			<td>
+				<textarea id="risenitDesc" name="risenitDesc" rows="5" cols="40"></textarea>
+			</td>
+		</tr>
+	</@p.form>
+</div>
+<div id="descDialog" title="规则说明">
+	<@p.form id="changeRuleForm" action="" >
+	<tr>
+		<td>说明：</td>
+		<td>
+			<textarea id="ruleDesc" name="ruleDesc" rows="5" cols="40"></textarea>
+			<input name="changeUuid" type="hidden" />
+		</td>
+	</tr>
+	</@p.form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

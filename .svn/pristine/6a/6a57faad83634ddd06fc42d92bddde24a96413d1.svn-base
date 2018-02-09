@@ -1,0 +1,225 @@
+package com.risen.action;
+
+import static com.jeecms.common.page.SimplePage.cpn;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.ibm.db2.jcc.am.de;
+import com.jeecms.common.page.Pagination;
+import com.jeecms.common.web.CookieUtils;
+import com.jeecms.core.dao.CmsUserDao;
+import com.jeecms.core.entity.CmsDepartment;
+import com.jeecms.core.entity.CmsSite;
+import com.jeecms.core.entity.CmsUser;
+import com.jeecms.core.web.WebErrors;
+import com.jeecms.core.web.util.CmsUtils;
+import com.risen.entity.RisenQuota;
+import com.risen.entity.RisenScore;
+import com.risen.service.IRisenQuotaService;
+import com.risen.service.IRisenScoreService;
+
+@Controller
+public class RisenScoreAct {
+	private static final Logger log = LoggerFactory.getLogger(RisenScoreAct.class);
+	
+	@RequiresPermissions("risenScore:v_list")
+	@RequestMapping("/risenScore/v_list.do")
+	public String list(Integer pageNo, HttpServletRequest request, ModelMap model,String userIds) {
+		CmsUser user = userDao.findById(new Integer(userIds));
+		Integer userId = user.getId();
+		CmsUser loginUser = CmsUtils.getUser(request);
+		Integer departId = loginUser.getDepartment().getId();
+		Pagination pagination = manager.getPage(cpn(pageNo), CookieUtils.getPageSize(request),userId,departId);
+		model.addAttribute("pagination",pagination);
+		model.addAttribute("pageNo",pagination.getPageNo());
+		model.addAttribute("userId",userIds);
+		return "score/list";
+	}
+	
+	@RequiresPermissions("risenScore:v_add")
+	@RequestMapping("/risenScore/v_add.do")
+	public String add(HttpServletRequest request,ModelMap model,String userId) {
+		//String userId = request.getParameter("userId");
+		CmsUser user = CmsUtils.getUser(request);
+		Integer parentId = user.getDepartment().getId();
+		try{
+			List<RisenQuota> quotas = (List<RisenQuota>) quotaManager.getPage(1, 20000, parentId,null).getList();
+			model.addAttribute("quotas", quotas);
+			model.addAttribute("userId", userId);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "score/add";
+	}
+	
+	@RequiresPermissions("risenScore:existScore")
+	@RequestMapping("/risenScore/existScore.do")
+	public void existScore(HttpServletRequest request,HttpServletResponse response){
+		String quotaId = request.getParameter("quotaId");
+		String userId = request.getParameter("userId");
+		CmsUser user = CmsUtils.getUser(request);
+		Integer departId = user.getDepartment().getId();
+		try {
+			boolean result = manager.existScore(new Integer(userId), departId, new Integer(quotaId));
+			if(result){
+				response.getWriter().write("exists");
+			}else{
+				response.getWriter().write("noexists");
+			}
+		} catch (Exception e) {
+				// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequiresPermissions("risenScore:v_edit")
+	@RequestMapping("/risenScore/v_edit.do")
+	public String edit(Integer id, Integer pageNo, HttpServletRequest request, ModelMap model) {
+		WebErrors errors = validateEdit(id, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		String userId = request.getParameter("userId");
+		model.addAttribute("risenScore", manager.findById(id));
+		model.addAttribute("pageNo",pageNo);
+		model.addAttribute("userId",userId);
+		return "score/edit";
+	}
+	
+	@RequiresPermissions("risenScore:o_save")
+	@RequestMapping("/risenScore/o_save.do")
+	public String save(RisenScore bean, HttpServletRequest request, ModelMap model) {
+		WebErrors errors = validateSave(bean, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		String userId = request.getParameter("userId");
+		CmsUser user = userDao.findById(new Integer(userId));
+		CmsDepartment depart = CmsUtils.getUser(request).getDepartment();
+		String[] risenScores = request.getParameterValues("risenScScore");
+		String[] descs = request.getParameterValues("risenScDescribtion");
+		String[] ballotIds = request.getParameterValues("quotaId");
+		int length = risenScores.length;
+		for(int i = 0;i<length;i++){
+			RisenScore score = new RisenScore();
+			Integer quotaId = new Integer(ballotIds[i]);
+			RisenQuota quota = quotaManager.findById(quotaId);
+			score.setRisenScQuota(quota);
+			score.setUser(user);
+			if(CmsUtils.getUser(request).getUsername().equalsIgnoreCase("admin")){
+				score.setDepartId(1);
+			}else{
+				score.setDepartId(depart.getId());
+			}
+			
+			score.setRisenScDescribtion(descs[i]);
+			if(StringUtils.hasText(risenScores[i])){
+				score.setRisenScScore(risenScores[i]);
+				manager.save(score);
+			}
+		}
+		model.addAttribute("userId", userId);
+		log.info("save RisenScore id={}", bean.getId());
+		return list(1, request, model,userId);
+	}
+	
+	@RequiresPermissions("risenScore:o_update")
+	@RequestMapping("/risenScore/o_update.do")
+	public String update(RisenScore bean, Integer pageNo, HttpServletRequest request,
+			ModelMap model) {
+		WebErrors errors = validateSave(bean, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		bean = manager.update(bean);
+		String userId = "";
+		try{
+			//model.addAttribute("userId", bean.getUser().getId());
+			userId = request.getParameter("userId");
+			model.addAttribute("userId", userId);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		log.info("update RisenScore id={}.", bean.getId());
+		return list(pageNo, request, model,userId);
+	}
+	
+	@RequiresPermissions("risenScore:o_delete")
+	@RequestMapping("/risenScore/o_delete.do")
+	public String delete(Integer[] ids, Integer pageNo, HttpServletRequest request,
+			ModelMap model) {
+		WebErrors errors = validateDelete(ids, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		String userId = request.getParameter("userId");
+		for(Integer id : ids){
+			manager.delete(id);
+			log.info("delete RisenScore id={}", id);
+		}
+		return list(pageNo, request, model,userId);
+	}
+	
+	private WebErrors validateSave(RisenScore bean, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		CmsSite site = CmsUtils.getSite(request);
+//		bean.setSite(site);
+		return errors;
+	}
+	
+	private WebErrors validateEdit(Integer id, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		CmsSite site = CmsUtils.getSite(request);
+		if (vldExist(id, site.getId(), errors)) {
+			return errors;
+		}
+		return errors;
+	}
+
+	private WebErrors validateUpdate(Integer id, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		CmsSite site = CmsUtils.getSite(request);
+		if (vldExist(id, site.getId(), errors)) {
+			return errors;
+		}
+		return errors;
+	}
+
+	private WebErrors validateDelete(Integer[] ids, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		CmsSite site = CmsUtils.getSite(request);
+		if (errors.ifEmpty(ids, "ids")) {
+			return errors;
+		}
+		for (Integer id : ids) {
+			vldExist(id, site.getId(), errors);
+		}
+		return errors;
+	}
+
+	private boolean vldExist(Integer id, Integer siteId, WebErrors errors) {
+		 
+		return false;
+	}
+	
+	@Autowired
+	private IRisenScoreService manager;
+	@Autowired
+	private IRisenQuotaService quotaManager;
+	@Autowired
+	private CmsUserDao userDao;
+}

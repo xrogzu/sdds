@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "../head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+});
+</script>
+
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 党员添加 - 新发展党员 - 查看</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='getAll.do';" class="return-button"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="update.do">
+<@p.td width="50" colspan="1" label="姓名">${risenPartyChange.risenpcUsername!''}</@p.td>
+<@p.radio width="50" colspan="1" label="cmsUser.gender" name="risenpcSex" required="true" value=risenPartyChange.risenpcSex list={"1":"cmsUser.male","2":"cmsUser.female"}/>
+<@p.tr/>
+<@p.text width="50" colspan="1" label="民族" name="risenpcNational" value=risenPartyChange.risenpcNational maxlength="100"/>
+<@p.text width="50" colspan="1" required="true" label="身份证号" name="risenpcIdnumber" value=risenPartyChange.risenpcIdnumber maxlength="100"/><@p.tr/>
+<@p.text width="50" colspan="1" required="true" label="生日" name="risenpcBirthday" value=(risenPartyChange.risenpcBirthday?string('yyyy-MM-dd'))! onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate"/>
+<@p.radio width="50" colspan="1" label="政治面貌" name="risenpcPolicaltype" value="${risenPartyChange.risenpcPolicaltype!'2'}" list={"1":"中共党员","2":"预备党员"} /><@p.tr/>
+<@p.text width="50" colspan="1" label="家庭住址" name="risenpcAddress" value=risenPartyChange.risenpcAddress maxlength="150"/>
+<@p.select width="50" colspan="1" required="true" label="学历"  value="3" id="risenpcEducation" name="risenpcEducation" list={"1":"研究生","2":"大学本科","3":"大学专科","4":"专科以下"} value=risenPartyChange.sddscpEducation /><@p.tr/>
+<@p.text colspan="1" width="50" label="籍贯" id="risenpcNative" value=risenPartyChange.risenpcNative name="risenpcNative" maxlength="100"/>
+<@p.text width="50" colspan="1" label="其他联系方式" name="risenpcOtherphone" value=risenPartyChange.risenpcOtherphone maxlength="100"/><@p.tr/>
+<@p.text width="50" colspan="1" label="cmsUser.phone" name="risenpcPhone" value=risenPartyChange.risenpcPhone maxlength="50"/>
+<@p.text width="50" colspan="1" label="cmsUser.mobile" name="risenpcMobile" value=risenPartyChange.risenpcMobile maxlength="50"/><@p.tr/>
+<@p.td colspan="2" >
+<@p.hidden  name="risenpcId" value="${risenPartyChange.risenpcId!}"/>
+<@p.hidden  name="userId" value="${risenPartyChange.risenpcCuserid.id!}"/>
+<@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td><@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

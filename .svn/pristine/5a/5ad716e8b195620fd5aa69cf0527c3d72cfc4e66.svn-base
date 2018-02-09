@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>首页 - ${site.name}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" ></meta>
+    <script src="${base}/r/cms/layer/jquery-1.12.1.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.SuperSlide.2.1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+    <style>
+    	.block{font-size:14px;font-weight:blod;height:60px;border-bottom:dashed 1px #C7C7C7}
+		.right{text-align: right;font-size:14px;width:100px;}
+		.button{width:120px;height:40px;background-color:#EF3838;border:none;margin-left:20px;color: #fff;margin-top:10px;}
+		.wenben{width:500px;height:30px;}
+    </style>
+    <script type="text/javascript">
+    $(function(){
+             $("#resetForm").click(function(){
+            	 $("[name='email']").val("");
+            	 $("[name='phone']").val("");
+            	 $("[name='title']").val("");
+            	 $("[name='name']").val("");
+            	 $("[name='content']").val("");
+             });
+             $("[name='tijiao']").click(function(){
+            	 var email = $("[name='email']").val();
+            	 var phone = $("[name='phone']").val();
+            	 var title = $("[name='title']").val();
+            	 var name = $("[name='name']").val();
+            	 var content = $("[name='content']").val();
+            	 if(email==""){
+            		 alert("请输入邮箱");
+            	 }
+            	 else if(phone==""){
+            		 alert("请输入电话号码");
+            	 }
+            	 else if(title==""){
+            		 alert("请输入标题");
+            	 }
+            	 else if(name==""){
+            		 alert("请输入姓名");
+            	 }
+            	 else if(content==""){
+            		 alert("请输入内容");
+            	 }else{
+            		 var isOpen = $("[name='isopen']:checked").val(); 
+            		 var url = "${base}/appealmail/save.jspx";
+            		 var partId = ${partId!};
+            		 $.ajaxSetup({
+                    	 contentType: "application/x-www-form-urlencoded; charset=utf-8"
+                      });
+            		 $.post(url,{ email: email, phone: phone,title: title, content: content,isOpen: isOpen, partId: partId,name:name },function(success){
+            			 if(success.length==4){
+            				 alert("留言成功!你的查询码是"+success);
+            				 window.location.href="${base}/index/index.jhtml";
+            			 }else{
+            				 alert("系统正繁忙,请稍后再试!");
+            			 }
+            		 });
+            	 }
+             });
+    	})
+    </script>
+<body>
+[#include "../include/header_shengju.html"/]
+<div class="coen" id="container">
+<div class="content">
+     <div class="slideTxtBox" id="conter">
+      <div class="" id="ji_list">
+        <div class="list_ym">
+      		<div class="ym_top"><span>我要留言</span></div>
+				<table cellpadding="0" cellspacing="0" style="margin-left:20px; margin-top: 20px;">
+	           		<tbody>
+	           		<input type="hidden" name="type" id="type" value="0" class="wenben"></td>
+	             		<tr style="height:50px;">
+	               		<td class="right">邮箱</td><td style="text-align:left;text-indent:20px;">
+						<input type="text" name="email" id="email" class="wenben">
+					</td>
+	            		 </tr>
+	             		<tr style="height:50px;">
+	              		 <td  class="right">电话</td><td style="text-align:left; text-indent:20px;">
+					<input type="text" name="phone" id="phone" class="wenben">
+					</td>
+	              </tr>
+	              <tr style="height:50px;">
+	                <td class="right">标题</td><td style="text-align:left; text-indent:20px;">
+	                <input type="text" name="title" id="title" class="wenben">
+	                </td>
+	              </tr>
+	               <tr style="height:50px;">
+	                <td class="right">姓名</td><td style="text-align:left; text-indent:20px;">
+	                <input type="text" name="name" id="name" class="wenben">
+	                </td>
+	              </tr>
+	              <tr style="height:50px;">
+	                <td class="right">是否公开</td><td style="text-align:left; text-indent:20px;">
+	                <input type="radio" name="isopen" value="0" checked="checked">公开<input type="radio" name="isopen" value="1">不公开
+	                </td>
+	              </tr>
+	              <tr style="height:50px;">
+	                <td class="right">内容</td><td style="text-align:left; text-indent:20px;">
+	               	<textarea name="content" id="content" rows="5" cols="80"></textarea> 
+	               </td>
+	              </tr>
+	              <tr style="height:70px;">
+	              <td class="right"></td>
+	              	<td>
+	              		<input name="tijiao" type="submit" value="提交" class="button">
+	              		<input type="reset" id="resetForm" value="重置" class="button" style="margin-left: 20px; background-color: 	#888888;">
+	               	</td>
+	              </tr>
+	            </tbody>
+	          </table>
+          </div>
+       </div>
+	</div>
+</div>
+</div>
+[#include "../include/footer_shengju.html"/]
+</body>
+</html>

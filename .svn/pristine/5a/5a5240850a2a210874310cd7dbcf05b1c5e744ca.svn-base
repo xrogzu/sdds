@@ -1,0 +1,15 @@
+package com.risen.service;
+
+import com.jeecms.common.page.Pagination;
+import com.risen.entity.RisenIntegralRecord;
+
+public interface IRisenIntegralRecordService {
+	public Pagination getPage(int pageNo, int pageSize);
+	public RisenIntegralRecord save(RisenIntegralRecord voteQues);
+	public RisenIntegralRecord findById(Integer id);
+	public void delete(Integer id);
+	public RisenIntegralRecord update(RisenIntegralRecord bean);
+	public Pagination getPage(int pageNo, int pageSize,RisenIntegralRecord bean);
+	public int confirmShare(Integer[]ids,Integer type,Integer score);
+	public RisenIntegralRecord findByContentId(Integer id);
+}

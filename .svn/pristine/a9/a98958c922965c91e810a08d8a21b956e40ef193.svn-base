@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<script src="${base}/res/echarts/echarts.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.ext.js" type="text/javascript"></script>
+<link href="${base}/res/common/css/loading.css" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+a{text-decoration:none;}
+</style>
+<script class="code" type="text/javascript">
+
+var names=[];
+var scores=[];
+$(function(){  
+		//showLoading();
+   
+         // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        var orgNames = null;
+        var orgScores = null;
+        
+        <#list  list as obj>
+        	var deptName = '${obj.risentgCorgName}';
+        	if(deptName.indexOf("市局机关党委党支部")==-1 && (deptName.indexOf("市局机关党委")>-1)){
+        		deptName = deptName.replace("市局机关党委", "");
+        	}else if(deptName.indexOf("市局机关党委党支部")==-1 && (deptName.indexOf("党支部")>-1)){
+        		deptName = deptName.replace("党支部", "");
+        	}
+         	names[${obj_index}] =  deptName;
+         	scores[${obj_index}] =  ${obj.risentgTotalScore};
+	    </#list>
+    
+		//alert(myChart);
+        // 指定图表的配置项和数据
+        var option = {
+	    title: {
+	        x: 'center',
+	        text: '目标总分统计'
+	    },
+	    tooltip : {
+	        trigger: 'axis',
+	        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+	            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+	        }
+	    },
+	    toolbox: {
+	        show: true,
+	        feature: {
+	            dataView: {show: true, readOnly: false},
+	            restore: {show: false},
+	            saveAsImage: {show: true}
+	        }
+	    },
+	    calculable: true,
+	    grid: {
+	        borderWidth: 0,
+	        y: 80,
+	        y2: 60
+	    },
+	   
+	    xAxis: [
+	        {
+	            type: 'category',
+	            data: names,
+	            axisLabel: {
+		            rotate: 60,
+		            interval:'all'
+		        }
+	        }
+	    ],
+	    yAxis: [
+	        {
+	            type: 'value' 
+	        }
+	    ],
+	    series: [
+	        {
+	            name: '目标总分统计',
+	            type: 'bar',
+	            itemStyle: {
+	                normal: {
+	                    color: function(params) {
+	                        // build a color map as your need.
+	                          var colorList = [
+	                          '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+	                           '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+	                           '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+	                        ];
+	                        //return colorList[params.dataIndex]
+	                        return colorList[params.dataIndex%colorList.length];
+	                    },
+	                    label: {
+	                        show: false,
+	                        position: 'top',
+	                        formatter: '{b}\n{c}'
+	                    }
+	                }
+	            },
+	            barWidth:70,
+	            data: scores,
+	            markPoint: {
+	                tooltip: {
+	                    trigger: 'item',
+	                    backgroundColor: 'rgba(0,0,0,0)',
+	                    formatter: function(params){
+	                        return '<img src="' 
+	                                + params.data.symbol.replace('image://', '')
+	                                + '"/>';
+	                    }
+	                } 
+	            }
+	        }
+	    ]
+	};
+                    
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);    
+      
+    });  
+</script>
+<script type="text/javascript">
+ function showLoading()
+        {
+           $("#over").css("display","block");
+           $("#zhezhao").css("display","block");
+            $("#loding").css("display","block");
+          //  document.getElementById("loding").style.display = "block";
+            
+        }
+ function closeLoading()
+        {
+        	 $("#zhezhao").css("display","none");
+        	$("#over").css("display","none");
+        	$("#loding").css("display","none");
+           // document.getElementById("over").style.display = "none";
+            //document.getElementById("loding").style.display = "none";
+        }
+    </script>
+</head>
+<body>
+<div class="page-positon ove">
+
+    <!-- 加载框 -->
+     <div id="zhezhao" class="zhezhao"></div>
+    <div id="loding" class="loding ">
+    	<img style="width: 50px;height: 50px;" src="${base}/r/cms/loading.gif" alt="" /><br/>
+    	<font color="white">正在加载数据，请稍后...</font>	
+ 	</div>
+</div>
+     <a href="report.do?type=xitong">下设系统</a><a href="report.do?type=jiguan" style="margin-left:10px;">下设机关</a>
+	<div id="main"  style="float:left; width:99%;height:650px;"></div>
+	  <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+</body>
+</html>

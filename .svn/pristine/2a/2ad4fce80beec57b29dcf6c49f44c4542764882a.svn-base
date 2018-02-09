@@ -1,0 +1,58 @@
+package com.risen.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.jeecms.common.hibernate4.Updater;
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.CmsFloatingDao;
+import com.risen.entity.CmsFloating;
+import com.risen.service.CmsFloatingMng;
+
+@Service
+@Transactional
+public class CmsFloatingMngImpl implements CmsFloatingMng {
+	@Transactional(readOnly = true)
+	public Pagination getPage(int pageNo, int pageSize) {
+		Pagination page = dao.getPage(pageNo, pageSize);
+		return page;
+	}
+
+	@Transactional(readOnly = true)
+	public CmsFloating findById(Integer id) {
+		CmsFloating entity = dao.findById(id);
+		return entity;
+	}
+
+	public CmsFloating save(CmsFloating bean) {
+		dao.save(bean);
+		return bean;
+	}
+
+	public CmsFloating update(CmsFloating bean) {
+		Updater<CmsFloating> updater = new Updater<CmsFloating>(bean);
+		bean = dao.updateByUpdater(updater);
+		return bean;
+	}
+
+	public CmsFloating deleteById(Integer id) {
+		CmsFloating bean = dao.deleteById(id);
+		return bean;
+	}
+	
+	public CmsFloating[] deleteByIds(Integer[] ids) {
+		CmsFloating[] beans = new CmsFloating[ids.length];
+		for (int i = 0,len = ids.length; i < len; i++) {
+			beans[i] = deleteById(ids[i]);
+		}
+		return beans;
+	}
+
+	private CmsFloatingDao dao;
+
+	@Autowired
+	public void setDao(CmsFloatingDao dao) {
+		this.dao = dao;
+	}
+}

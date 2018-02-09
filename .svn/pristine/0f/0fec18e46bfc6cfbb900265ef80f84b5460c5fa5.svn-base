@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script src="${base}/res/common/js/ProvinceAndCityJson.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+	<div class="page-positon ove">
+  		<div class="position-div"><@s.m "global.position"/>: 流动人员 > <@s.m "global.edit"/></div>
+	</div>
+	<div class="box-positon ck">
+		<form class="ropt">
+			<input type="button" value="<@s.m "global.backToList"/>" onclick="history.back();" class="return-button"/>
+		</form>
+		<div class="clear"></div>
+	</div>
+	<div class="body-box">
+		<@p.form id="jvForm" action="o_update.do" labelWidth="12" class="formDefStyle">
+		<@p.td width="50" colspan="1" label="姓名">${cmsMember.username}<#if cmsMember.admin> &nbsp; <span style="color:red">[<@s.m "cmsUser.admin"/>]</span></#if></@p.td>
+		<@p.radio width="50" colspan="1" label="cmsUser.gender" name="gender" value=cmsMember.gender list={"true":"cmsUser.male","false":"cmsUser.female"}/>
+		<@p.tr/>
+<@p.text width="50" colspan="1" label="姓名" name="sddsfiUsername" value=CmsFloating.sddsfiUsername maxlength="100"/>
+<@p.text width="50" colspan="1" required="true" label="组织名称" name="sddsfiOrgname" value=CmsFloating.sddsfiOrgname maxlength="100"/>
+<@p.text width="50" colspan="1" label="年份" name="sddsfiYear" value=CmsFloating.sddsfiYear maxlength="150"/><@p.tr/>
+<@p.select colspan="1" width="50" label="月份" name="sddsfiMonth" value=CmsFloating.sddsfiMonth maxlength="100" />
+<@p.text width="50" colspan="1" label="日" name="sddsfiDay" value=CmsFloating.sddsfiDay maxlength="100"/>
+
+<@p.text  id="sddscpJgdwname" name="sddscpJgdwname" value=cmsMember.sddscpJgdwname readonly="true"  maxlength="25"/><input class="depart" type="button" id="depart" value="请选择"/>
+<label id="s1" for="sddscpJgdwname" generated="true" class="error" style="display: none;">所属机关党委/党总支/支部必须选择至少一个</label>
+<input type="hidden" name="sddscpJgdw" id="sddscpJgdw" value="${cmsMember.sddscpJgdw!0}" /> 
+</@p.td>
+<@p.select  colspan="1" width="50" label="机关党委职务" value=cmsMember.sddscpJgdwjob name="sddscpJgdwjob" list=jiguan listKey="corecdKey" listValue="corecdVal" />
+
+<@p.tr/>
+<@p.td   colspan="1" width="50" label="所属党总支">
+<@p.text  id="sddscpDzzname" name="sddscpDzzname" value=cmsMember.sddscpDzzname readonly="true"  maxlength="25"/><input class="depart" type="button" id="depart1" value="请选择"/>
+<label id="s2" for="sddscpDzzname" generated="true" class="error" style="display: none;">所属机关党委/党总支/支部必须选择至少一个</label>
+<input type="hidden" name="sddscpDzz" id="sddscpDzz" value=${cmsMember.sddscpDzz!0} />
+</@p.td>
+<@p.select colspan="1" width="50" label="党总支职务" value=cmsMember.sddscpDzzjob name="sddscpDzzjob" list=dangzongzhi listKey="corecdKey" listValue="corecdVal" />
+<@p.tr/>
+
+<@p.td    colspan="1" width="50" label="所属支部">
+<@p.text  id="sddscpZbname" name="sddscpZbname" value=cmsMember.sddscpZbname readonly="true"  maxlength="25"/><input class="depart" type="button" id="depart2" value="请选择"/>
+<label id="s3" for="sddscpZbname" generated="true" class="error" style="display: none;">所属机关党委/党总支/支部必须选择至少一个</label>
+<input type="hidden" name="sddscpZb" id="sddscpZb" value=${cmsMember.sddscpZb!0} />
+</@p.td>
+ <@p.select colspan="1" width="50" label="支部职务" value=cmsMember.sddscpZbjob name="sddscpZbjob" list=zhibu listKey="corecdKey" listValue="corecdVal" />
+<@p.tr/>
+
+
+
+<@p.tr/>
+<@p.td width="50" colspan="1" label="人员变动"  >
+		<input type="radio" ${(cmsMember.sddscpChangestype! =='1')?string('checked="checked"','')} onclick="inOrOut(1)" name="sddscpChangestype" value="1">党员增加
+		<input type="radio" ${(cmsMember.sddscpChangestype! =='2')?string('checked="checked"','')} onclick="inOrOut(2)" name="sddscpChangestype" value="2">党员减少
+</@p.td> 
+<@p.td width="50" colspan="1" label="党员增加/减少类型"  >
+		<span id="in" ${((cmsMember.sddscpChanges!0)?number gt 4)?string('style="display: none;"','')} >
+		<input type="radio" ${(cmsMember.sddscpChanges! =='1')?string('checked="checked"','')} name="sddscpChanges" value="1">新发展党员
+		<input type="radio" ${(cmsMember.sddscpChanges! =='2')?string('checked="checked"','')} name="sddscpChanges" value="2">山东地税系统外转入
+		<input type="radio" ${(cmsMember.sddscpChanges! =='3')?string('checked="checked"','')} name="sddscpChanges" value="3">本市地税系统外转入
+		<input type="radio" ${(cmsMember.sddscpChanges! =='4')?string('checked="checked"','')} name="sddscpChanges" value="4">本县地税系统外转入
+		</span>
+		<span id="out" ${((cmsMember.sddscpChanges!0)?number lt 4)?string('style="display: none;"','')} >
+		<input type="radio" ${(cmsMember.sddscpChanges! =='5')?string('checked="checked"','')} name="sddscpChanges" value="5">开除党籍
+		<input type="radio" ${(cmsMember.sddscpChanges! =='6')?string('checked="checked"','')} name="sddscpChanges" value="6">本省地税系统转出
+		<input type="radio" ${(cmsMember.sddscpChanges! =='7')?string('checked="checked"','')} name="sddscpChanges" value="7">本市地税系统转出
+		<input type="radio" ${(cmsMember.sddscpChanges! =='8')?string('checked="checked"','')} name="sddscpChanges" value="8">本县地税系统转出
+		</span>
+</@p.td>
+<@p.tr/>
+
+<tr id="sddscpOutpartytypetr" style="display:none;">
+	<td>出党类型：</td>
+	<td colspan=3>
+		<select name="sddscpOutpartytype">
+			<option value="${cmsMember.sddscpOutpartytype!}">${cmsMember.sddscpOutpartytype!}</option>
+			<#list outpartyList as opl>
+				<option value="${opl.value}">${opl.key}</option>
+			</#list>
+		</select>
+	</td>
+</tr>
+
+<tr id="sddscpOutpartycause" style="display:none;">
+	<td>原因：</td>
+	<td colspan=3>
+		<textarea name="sddscpOutpartycause" rows="5" cols="70">${cmsMember.sddscpOutpartycause!}</textarea>
+	</td>
+</tr>
+<@p.textarea colspan="2" label="cmsUser.intro" name="intro" value=cmsMember.intro maxlength="255" cols="70" rows="5"/><@p.tr/>
+<#list registerItems as item>
+<#if item_has_next>
+<@p.selfDefineRegisterWidget name="attr_${item.field}" value=userAttrValues[item_index] size="${item.size!}" width="50" colspan="1" list="${item.optValue!}" help=item.help helpPosition="${item.helpPosition!2}" rows="${item.rows!}" cols="${item.cols!}" label=item.label required=item.required type="${item.dataType}"/>
+<#if item_index%2==1><@p.tr/></#if>
+<#else>
+<@p.selfDefineRegisterWidget name="attr_${item.field}" value=userAttrValues[item_index] size="${item.size!}" width="100" colspan="2" list="${item.optValue!}" help=item.help helpPosition="${item.helpPosition!2}" rows="${item.rows!}" cols="${item.cols!}" label=item.label required=item.required type="${item.dataType}"/>
+<@p.tr/>
+</#if>
+</#list>
+<@p.td colspan="2">
+	<@p.hidden name="id" value=cmsMember.id/>
+	<@p.button id="sub" code="global.submit" class="query"/><@p.reset code="global.reset" class="cancel"/>
+</@p.td>
+</@p.form>
+</div>
+
+<!-- 弹出框start -->
+<div id="departDialog" title="组织" style="display:none;">
+    <ul id="departTree" class="filetree"></ul>
+</div>
+<div id="departDialog1" title="组织" style="display:none;">
+    <ul id="departTree1" class="filetree"></ul>
+</div>
+<div id="departDialog2" title="组织" style="display:none;">
+    <ul id="departTree2" class="filetree"></ul>
+</div>
+<div id="jgDialog" title="籍贯" style="display:none;">
+    <select id="SelectProvince" name="SelectProvince"></select>
+    <select id="SelectCity" name="SelectCity"></select>
+    <select id="SelectArea" name="SelectArea"></select><br/>
+            详细地址：<input type="text" id="detailAddress" style="margin-top: 10px; width: 330px;" />
+</div>
+<!-- 弹出框end -->
+
+</body>
+</html>

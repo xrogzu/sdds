@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+});
+</script>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>:  <@s.m "risenPartyapplication.function"/> - <@s.m "global.edit"/></div>
+	<form class="ropt">
+		<input class="return-button" type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_update.do">
+<!-- ######edit html fields start###### -->
+<@p.text label="risenPartyapplication.risenpaSubmitcardid" colspan="2" width="100" name="risenpaSubmitcardid" value=risenPartyapplication.risenpaSubmitcardid required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaSubmitsex" colspan="2" width="100" name="risenpaSubmitsex" value=risenPartyapplication.risenpaSubmitsex required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaSubmitbirthday" colspan="2" width="100" name="risenpaSubmitbirthday" value=risenPartyapplication.risenpaSubmitbirthday required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.id" colspan="2" width="100" name="id" value=risenPartyapplication.id required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaName" colspan="2" width="100" name="risenpaName" value=risenPartyapplication.risenpaName required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaSubmitperid" colspan="2" width="100" name="risenpaSubmitperid" value=risenPartyapplication.risenpaSubmitperid required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaSubmitpername" colspan="2" width="100" name="risenpaSubmitpername" value=risenPartyapplication.risenpaSubmitpername required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaExamineperid" colspan="2" width="100" name="risenpaExamineperid" value=risenPartyapplication.risenpaExamineperid required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaExaminepername" colspan="2" width="100" name="risenpaExaminepername" value=risenPartyapplication.risenpaExaminepername required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaExamineorgid" colspan="2" width="100" name="risenpaExamineorgid" value=risenPartyapplication.risenpaExamineorgid required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaExamineorgname" colspan="2" width="100" name="risenpaExamineorgname" value=risenPartyapplication.risenpaExamineorgname required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaSubmitdate" colspan="2" width="100" name="risenpaSubmitdate" value=risenPartyapplication.risenpaSubmitdate required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaExaminedate" colspan="2" width="100" name="risenpaExaminedate" value=risenPartyapplication.risenpaExaminedate required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaResult" colspan="2" width="100" name="risenpaResult" value=risenPartyapplication.risenpaResult required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaApplicationcontent" colspan="2" width="100" name="risenpaApplicationcontent" value=risenPartyapplication.risenpaApplicationcontent required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="risenPartyapplication.risenpaExaminecontent" colspan="2" width="100" name="risenpaExaminecontent" value=risenPartyapplication.risenpaExaminecontent required="true" class="required" maxlength="100"/><@p.tr/>
+<!-- ######edit html fields end###### -->
+<@p.td><@p.hidden name="id" value=risenPartyapplication.id/><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+</@p.form>
+</div>
+</body>
+</html>

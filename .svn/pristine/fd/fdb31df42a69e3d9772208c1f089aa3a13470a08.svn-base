@@ -1,0 +1,292 @@
+<script>
+    	function sitesnav2(pid){
+			$("#sr_dj").html("");
+    		$.ajax({  
+		         type : "post",  
+		          url : "${base}/getChannelPaths.jspx?departId="+pid,
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			        $("#go2").attr("href","#");
+			        if(data!=null && data!=""){
+			        	$("#go2").attr("href","${base}/${site.accessPath!}/"+data+"/index.jhtml");
+			        	$("#go2").attr("target","_blank");
+			        }else{
+			        	$("#go2").attr("href","#");
+			        }
+			        $.ajax({  
+				         type : "post",  
+				          url : "${base}/getSites.jspx?pid="+pid,  
+				          data : {},
+				          dataType : "json" , 
+				          success : function(data){
+					        if(data.length>0){
+					        	for(var i=0;i<data.length;i++){
+					        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+					          			$("#sr_dj").append("<a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+					          		}else{
+					          			$("#sr_dj").append("<a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+					          		}
+					        	}
+					        }
+				          }
+				     });
+				  }
+		     });
+    	}
+    	
+    	function findJgdw(pid){
+    		$("#jgdw").html("");
+    		 $.ajax({  
+		         type : "post",  
+		          url : "${base}/getSites.jspx?pid="+pid,  
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			        $(".sh_tr").css({"text-align":"left","overflow-y":"scroll","height":"400px"});
+			        if(data.length>0){
+			        	for(var i=0;i<data.length;i++){
+			        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+			          			$("#jgdw").append("<a style='width:100%;' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+			          		}else{
+			          			$("#jgdw").append("<a style='width:100%;' href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+			          		}
+			        	}
+			        }
+		          }
+		     });
+    	}
+    	
+    	$(function(){
+    		$("#jgdw").html("");
+    		$.ajax({  
+		         type : "post",  
+		          url : "${base}/getSites.jspx?pid=2424",  
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			         var jgdwHtml = $("#jgdw").html();
+			         if(jgdwHtml=="" || (jgdw==null)){
+			        	 if(data.length>0){
+					        	for(var i=0;i<data.length;i++){
+					        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+					          			$("#jgdw").append("<a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+					          			$("#gfhdzb_list").append("<li><a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"<font color='#00AA00'>【点击进入】</font></a></li>");
+					          		}else{
+					          			$("#jgdw").append("<a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+					          			$("#gfhdzb_list").append("<li><a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"<font color='#DDDDDD'>【点击进入】</font></a></li>");
+					          		}
+					        	}
+					        } 
+			         }
+			   	}
+	    	});
+    	});
+    </script>
+     <style>
+		.seli{position: absolute;right: 50px;bottom: 15px;}
+		.dropdown{width:140px; position:relative; float: left;} 
+		.input_select{width:120px; height:24px; line-height:24px; padding:0 4px; border:1px solid #a9c9e2; background:#e8f5fe url(arrow.gif) no-repeat rightright 4px; color:#807a62; } 
+		.dropdown ul{width:128px; background:#e8f5fe; margin-top:2px; height:90px; overflow-x:hidden;overflow-y:scroll; border:1px solid #a9c9e2; position:absolute; display:none} 
+		.dropdown ul li{height:24px; line-height:24px; text-indent:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} 
+		.dropdown ul li a{display:block; height:24px; color:#807a62; text-decoration:none} 
+		.dropdown ul li a:hover{background:#c6dbfc; color:#369} 
+    </style>
+</head>
+<body>
+[#include "../include/header_shengju.html"/]
+<div class="coen" id="container">
+<div class="content">
+     <div class="shdh">
+          <a href="javascript:;" class="shei"><img src="${base}/r/cms/www/risen/images/zh_dh.png" alt=""></a>
+          <div class="shnr" style="display:block;background:url(${base}/r/cms/www/risen/images/zbds/zh_bg.png)">
+          <div class="shelf">
+                <img id="jens" src="${base}/r/cms/www/risen/images/zbds/1.png" width="276" height="394" usemap="#Map">
+<map name="Map">
+  <area shape="poly" coords="33,21,73,23,103,18,121,38,128,50,128,67,107,71,74,74,47,73,19,66,13,54" onfocus="blur(this);" class="mac" title="高青县" href="javascript:sitesnav2(2464);">
+  <area shape="poly" coords="141,69,147,120,122,121,107,123,102,113,99,100,83,93,83,78" onfocus="blur(this);" class="mac" title="桓台县" href="javascript:sitesnav2(2490);">
+  <area shape="poly" coords="177,91,193,107,215,109,226,118,220,134,205,145,187,156,181,161,175,170,168,189,168,194,156,191,153,183,144,177,152,159,156,150,159,143,164,134,161,132,156,124,157,112,162,100" onfocus="blur(this);" class="mac" title="临淄区" href="javascript:sitesnav2(2477);">
+  <area shape="poly" coords="103,130,119,126,139,126,151,126,153,132,148,145,147,158,145,167,140,176,126,174,110,168,110,156,106,136" onfocus="blur(this);" class="mac" title="张店区" href="javascript:sitesnav2(2539);">
+  <area shape="poly" coords="97,126,98,145,107,154,102,160,96,172,97,181,86,179,70,178,52,187,52,178,78,149,84,126,77,136" onfocus="blur(this);" class="mac" title="周村区" href="javascript:sitesnav2(2528);">
+  <area shape="poly" coords="161,191,157,213,161,231,167,251,170,264,161,266,151,253,141,247,132,244,125,241,115,240,102,236,97,228,92,209,85,204,71,203,55,209,53,214,49,208,47,198,47,188,68,182,84,179,101,179,109,171,109,165" onfocus="blur(this);" class="mac" title="淄川区" href="javascript:sitesnav2(2508);">
+  <area shape="poly" coords="163,270,152,284,138,286,125,283,94,295,102,276,95,267,81,259,71,244,61,232,51,216,75,208,95,230,104,244,127,250,137,253" onfocus="blur(this);" class="mac" title="博山区" href="javascript:sitesnav2(2559);">
+  <area shape="poly" coords="173,271,189,300,201,308,207,319,218,336,228,334,232,352,235,357,231,378,226,379,212,374,192,380,183,383,175,384,164,371,156,368,144,363,139,368,126,381,118,389,105,379,101,372,101,353,98,331,98,314,109,301,121,290" onfocus="blur(this);" class="mac" title="沂源县" href="javascript:sitesnav2(2440);">
+</map>
+      </div>
+      <div class="neir">
+           <div class="sh_dw">
+               <a href="javascript:;" id="gub">×</a>
+               <div class="ne_sp"><span></span><a href="javascript:;" id="go2">点击进入</a></div>
+               <div class="ne_sr" id="sr_dj">                
+               </div>
+           </div>
+      </div>
+          
+      <div class="sheri">
+               <div class="sh_tit"><a class="on" href="javascript:;">系统</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="###">机关</a></div>
+               <div class="sh_tr">
+                    <a target="_blank" href="${base}/${site.accessPath!}/zdqfj/index.jhtml" style="width:160px;">淄博市局张店区分局</a>
+                    <a target="_blank" href="${base}/${site.accessPath!}/bsqfj/index.jhtml" style="width:160px;">淄博市局博山区分局</a>
+                    <a target="_blank" href="${base}/${site.accessPath!}/zcunqfj/index.jhtml" style="width:160px;">淄博市局周村区分局</a>
+                    <a target="_blank" href="${base}/${site.accessPath!}/gqxdfswj/index.jhtml" style="width:160px;">高青县地方税务局</a>
+                    <a target="_blank" href="${base}/${site.accessPath!}/gxqfj/index.jhtml" style="width:160px;">淄博市局高新区分局</a> 
+                    <a target="_blank" href="${base}/${site.accessPath!}/zcqfj/index.jhtml" style="width:160px;">淄博市局淄川区分局</a>
+                    <a target="_blank" href="${base}/${site.accessPath!}/lzqfj/index.jhtml" style="width:160px;">淄博市局临淄区分局</a>
+                    <a target="_blank" href="${base}/${site.accessPath!}/htxdfswj/index.jhtml" style="width:160px;">桓台县地方税务局</a>
+                    <a target="_blank" href="${base}/${site.accessPath!}/yyxdfswj/index.jhtml" style="width:160px;">沂源县地方税务局</a>   
+                    <a target="_blank" href="${base}/${site.accessPath!}/wchfj/index.jhtml" style="width:160px;">淄博市局文昌湖分局</a>
+                    <a target="_blank" href="${base}/${site.accessPath!}/zbdsjjkfqfjzhdjpt/index.jhtml" style="width:167px;">淄博市局经济开发区分局</a>
+               </div>
+               <div class="sh_tr" id="jgdw"  style="overflow-y:auto; display:none;overflow-x:hidden;">
+               </div>
+      </div>
+      
+      <div class="seli">
+           <div class="dropdown"> 
+                <input class="input_select" type="text" value="国家税务总局网站"/> 
+                <ul> 
+                <li><a href="http://130.9.1.168" rel="3" target="_blank">国家税务总局</a></li>  <li><a href="http://130.9.1.22:8080/" rel="3" target="_blank">廉政之窗</a></li>  <li><a href="http://130.9.1.168/dangjian" rel="3" target="_blank">税务党建网</a></li> 
+                </ul> 
+           </div> 
+           <div class="dropdown"> 
+                <input class="input_select" type="text" value="政府、部门网站"/> 
+                <ul> 
+                <li><a href="http://www.shandong.gov.cn" target="_blank" rel="3">山东省政务专网</a></li> 
+                <li><a href="http://15.32.5.5" rel="4" target="_blank">省科技厅</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0002" rel="5" target="_blank">省财政厅</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0008" rel="5" target="_blank">省统计局</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0008" rel="5" target="_blank">省工商局</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0003" rel="5" target="_blank">省国税局</a></li> 
+                <li><a href="http://15.32.76.19" rel="5" target="_blank">省防总</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0006" rel="5" target="_blank">人行济南分行</a></li> 
+                <li><a href="http://www.ta.sd.gov.cn" rel="5" target="_blank">泰安政务信息网</a></li> 
+                <li><a href="http://www/lc.sd.gov.cn" rel="5" target="_blank">聊城电子政务系统</a></li> 
+                <li><a href="http://www/wh.sd.gov.cn" rel="5" target="_blank">威海市政务网</a></li> 
+                <li><a href="http://www.rz.sd.gov.cn" rel="5" target="_blank">日照政务网</a></li> 
+                <li><a href="http://www/lw.sd.gov.cn" rel="5" target="_blank">莱芜政务专网</a></li> 
+                </ul> 
+           </div> 
+           <div class="dropdown" style="width:190px"> 
+                <input class="input_select" style="width:170px" type="text" value="省局内网网站"/> 
+                <ul style="width:180px">  
+                    <li><a href="http://140.16.16.16" rel="4" target="_blank">山东省地方税务局内网</a></li> 
+                    <li><a href="http://140.12.96.100" rel="4" target="_blank">山东地税智慧党建平台 </a></li> 
+                    <li><a href="http://140.16.16.15" rel="4" target="_blank">山东地税廉政文化教育基地 </a></li> 
+                    <li><a href="http://140.12.96.104/wsds/" rel="4" target="_blank">山东地税网上党校</a></li>       
+                    <li><a href="http://140.12.96.51/lxsd/index.jsp" rel="4" target="_blank">山东地税网络教育学院</a></li>               
+                </ul> 
+           </div> 
+           <div class="dropdown"> 
+                <input class="input_select" type="text" value="其他"/> 
+                <ul> 
+                <li><a href="http://140.16.16.16/col/col22472/index.html" rel="3" target="_blank">中国税务报</a></li> 
+                <li><a href="http://140.16.16.16/col/col22716/index.html" rel="4" target="_blank">齐鲁晚报</a></li> 
+                <li><a href="http://140.16.16.16/col/col22796/index.html" rel="5" target="_blank">生活日报</a></li> 
+                <li><a href="http://140.16.16.16/col/col91/index.html" rel="5" target="_blank">山东地税时空</a></li> 
+                <li><a href="http://140.16.16.16/col/col13150/index.html" rel="5" target="_blank">《山东地税》杂志</a></li> 
+                </ul> 
+           </div> 
+      </div>                     
+   </div>
+</div>
+<script type="text/javascript"> 
+	$(function(){ 
+	$(".dropdown .input_select").click(function(){ 
+	var ul = $(this).next('ul'); 
+	if(ul.css("display")=="none"){ 
+	ul.slideDown("fast"); 
+	}else{ 
+	ul.slideUp("fast"); 
+	} 
+	}); 
+	$(".dropdown ul li a").click(function(){ 
+	var txt = $(this).text(); 
+	$(this).parents('ul').prev('.input_select').val(txt); 
+	var value = $(this).attr("rel"); 
+	$(this).parents('ul').hide(); 
+	}); 
+	}); 
+</script> 
+     <script>
+        $(function(){
+            $(".sh_tit a").click(function(){
+                var index = $(".sh_tit a").index(this);
+                $(".sh_tr").hide();
+                $(".sh_tr").eq(index).show(0);
+            });                   
+            $(".shei").click(function(){
+                 var hei = $(".shnr").height();
+                 if(hei == 0){
+                    $(".shnr").animate({height:'448px',right:'10px'});
+                 }else{
+                    $(".shnr").animate({height:'0px',right:'-1270px'});
+                 };                 
+            });
+            var shr = $(".sh_tr a");
+            for(var i=0; i<shr.length; i++){
+                $(".sh_tr a:eq("+i+")").addClass("son"+i);
+            };
+            $("#gub").click(function(){
+                $(".neir").hide();
+            });
+            $("#gub1").click(function(){
+                $(".jied").hide();
+            });
+            $("#sr_dj a").click(function(){
+                 $(".neir").stop(true,true).fadeOut();
+                 $(".jied").stop(true,true).fadeIn();
+            });
+            $(".mac").click(function(){
+                var tle = $(this).attr("title");
+                var csa = $(".sh_tr a").attr("title");
+                $(".neir").stop(true,true).fadeOut();
+                $(".neir").stop(true,true).fadeIn();
+                $(".jied").stop(true,true).fadeOut();
+                $(".neir .ne_sp span").text(tle)
+                switch(tle)
+                    {
+                    case '高青县':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zbds/2.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son0").addClass("son");
+                      break;
+                    case '桓台县':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zbds/3.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son1").addClass("son");
+                      break;
+                    case '临淄区':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zbds/4.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son2").addClass("son");
+                      break;
+                    case '张店区':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zbds/5.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son3").addClass("son");
+                      break;
+					case '周村区':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zbds/6.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son4").addClass("son");
+                      break;
+					case '淄川区':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zbds/7.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son5").addClass("son");
+                      break;
+					case '博山区':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zbds/8.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son6").addClass("son");
+                      break;
+					case '沂源县':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zbds/9.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son7").addClass("son");
+                      break;
+                    default:
+                    }
+            });
+        });
+     </script>

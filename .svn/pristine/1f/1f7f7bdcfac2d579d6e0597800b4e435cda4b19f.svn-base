@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+});
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 发展党员流程 - 添加</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';" class="return-button"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_save.do">
+	<!-- ######add html fields start###### -->
+	<input name="risendpExpands1" type="hidden" value="1"/><!-- 第一步 -->
+	<@p.text width="50" colspan="1" label="姓	名" name="risendpName" required="true" />
+	<@p.text width="50"  colspan="1" label="身份证号码" name="risendpIdnumber" required="true" /><@p.tr/>
+	<@p.radio width="50" colspan="1" label="性	别" list={"1":"男","0":"女"} required="true" name="risendpSex" value="1"/>
+	<@p.text width="50" colspan="1" label="出生日期" name="risendpBirth" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/><@p.tr/>
+	<@p.text width="50" colspan="1" label="所在党支部" name="risendpBranch" />
+	<@p.text width="50" colspan="1" label="民	族" name="risendpNation" /><@p.tr/>
+	<@p.text width="50" colspan="1" label="籍	贯" name="risendpNative" />
+	<@p.radio width="50" colspan="1" label="婚姻状况" name="risendpMarriage" list={"1":"未婚","2":"已婚"} value="1"/><@p.tr/>
+	<@p.tr/>
+
+	<!-- ######add html fields end###### -->
+	<@p.td><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+</@p.form>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<style>
+	.btn_alink{
+		width:80px;
+		height:25px;
+		border:1px solid black;
+		border-radius:5px;
+		text-align:center;
+		line-height:25px;
+		display:block;
+	}
+</style>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+	$("[name='resetForm']").click(function(){
+		$("[name='risendsYear']").val("");
+		$("[name='risendsRemark']").val("");
+	});
+	$("#jvForm").submit(function(){
+		var risendsYear = $("[name='risendsYear']").val();
+		if(risendsYear==null || (risendsYear=="")){
+			alert("请选择评议年份");
+			return false;
+		}else{
+			var url = "../risenDiscussion/check.do";
+			var userId = $("[name='userId']").val();
+			var exists = false;
+			$.post(url,{userId:userId,year:risendsYear},function(result){
+				if(result=="exist"){
+					return false;
+				}else if(result=="noexists"){
+					return true;
+				}else{
+					return false;
+				}
+			});
+			if(exists){
+				return true;
+			}else{
+				alert("已添加该人在此年度的评议");
+				return false;
+			}
+		}
+	});
+});
+
+</script>
+
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 组织生活日历  - 年度评议 - 添加</div>
+</div>
+<div class="box-positon">
+	<form class="ropt">
+		<a href="../risenDiscussion/mylist.do?userId=${userId}" class="btn_alink">返回</a>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">		
+<@p.form id="jvForm" method="post" action="../risenDiscussion/conserve.do">
+<@p.text label="姓　　名" colspan="1" width="50" name="username" value="${username!}" readonly="true" maxlength="20" /><@p.tr/>
+<@p.select label="评　　议" id="risendsScore" colspan="1" width="50" name="risendsScore" required="true"  class="required" list={"1":"优秀","2":"合格","3":"基本合格","4":"不合格"} /><@p.tr/>
+<@p.text width="50" colspan="1" required="true" label="年　　度" name="risendsYear" onclick="WdatePicker({dateFmt:'yyyy'})" class="Wdate"/><@p.tr/>
+<tr>
+		<td>备注：</td>
+		<td>
+			<textarea id="risendsRemark" name="risendsRemark" rows="5" cols="40"></textarea>
+		</td>
+	</tr>
+<@p.td colspan="2" >
+	<input id="userId" name="userId" value="${userId!''}"  type="hidden">
+	<@p.submit code="global.submit"/> &nbsp; <@p.reset name="resetForm" code="global.reset"/>
+</@p.td><@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

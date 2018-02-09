@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+});
+
+function selectType(value){
+   if(value==4){
+     $("#wjItems").css('display','none');
+   }
+   else
+     $("#wjItems").css('display','');
+}
+</script>
+<style type="text/css">
+.items{padding-top:1px;}
+</style>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 问卷调查 - <@s.m "global.add"/></div>
+	<form class="ropt">
+	    <input type="hidden" value="${qairesId!}" name="qairesId"/>
+		<input type="submit" class="return-button" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="saveTopic.do">
+<input type="hidden" value="${qairesId!}" name="qairesId"/>
+<td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>标题:</td><td width="80%" colspan="3" class="pn-fcontent"><input type="text" maxlength="255" name="title" class="required" style="width:400px"></td></tr>
+<tr><td width="20%" class="pn-flabel pn-flabel-h">描述:</td><td width="80%" colspan="3" class="pn-fcontent"><textarea rows="3" name="description" style="width:400px" maxlength="255"></textarea>
+</td>
+</tr>
+<tr>
+<td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>类型:</td><td width="30%" class="pn-fcontent">
+<input type="radio" name="type" onclick="selectType(1);" checked="checked" value="1"/>单选题&nbsp;<input type="radio" onclick="selectType(12);" name="type" value="2"/>多选题&nbsp;<input onclick="selectType(4);" type="radio" name="type" value="4"/>问答题
+</td>
+<td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>排序:</td><td width="30%" class="pn-fcontent">
+<input type="text" name="torderBy" style="width:100px" value="1" class="required" />
+</td>
+</tr>
+
+<tr id="wjItems" style=""><td colspan="4" class="pn-fbutton">
+<div class="items">
+	题目选项
+&nbsp; <input type="button" value="<@s.m "cmsVoteItem.addLines"/>" onclick="addLines();"/>
+</div>
+<div id="itemsContainer">
+<#list 0..3 as i>
+<div class="items">
+选项: <input type="text" name="itemOption" style="width:30px"/>
+&nbsp;标题: <input type="text" name="itemTitle" style="width:300px"/>
+&nbsp; 排序: <input type="text" name="priority" value="${i+1}" style="width:30px"/>
+&nbsp; <input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="$(this).parent().remove();"/>
+</div>
+</#list>
+</div>
+</td></tr>
+<tr><td colspan="4" class="pn-fbutton">
+<input type="submit" value="提交" class="submit"/> &nbsp; <input type="reset" value="重置" class="reset"/></td>
+</tr>
+</@p.form>
+</div>
+
+<textarea id="itemTpl" style="display:none;">
+<div class="items">
+选项: <input type="text" name="itemOption" style="width:30px"/>
+&nbsp;标题: <input type="text" name="itemTitle" style="width:300px"/>
+&nbsp; 排序: <input type="text" name="priority" value="{0}" style="width:30px"/>
+&nbsp; <input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="$(this).parent().remove();"/>
+</div>
+</textarea>
+
+<script type="text/javascript">
+var tpl = $.format($("#itemTpl").val());
+var index = 5;
+function addLines() {
+	$("#itemsContainer").append(tpl(index++));
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+package com.risen.dao.impl;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.util.StringUtils;
+
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.IRisenOrgLifeCalendarDao;
+import com.risen.entity.RisenOrgLifeCalendar;
+
+public class RisenOrgLifeCalendarDaoImpl extends HibernateBaseDao<RisenOrgLifeCalendar, Integer> implements IRisenOrgLifeCalendarDao {
+	public Pagination getPage(int pageNo, int pageSize,RisenOrgLifeCalendar bean) {
+		Criteria crit = createCriteria();
+		if(!StringUtils.isEmpty(bean.getRisenlcOdate())){
+			crit.add(Restrictions.between("risenlcOdate", bean.getStartDate(),bean.getEndDate()));
+		}
+		/*if(!StringUtils.isEmpty(bean.getRisenlcReminddate())){
+			crit.add(Restrictions.between("risenlcReminddate", bean.getStartDate1(),bean.getEndDate1()));
+		}*/
+		crit.add(Restrictions.eq("risenlcOrgid", bean.getRisenlcOrgid()));
+		crit.addOrder(Order.asc("risenlcOdate"));
+		Pagination page = findByCriteria(crit, pageNo, pageSize);
+		return page;
+	}
+	
+	public Pagination getPage(int pageNo, int pageSize) {
+		Criteria crit = createCriteria();
+
+		Pagination page = findByCriteria(crit, pageNo, pageSize);
+		return page;
+	}
+	
+	public RisenOrgLifeCalendar findById(Integer id) {
+		RisenOrgLifeCalendar entity = get(id);
+		return entity;
+	}
+
+	public RisenOrgLifeCalendar save(RisenOrgLifeCalendar bean) {
+		getSession().save(bean); 
+		return bean;
+	}
+
+	public RisenOrgLifeCalendar deleteById(Integer id) {
+		RisenOrgLifeCalendar entity = super.get(id);
+		if (entity != null) {
+			getSession().delete(entity);
+		}
+		return entity;
+	}
+	
+	@Override
+	protected Class<RisenOrgLifeCalendar> getEntityClass() {
+		return RisenOrgLifeCalendar.class;
+	}
+
+	public void delete(Integer id) {
+		RisenOrgLifeCalendar entity = super.get(id);
+		getSession().delete(entity);
+	}
+
+	public RisenOrgLifeCalendar update(RisenOrgLifeCalendar bean) {
+		
+		getSession().update(getSession().merge(bean));
+		return bean;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<RisenOrgLifeCalendar> ActivitiesToday(RisenOrgLifeCalendar bean) {
+		StringBuffer sql=new StringBuffer();
+		SimpleDateFormat format =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");	
+		List<RisenOrgLifeCalendar> list=null;
+		sql.append("select * from risen_orglifecalendar t ");
+		sql.append(" where t.risenlc_odate between");
+		sql.append(" to_date('"+format.format(bean.getStartDate())+"','yyyy-mm-dd hh24:mi:ss')");
+		sql.append(" and to_date('"+format.format(bean.getEndDate())+"','yyyy-mm-dd hh24:mi:ss')");
+		sql.append(" order by t.risenlc_odate asc");
+		list=getSession().createSQLQuery(sql.toString()).addEntity(RisenOrgLifeCalendar.class).list();
+		return list;
+	}
+
+	
+	@Override
+	public RisenOrgLifeCalendar TodayRemind(RisenOrgLifeCalendar bean) {
+		StringBuffer sql=new StringBuffer();
+		SimpleDateFormat format =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");	
+		RisenOrgLifeCalendar olc=null;
+		sql.append("select * from (select * from risen_orglifecalendar t");
+		sql.append(" where t.risenlc_odate between");
+		sql.append(" to_date('"+format.format(bean.getStartDate())+"','yyyy-mm-dd hh24:mi:ss')");
+		sql.append(" and to_date('"+format.format(bean.getEndDate())+"','yyyy-mm-dd hh24:mi:ss')");
+		sql.append(" order by t.risenlc_odate asc)t1");
+		sql.append("  where rownum=1");
+		olc=(RisenOrgLifeCalendar) getSession().createSQLQuery(sql.toString()).addEntity(RisenOrgLifeCalendar.class).uniqueResult();
+		
+		return olc;
+		 
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getEvent() {
+		String sql="select TRUNC(t.risenlc_odate)from risen_orglifecalendar t where t.risenlc_odate>=sysdate";
+		
+		List<String>dates=getSession().createSQLQuery(sql).list();
+		return dates;
+	}
+	
+
+
+	
+
+}

@@ -1,0 +1,99 @@
+package com.risen.dao.impl;
+
+import java.util.List;
+
+import org.hibernate.Query;
+import org.springframework.util.StringUtils;
+
+import com.jeecms.common.hibernate4.Finder;
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.IRisenScoreDao;
+import com.risen.entity.RisenScore;
+
+public class RisenScoreDao extends HibernateBaseDao<RisenScore, Integer> implements IRisenScoreDao {
+
+	@Override
+	public Pagination getPage(int pageNo, int pageSize, Integer userId) {
+		// TODO Auto-generated method stub
+		Finder f = Finder.create(" from RisenScore where 1=1");
+		if(StringUtils.hasText(String.valueOf(userId))){
+			f.append(" and risensc_partyUserId = "+userId);
+		}
+		return find(f,pageNo,pageSize);
+	}
+	
+	@Override
+	public Pagination getPage(int pageNo, int pageSize, Integer userId,Integer departId) {
+		// TODO Auto-generated method stub
+		Finder f = Finder.create(" from RisenScore where 1=1");
+		if(userId!=null){
+			f.append(" and risensc_partyUserId = "+userId);
+		}
+		if(StringUtils.hasText(String.valueOf(departId))){
+			f.append(" and DEPART_ID = "+departId);
+		}
+		return find(f,pageNo,pageSize);
+	}
+
+	@Override
+	public RisenScore save(RisenScore score) {
+		// TODO Auto-generated method stub
+		getSession().save(score);
+		return score;
+	}
+
+	@Override
+	public RisenScore findById(Integer id) {
+		// TODO Auto-generated method stub
+		RisenScore score = get(id);
+		return score;
+	}
+
+	@Override
+	public void delete(Integer id) {
+		// TODO Auto-generated method stub
+		RisenScore score = get(id);
+		if(score!=null){
+			getSession().delete(score);
+		}
+	}
+
+	@Override
+	public RisenScore update(RisenScore bean) {
+		// TODO Auto-generated method stub
+		String hql = "update RisenScore bean set bean.risenScScore=:risenScScore,bean.risenScDescribtion=:risenScDescribtion where bean.id=:id";
+		Query query = getSession().createQuery(hql);
+		query.setParameter("risenScScore", bean.getRisenScScore());
+    	query.setParameter("risenScDescribtion", bean.getRisenScDescribtion());
+    	query.setParameter("id", bean.getId());
+    	query.executeUpdate();
+		return bean;
+	}
+
+	@Override
+	protected Class<RisenScore> getEntityClass() {
+		// TODO Auto-generated method stub
+		return RisenScore.class;
+	}
+
+	@Override
+	public boolean existScore(Integer userId, Integer departId, Integer quotaId) {
+		// TODO Auto-generated method stub
+		Finder f = Finder.create(" from RisenScore where 1=1");
+		if((StringUtils.hasText(String.valueOf(userId)))&&(StringUtils.hasText(String.valueOf(departId)))
+				&&(StringUtils.hasText(String.valueOf(quotaId)))){
+			f.append(" and risensc_partyUserId = "+userId);
+			f.append(" and depart_id = "+departId);
+			f.append(" and quota_id = "+quotaId);
+		}
+		Pagination pagination = find(f,1,20000);
+		List<RisenScore> scores = (List<RisenScore>)pagination.getList();
+		if(scores.size()>0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "../head.html"/>
+<style>
+	.btn_alink{
+		width:80px;
+		height:25px;
+		border:1px solid black;
+		border-radius:5px;
+		text-align:center;
+		line-height:25px;
+		display:block;
+	}
+</style>
+<script type="text/javascript">
+$(function() {
+	var result = false;
+	$("#jvForm").validate();
+	$("[name='risenqtName']").change(function(){
+		var name = $("[name='risenqtName']").val(); 
+		var risenType=${risenType!};
+		var risenAddType=${risenAddType!};
+		var typeName = "";
+		if(risenType=="1"){
+			typeName = "基础分";
+		}else{
+			typeName = "附加分";
+		}
+		var url = "exist.do?quotaName="+name+"&risenType="+risenType+"&risenAddType="+risenAddType;
+		$.post(url,function(answer){
+			if(answer=="exists"){
+				alert("此指标已在该组织下的"+typeName+"中添加!");
+			}else{
+				result = true;
+			}
+		});
+	});
+	$("#jvForm").submit(function(){
+		var risenqtScore = $("[name='risenqtScore']").val();
+		var reg =/^\d+$/;
+		if(!reg.test(risenqtScore)){
+			alert("指标总分为数字!");
+			return false;
+		}
+		if(result){
+			return true;
+		}else{
+			return false;
+		}
+	});
+});
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 先锋分 - 指标管理 - 编辑</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<a href="v_list.do?risenType=${risenType!}" class="btn_alink">返回</a>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_update.do">
+<@p.text label="指标名称" id="risenqtName" colspan="1" width="50" name="risenqtName" required="true" class="required" maxlength="20" value="${risenQuota.risenqtName!}" /><@p.tr/>
+<@p.text label="指标总分" id="risenqtScore" colspan="1" width="50" name="risenqtScore" required="true" class="required" maxlength="3" value="${risenQuota.risenqtScore!}" /><@p.tr/>
+<@p.td>
+<@p.hidden name="id" value="${risenQuota.id!}"/>
+<@p.hidden name="risenType" value="${risenType!}"/>
+<@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+</@p.form>
+</div>
+</body>
+</html>

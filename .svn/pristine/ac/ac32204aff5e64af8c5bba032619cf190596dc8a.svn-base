@@ -1,0 +1,12 @@
+package com.risen.dao;
+
+import java.util.List;
+
+import com.jeecms.core.entity.CmsDepartment;
+import com.risen.entity.RisenChangeremindrecord;
+
+public interface IRisenChangeremindrecordDao {
+	
+	RisenChangeremindrecord save(RisenChangeremindrecord model);
+	RisenChangeremindrecord getByOrgid(Integer orgid);
+}

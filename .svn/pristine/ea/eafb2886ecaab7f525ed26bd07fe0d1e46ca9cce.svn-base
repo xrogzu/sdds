@@ -1,0 +1,64 @@
+package com.risen.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.jeecms.common.hibernate4.Updater;
+import com.jeecms.common.hibernate4.Updater.UpdateMode;
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.RisenDevpartyDao;
+import com.risen.entity.RisenDevparty;
+import com.risen.service.RisenDevpartyMng;
+
+@Service
+@Transactional
+public class RisenDevpartyMngImpl implements RisenDevpartyMng {
+	@Transactional(readOnly = true)
+	public Pagination getPage(int pageNo, int pageSize) {
+		Pagination page = dao.getPage(pageNo, pageSize);
+		return page;
+	}
+	@Transactional(readOnly = true)
+	public Pagination getPage(int pageNo, int pageSize,Integer departId ) {
+		Pagination page = dao.getPage(pageNo, pageSize, departId);
+		return page;
+	}
+
+	@Transactional(readOnly = true)
+	public RisenDevparty findById(Integer id) {
+		RisenDevparty entity = dao.findById(id);
+		return entity;
+	}
+
+	public RisenDevparty save(RisenDevparty bean) {
+		dao.save(bean);
+		return bean;
+	}
+
+	public RisenDevparty update(RisenDevparty bean) {
+		Updater<RisenDevparty> updater = new Updater<RisenDevparty>(bean,UpdateMode.MIDDLE);
+		RisenDevparty entity = dao.updateByUpdater(updater);
+		return entity;
+	}
+
+	public RisenDevparty deleteById(Integer id) {
+		RisenDevparty bean = dao.deleteById(id);
+		return bean;
+	}
+	
+	public RisenDevparty[] deleteByIds(Integer[] ids) {
+		RisenDevparty[] beans = new RisenDevparty[ids.length];
+		for (int i = 0,len = ids.length; i < len; i++) {
+			beans[i] = deleteById(ids[i]);
+		}
+		return beans;
+	}
+
+	private RisenDevpartyDao dao;
+
+	@Autowired
+	public void setDao(RisenDevpartyDao dao) {
+		this.dao = dao;
+	}
+}

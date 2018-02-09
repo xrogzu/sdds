@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "../head.html"/>
+<style>
+	.btn_alink{
+		width:80px;
+		height:25px;
+		border:1px solid black;
+		border-radius:5px;
+		text-align:center;
+		line-height:25px;
+		display:block;
+	}
+</style>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+	$("#jvForm").submit(function(){
+		var risenScScore = $("[name='risenScScore']").val();
+		var risenMaxScore = $("[name='risenMaxScore']").val();
+		var reg =/^\d+$/;
+		if(!reg.test(risenScScore)){
+			alert("指标总分为数字！");
+			return false;
+		}else{
+			if(parseInt(risenScScore)>parseInt(risenMaxScore)){
+				alert("指标分数超过上限"+risenMaxScore);
+				return false;
+			}else{
+				return true;
+			}
+		}
+	});
+});
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 先锋分 - 指标管理 - 编辑</div>
+</div>
+<div class="box-positon ck">
+<form class="ropt">
+		<a href="v_list.do?userIds=${userId!}" class="btn_alink">返回 </a>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_update.do">
+<tr>
+		<td>指标名称</td>
+		<td>
+			<input type="text" name="quotaNames" value="${risenScore.risenScQuota.risenqtName!}" readonly="readonly"/>
+			<input type="hidden" name="quotaId" value="${risenScore.risenScQuota.id!}" />
+		</td>
+	</tr>
+	<tr>
+		<td>指标得分</td>
+		<td>
+			<input type="text" name="risenScScore" value="${risenScore.risenScScore!'0'}"/>
+			<input type="hidden" name="risenMaxScore" value="${risenScore.risenScQuota.risenqtScore!'0'}"/>
+		</td>
+	</tr>
+	<tr>
+		<td>指标说明</td>
+		<td>
+			<textarea cols="60" rows="5" name="risenScDescribtion">${risenScore.risenScDescribtion!''}</textarea>
+		</td>
+	</tr>
+<@p.td>
+<@p.hidden name="id" value="${risenScore.id!}"/>
+<@p.hidden name="userId" value="${userId!}"/>
+<@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+</@p.form>
+</div>
+</body>
+</html>

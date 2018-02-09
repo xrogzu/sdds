@@ -1,0 +1,747 @@
+package com.jeecms.cms.statistic;
+
+import static com.jeecms.cms.statistic.CmsStatistic.SITEID;
+import static com.jeecms.cms.statistic.CmsStatistic.ISREPLYED;
+import static com.jeecms.cms.statistic.CmsStatistic.USERID;
+import static com.jeecms.cms.statistic.CmsStatistic.STATISTIC_BY_DAY;
+import static com.jeecms.cms.statistic.CmsStatistic.STATISTIC_BY_WEEK;
+import static com.jeecms.cms.statistic.CmsStatistic.STATISTIC_BY_MONTH;
+import static com.jeecms.cms.statistic.CmsStatistic.STATISTIC_BY_YEAR;
+import static com.jeecms.cms.statistic.CmsStatistic.STATISTIC_BY_YEARS;
+import static com.jeecms.cms.entity.assist.CmsSiteAccessStatistic.STATISTIC_AREA;
+import static com.jeecms.cms.entity.assist.CmsSiteAccessStatistic.STATISTIC_ENGINE;
+import static com.jeecms.cms.entity.assist.CmsSiteAccessStatistic.STATISTIC_KEYWORD;
+import static com.jeecms.cms.entity.assist.CmsSiteAccessStatistic.STATISTIC_LINK;
+import static com.jeecms.cms.entity.assist.CmsSiteAccessStatistic.STATISTIC_SOURCE;
+import static com.jeecms.cms.entity.assist.CmsSiteAccessStatistic.STATISTIC_TARGET_IP;
+import static com.jeecms.cms.entity.assist.CmsSiteAccessStatistic.STATISTIC_TARGET_PV;
+import static com.jeecms.cms.entity.assist.CmsSiteAccessStatistic.STATISTIC_TARGET_VISITORS;
+import static com.jeecms.cms.entity.assist.CmsSiteAccessStatistic.STATISTIC_TARGET_VISITSECOND;
+
+import static com.jeecms.cms.statistic.CmsStatistic.CHANNELID;
+import static com.jeecms.cms.statistic.CmsStatistic.STATUS;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.ehcache.hibernate.HibernateUtil;
+
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.type.StandardBasicTypes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.jeecms.cms.statistic.CmsStatistic.CmsStatisticModel;
+import com.jeecms.cms.statistic.CmsStatistic.TimeRange;
+import com.jeecms.common.hibernate4.Finder;
+import com.jeecms.common.hibernate4.HibernateSimpleDao;
+import com.jeecms.common.util.DateUtils;
+import com.jeecms.core.entity.CmsDepartment;
+import com.jeecms.core.manager.CmsDepartmentMng;
+import com.utility.date.DateUtil;
+
+@Repository
+public class CmsStatisticDaoImpl extends HibernateSimpleDao implements
+		CmsStatisticDao {
+	public long memberStatistic(TimeRange timeRange) {
+		Finder f = createCacheableFinder("select count(*) from CmsUser bean where 1=1");
+		if (timeRange != null) {
+			if(timeRange.getBegin()!=null){
+				f.append(" and bean.registerTime >= :begin");
+				f.setParam("begin", timeRange.getBegin());
+			}
+			if(timeRange.getEnd()!=null){
+				f.append(" and bean.registerTime < :end");
+				f.setParam("end", timeRange.getEnd());
+			}
+		}
+		f.append(" and bean.admin is false");
+		return (Long) find(f).iterator().next();
+	}
+	
+	public long memberStatistic(TimeRange timeRange, String statisticType,Map<String, Object> restrictions){
+		String sql = "select count(bean.user_id) from jc_user bean where 1=1 and bean.sddscp_changestype='1' and bean.sddscp_changes='0' and bean.sddscp_isinjob='1'";
+		Integer deptId = (Integer) restrictions.get("deptId");
+		if (deptId!=null && deptId>-1) {
+			String cndSql = "(" +
+					"select u.user_id from jc_user u where " +
+					"u.sddscp_jgdwname in (select dp.depart_name from jc_department dp start with dp.depart_id="+deptId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_dzzname in (select dp.depart_name from jc_department dp start with dp.depart_id="+deptId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_zbname in (select dp.depart_name from jc_department dp start with dp.depart_id="+deptId+" connect by prior dp.depart_id=dp.parent_id))";
+			
+			sql += " and bean.sddscp_isperororg='1' and bean.user_id in ("+cndSql+")";
+		}else{
+			sql += " and bean.sddscp_isperororg='1'";
+		}
+		if (!StringUtils.isBlank(statisticType)) {
+			if (CmsStatisticModel.lastYear.toString().equals(statisticType)) {
+				if (timeRange != null) {
+					if(timeRange.getBegin()!=null){
+						sql+=" and bean.register_time > to_date('"+DateUtil.format(timeRange.getBegin(), "yyyy-MM-dd HH:mm:ss")+"','yyyy-mm-dd hh24:mi:ss')";
+					}
+				}
+				sql+=" and bean.sddscp_isperororg='1' and bean.sddscp_changestype='1'";
+			}else if (CmsStatisticModel.thisYearAdd.toString().equals(statisticType)) {
+				if (timeRange != null) {
+					if(timeRange.getBegin()!=null){
+						sql+=" and bean.register_time >= to_date('"+DateUtil.format(timeRange.getBegin(), "yyyy-MM-dd HH:mm:ss")+"','yyyy-mm-dd hh24:mi:ss')";
+					}
+				}
+				sql+=" and bean.sddscp_isperororg='1' and bean.sddscp_changestype='1'";
+			}else if(CmsStatisticModel.thisYearDecrease.toString().equals(statisticType)){
+				if (timeRange != null) {
+					if(timeRange.getBegin()!=null){
+						sql+=" and bean.register_time >= to_date('"+DateUtil.format(timeRange.getBegin(), "yyyy-MM-dd HH:mm:ss")+"','yyyy-mm-dd hh24:mi:ss')";
+					}
+				}
+				sql+=" and bean.sddscp_isperororg='1' and bean.sddscp_changestype='2'";
+			}else if(CmsStatisticModel.endOfTheYear.toString().equals(statisticType)){
+				if (timeRange != null) {
+					if(timeRange.getBegin()!=null){
+						sql+=" and bean.register_time < to_date('"+DateUtil.format(timeRange.getBegin(), "yyyy-MM-dd HH:mm:ss")+"','yyyy-mm-dd hh24:mi:ss')";
+					}
+				}
+				sql+=" and bean.sddscp_isperororg='1' and bean.sddscp_changestype='1'";
+			}else if(CmsStatisticModel.atTheEndOfTheYear.toString().equals(statisticType)){
+				if (timeRange != null) {
+					if(timeRange.getBegin()!=null){
+						sql+=" and bean.register_time < to_date('"+DateUtil.format(timeRange.getBegin(), "yyyy-MM-dd HH:mm:ss")+"','yyyy-mm-dd hh24:mi:ss')";
+					}
+				}
+				sql+=" and bean.sddscp_isperororg='1' and bean.sddscp_changestype='1'";
+			}
+			List list = this.getSession().createSQLQuery(sql).list();
+			Object obj = list.get(0);
+			return Long.valueOf(obj.toString());
+		}
+		return 0L;
+	}
+	
+	public List<Object[]> statisticMemberByTarget(Integer target,String statisticType,Date timeBegin,Date timeEnd,Map<String, Object> restrictions){
+		String hql = "";
+		Finder f = null;
+		if (!StringUtils.isBlank(statisticType)) {
+			Integer deptId = (Integer) restrictions.get("deptId");
+			Integer deptType = (Integer) restrictions.get("deptType");
+			if (statisticType.equals(CmsStatisticModel.lastYear.toString())) {
+				hql="select count(bean.id) from CmsUser bean where 1=1";
+				f = Finder.create(hql);
+				if(timeBegin!=null){
+					f.append(" and bean.registerTime <:timeBegin").setParam("timeBegin", timeBegin);
+				}
+				f.append(" and bean.sddscpChangestype='1' group by bean.sddscpChanges");
+				return find(f);
+			}else if(statisticType.equals(CmsStatisticModel.thisYearAdd.toString())){
+				//target---1：本年新增发展党员 2：外地转入 3：转出外地
+				if (target.equals(1)) {
+					String sql="select count(bean.user_id) from jc_user bean where 1=1 and bean.sddscp_isperororg='1' and bean.sddscp_changestype='1' and bean.sddscp_changes='0' and bean.sddscp_isinjob='1'";
+					if (deptId!=null) {
+						String cndSql = "(" +
+								"select u.user_id from jc_user u where " +
+								"u.sddscp_jgdwname in (select dp.depart_name from jc_department dp start with dp.depart_id="+deptId+" connect by prior dp.depart_id=dp.parent_id) or "+
+								"u.sddscp_dzzname in (select dp.depart_name from jc_department dp start with dp.depart_id="+deptId+" connect by prior dp.depart_id=dp.parent_id) or "+
+								"u.sddscp_zbname in (select dp.depart_name from jc_department dp start with dp.depart_id="+deptId+" connect by prior dp.depart_id=dp.parent_id))";
+						
+						sql += " and bean.user_id in ("+cndSql+")";
+					}
+					if( timeBegin!=null){
+						sql += " and bean.register_time >= to_date('"+DateUtil.format(timeBegin, "yyyy-MM-dd HH:mm:ss")+"','yyyy-mm-dd hh24:mi:ss')";
+					}
+					List list = this.getSession().createSQLQuery(sql).list();
+					return list;
+				}else if (target.equals(2)) {
+					//deptType---1：区县局机关 2：乡镇/街道/基层所 3：市局机关 4：省局机关
+					if (deptType!=null) {
+						hql="select count(bean.id) from CmsFloating bean where 1=1";
+						f = Finder.create(hql);
+						if (deptType.equals(1)) {
+							f.append(" and bean.sddsfiIncounty='1'");
+						}else if (deptType.equals(2)) {
+							f.append(" and bean.sddsfiIncounty='1'");
+						}else if (deptType.equals(3)) {
+							f.append(" and bean.sddsfiIncity='1'");
+						}else if (deptType.equals(4)) {
+							f.append(" and bean.sddsfiInprovince='1'");
+						}
+						if (deptId!=null) {
+							f.append(" and bean.sddsfiOrgid = :deptId");
+							f.setParam("deptId", deptId);
+						}
+						f.append(" and bean.sddsfiYear =:timeBegin").setParam("timeBegin", DateUtil.format(new Date(), "yyyy"));
+						return find(f);
+					}
+				}
+			}else if(statisticType.equals(CmsStatisticModel.thisYearDecrease.toString())){
+				//deptType---1：区县局机关 2：乡镇/街道/基层所 3：市局机关 4：省局机关
+				if (deptType!=null) {
+					hql="select count(bean.id) from CmsFloating bean where 1=1";
+					f = Finder.create(hql);
+					if (deptType.equals(1)) {
+						f.append(" and bean.sddsfiOutcounty='1'");
+					}else if (deptType.equals(2)) {
+						f.append(" and bean.sddsfiOutcounty='1'");
+					}else if (deptType.equals(3)) {
+						f.append(" and bean.sddsfiOutcity='1'");
+					}else if (deptType.equals(4)) {
+						f.append(" and bean.sddsfiOutprovince='1'");
+					}
+					if (deptId!=null) {
+						f.append(" and bean.sddsfiOrgid = :deptId");
+						f.setParam("deptId", deptId);
+					}
+					f.append(" and bean.sddsfiYear =:timeBegin").setParam("timeBegin", DateUtil.format(new Date(), "yyyy"));
+					return find(f);
+				}
+			}
+		}
+		return find(f);
+	}
+	
+	public List<Object[]> statisticMemberByTarget(Integer target,Date timeBegin,Date timeEnd){
+		String hql = "";
+		if(target==STATISTIC_BY_DAY){
+			hql="select count(bean.id),HOUR(bean.registerTime) from CmsUser bean where 1=1 ";
+		}else if(target==STATISTIC_BY_MONTH){
+			hql="select count(bean.id),DAY(bean.registerTime) from CmsUser bean  where 1=1  ";
+		}else if(target==STATISTIC_BY_YEAR){
+			hql="select count(bean.id),MONTH(bean.registerTime) from CmsUser bean  where 1=1 ";
+		}else if(target==STATISTIC_BY_YEARS){
+			hql="select count(bean.id),YEAR(bean.registerTime) from CmsUser bean  where 1=1 ";
+		}
+		Finder f = Finder.create(hql);
+		if(timeBegin!=null){
+			f.append(" and bean.registerTime>=:timeBegin").setParam("timeBegin", timeBegin);
+		}
+		if(timeEnd!=null){
+			f.append(" and bean.registerTime<=:timeEnd").setParam("timeEnd", timeEnd);
+		}
+		f.append(" and bean.admin=false");
+		if(target==STATISTIC_BY_DAY){
+			f.append(" group by HOUR(bean.registerTime) order by HOUR(bean.registerTime) asc");
+		}else if(target==STATISTIC_BY_MONTH){
+			f.append(" group by DAY(bean.registerTime) order by DAY(bean.registerTime) asc");
+		}else if(target==STATISTIC_BY_YEAR){
+			f.append(" group by MONTH(bean.registerTime) order by MONTH(bean.registerTime) asc");
+		}else if(target==STATISTIC_BY_YEARS){
+			f.append(" group by YEAR(bean.registerTime) order by YEAR(bean.registerTime) asc");
+		}
+		return find(f);
+	}
+
+	public long contentStatistic(TimeRange timeRange,
+			Map<String, Object> restrictions) {
+		Finder f = createCacheableFinder("select count(*) from Content bean");
+		Integer userId = (Integer) restrictions.get(USERID);
+		Integer channelId = (Integer) restrictions.get(CHANNELID);
+		Byte status = (Byte) restrictions.get(STATUS);
+		if (channelId != null) {
+			f.append(" join bean.channel channel,Channel parent");
+			f.append(" where channel.lft between parent.lft and parent.rgt");
+			f.append(" and channel.site.id=parent.site.id");
+			f.append(" and parent.id=:parentId");
+			f.setParam("parentId", channelId);
+		} else {
+			f.append(" where bean.site.id=:siteId").setParam("siteId",
+					restrictions.get(SITEID));
+		}
+		if (timeRange != null) {
+			if(timeRange.getBegin()!=null){
+				f.append(" and bean.contentExt.releaseDate >= :begin");
+				f.setParam("begin", timeRange.getBegin());
+			}
+			if(timeRange.getEnd()!=null){
+				f.append(" and bean.contentExt.releaseDate < :end");
+				f.setParam("end", timeRange.getEnd());
+			}
+			
+		}
+		if (userId != null) {
+			f.append(" and bean.user.id=:userId").setParam("userId", userId);
+		}
+		if(status!=null){
+			f.append(" and bean.status=:status").setParam("status", status);
+		}
+		return (Long) find(f).iterator().next();
+	}
+	
+	public List<Object[]> statisticContentByTarget(Integer target,
+			Date timeBegin,Date timeEnd,Map<String, Object> restrictions){
+		String hql = "";
+		if(target==STATISTIC_BY_DAY){
+			hql="select count(bean.id),HOUR(bean.contentExt.releaseDate) from Content bean ";
+		}else if(target==STATISTIC_BY_MONTH){
+			hql="select count(bean.id),DAY(bean.contentExt.releaseDate) from Content bean  ";
+		}else if(target==STATISTIC_BY_YEAR){
+			hql="select count(bean.id),MONTH(bean.contentExt.releaseDate) from Content bean ";
+		}
+		Finder f = createCacheableFinder(hql);
+		Integer channelId = (Integer) restrictions.get(CHANNELID);
+		Byte status = (Byte) restrictions.get(STATUS);
+		if (channelId != null) {
+			f.append(" join bean.channel channel,Channel parent");
+			f.append(" where channel.lft between parent.lft and parent.rgt");
+			f.append(" and channel.site.id=parent.site.id");
+			f.append(" and parent.id=:parentId");
+			f.setParam("parentId", channelId);
+		} else {
+			f.append(" where bean.site.id=:siteId").setParam("siteId",
+					restrictions.get(SITEID));
+		}
+		if(timeBegin!=null){
+			f.append(" and bean.contentExt.releaseDate>=:timeBegin").setParam("timeBegin", timeBegin);
+		}
+		if(timeEnd!=null){
+			f.append(" and bean.contentExt.releaseDate<=:timeEnd").setParam("timeEnd", timeEnd);
+		}
+		if(status!=null){
+			f.append(" and bean.status=:status").setParam("status", status);
+		}
+		if(target==STATISTIC_BY_DAY){
+			f.append(" group by HOUR(bean.contentExt.releaseDate) order by HOUR(bean.contentExt.releaseDate) asc");
+		}else if(target==STATISTIC_BY_MONTH){
+			f.append(" group by DAY(bean.contentExt.releaseDate) order by DAY(bean.contentExt.releaseDate) asc");
+		}else if(target==STATISTIC_BY_YEAR){
+			f.append(" group by MONTH(bean.contentExt.releaseDate) order by MONTH(bean.contentExt.releaseDate) asc");
+		}
+		return find(f);
+	}
+
+	public long commentStatistic(TimeRange timeRange,
+			Map<String, Object> restrictions) {
+		Finder f = createCacheableFinder("select count(*) from CmsComment bean where bean.site.id=:siteId");
+		f.setParam("siteId", restrictions.get(SITEID));
+		if (timeRange != null) {
+			if(timeRange.getBegin()!=null){
+				f.append(" and bean.createTime >= :begin");
+				f.setParam("begin", timeRange.getBegin());
+			}
+			if(timeRange.getEnd()!=null){
+				f.append(" and bean.createTime < :end");
+				f.setParam("end", timeRange.getEnd());
+			}
+		}
+		Boolean isReplyed = (Boolean) restrictions.get(ISREPLYED);
+		if (isReplyed != null) {
+			if (isReplyed) {
+				f.append(" and bean.replayTime is not null");
+			} else {
+				f.append(" and bean.replayTime is null");
+			}
+		}
+		return (Long) find(f).iterator().next();
+	}
+	
+	public List<Object[]> statisticCommentByTarget(Integer target,Integer siteId,
+			Boolean isReplyed,Date timeBegin,Date timeEnd){
+		String hql = "";
+		if(target==STATISTIC_BY_DAY){
+			hql="select count(bean.id),HOUR(bean.createTime) from CmsComment bean where 1=1 ";
+		}else if(target==STATISTIC_BY_MONTH){
+			hql="select count(bean.id),DAY(bean.createTime) from CmsComment bean  where 1=1  ";
+		}else if(target==STATISTIC_BY_YEAR){
+			hql="select count(bean.id),MONTH(bean.createTime) from CmsComment bean  where 1=1 ";
+		}else if(target==STATISTIC_BY_YEARS){
+			hql="select count(bean.id),YEAR(bean.createTime) from CmsComment bean  where 1=1 ";
+		}
+		Finder f = Finder.create(hql);
+		f.setCacheable(true);
+		if(timeBegin!=null){
+			f.append(" and bean.createTime>=:timeBegin").setParam("timeBegin", timeBegin);
+		}
+		if(timeEnd!=null){
+			f.append(" and bean.createTime<=:timeEnd").setParam("timeEnd", timeEnd);
+		}
+		if(siteId!=null){
+			f.append(" and bean.site.id=:siteId").setParam("siteId", siteId);
+		}
+		if (isReplyed != null) {
+			if (isReplyed) {
+				f.append(" and bean.replayTime is not null");
+			} else {
+				f.append(" and bean.replayTime is null");
+			}
+		}
+		if(target==STATISTIC_BY_DAY){
+			f.append(" group by HOUR(bean.createTime) order by HOUR(bean.createTime) asc");
+		}else if(target==STATISTIC_BY_MONTH){
+			f.append(" group by DAY(bean.createTime) order by DAY(bean.createTime) asc");
+		}else if(target==STATISTIC_BY_YEAR){
+			f.append(" group by MONTH(bean.createTime) order by MONTH(bean.createTime) asc");
+		}else if(target==STATISTIC_BY_YEARS){
+			f.append(" group by YEAR(bean.createTime) order by YEAR(bean.createTime) asc");
+		}
+		return find(f);
+	}
+
+	public long guestbookStatistic(TimeRange timeRange,
+			Map<String, Object> restrictions) {
+		Finder f = createCacheableFinder("select count(*) from CmsGuestbook bean where bean.site.id=:siteId");
+		f.setParam("siteId", restrictions.get(SITEID));
+		if (timeRange != null) {
+			if(timeRange.getBegin()!=null){
+				f.append(" and bean.createTime >= :begin");
+				f.setParam("begin", timeRange.getBegin());
+			}
+			if(timeRange.getEnd()!=null){
+				f.append(" and bean.createTime < :end");
+				f.setParam("end", timeRange.getEnd());
+			}
+		}
+		Boolean isReplyed = (Boolean) restrictions.get(ISREPLYED);
+		if (isReplyed != null) {
+			if (isReplyed) {
+				f.append(" and bean.replayTime is not null");
+			} else {
+				f.append(" and bean.replayTime is null");
+			}
+		}
+		return (Long) find(f).iterator().next();
+	}
+	
+	public List<Object[]> statisticGuestbookByTarget(Integer target,Integer siteId,
+			Boolean isReplyed,Date timeBegin,Date timeEnd){
+		String hql = "";
+		if(target==STATISTIC_BY_DAY){
+			hql="select count(bean.id),HOUR(bean.createTime) from CmsGuestbook bean where 1=1 ";
+		}else if(target==STATISTIC_BY_MONTH){
+			hql="select count(bean.id),DAY(bean.createTime) from CmsGuestbook bean  where 1=1  ";
+		}else if(target==STATISTIC_BY_YEAR){
+			hql="select count(bean.id),MONTH(bean.createTime) from CmsGuestbook bean  where 1=1 ";
+		}else if(target==STATISTIC_BY_YEARS){
+			hql="select count(bean.id),YEAR(bean.createTime) from CmsGuestbook bean  where 1=1 ";
+		}
+		Finder f = Finder.create(hql);
+		f.setCacheable(true);
+		if(timeBegin!=null){
+			f.append(" and bean.createTime>=:timeBegin").setParam("timeBegin", timeBegin);
+		}
+		if(timeEnd!=null){
+			f.append(" and bean.createTime<=:timeEnd").setParam("timeEnd", timeEnd);
+		}
+		if(siteId!=null){
+			f.append(" and bean.site.id=:siteId").setParam("siteId", siteId);
+		}
+		if (isReplyed != null) {
+			if (isReplyed) {
+				f.append(" and bean.replayTime is not null");
+			} else {
+				f.append(" and bean.replayTime is null");
+			}
+		}
+		if(target==STATISTIC_BY_DAY){
+			f.append(" group by HOUR(bean.createTime) order by HOUR(bean.createTime) asc");
+		}else if(target==STATISTIC_BY_MONTH){
+			f.append(" group by DAY(bean.createTime) order by DAY(bean.createTime) asc");
+		}else if(target==STATISTIC_BY_YEAR){
+			f.append(" group by MONTH(bean.createTime) order by MONTH(bean.createTime) asc");
+		}else if(target==STATISTIC_BY_YEARS){
+			f.append(" group by YEAR(bean.createTime) order by YEAR(bean.createTime) asc");
+		}
+		return find(f);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Object[]> basicInfoList(String statisticType,Integer departId,String sddscpUsertype){
+		String cndSql = "";
+		if ("DZJG".equals(statisticType))  {
+			cndSql = " and bean.sddscp_jobstatus='公务员'";
+		}else if ("SYDW".equals(statisticType)) {
+ 			cndSql = " and bean.sddscp_jobstatus='事业编制人员'";
+		}else if ("GQ".equals(statisticType)) {
+			cndSql = " and bean.sddscp_jobstatus='工勤'";
+		}else if ("LTX".equals(statisticType)) {
+			cndSql = " and bean.sddscp_jobstatus='离退休党员'";
+		}else if ("ALL".equals(statisticType)){
+			//查询所有，不做任何操作
+		}
+		
+		if (departId!=null && departId>-1) {
+			//--------由于以下sql能实现查询指定机构下得所有支部，所以弃用本递归查询方法
+			/*List<Integer> listIds = new ArrayList<Integer>();
+			List<Integer> ids = cmsDepartmentMng.findDpetNameByLoginDept(2805, listIds);*/
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1' and bean.user_id in(" +
+					"select u.user_id from jc_user u where " +
+					"u.sddscp_jgdwname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_dzzname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_zbname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id))";
+		}else{
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1'";
+		}
+		 
+		String sql = "select (select count(bean.user_id) from jc_user bean where bean.sddscp_changes='0' and bean.sddscp_changestype='1' "+cndSql+") as sddscpUsertype,"+
+				" (select count(bean.user_id) from jc_user bean where bean.sddscp_sex='1'"+cndSql+") as sddscpSexB,"+
+				" (select count(bean.user_id) from jc_user bean where bean.sddscp_sex='2'"+cndSql+") as sddscpSexG,"+
+				" (select count(bean.user_id) from jc_user bean where (bean.sddscp_national not like '汉%')"+cndSql+") as sddscpNational,"+
+				" (select count(bean.user_id) from jc_user bean where floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)<=30"+cndSql+") as age1,"+
+				" (select count(bean.user_id) from jc_user bean where floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)<=35 and floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)>=31"+cndSql+") as age2,"+
+				" (select count(bean.user_id) from jc_user bean where floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)<=40 and floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)>=36"+cndSql+") as age3,"+
+				" (select count(bean.user_id) from jc_user bean where floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)<=45 and floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)>=41"+cndSql+") as age4,"+
+				" (select count(bean.user_id) from jc_user bean where floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)<=50 and floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)>=46"+cndSql+") as age5,"+
+				" (select count(bean.user_id) from jc_user bean where floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)<=55 and floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)>=51"+cndSql+") as age6,"+
+				" (select count(bean.user_id) from jc_user bean where floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)<=60 and floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)>=56"+cndSql+") as age7,"+
+				" (select count(bean.user_id) from jc_user bean where floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)<=65 and floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)>=61"+cndSql+") as age8,"+
+				" (select count(bean.user_id) from jc_user bean where floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)<=70 and floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)>=66"+cndSql+") as age9,"+
+				" (select count(bean.user_id) from jc_user bean where floor(MONTHS_BETWEEN(to_date(to_char(sysdate, 'yyyy-MM-dd'),'yyyy-MM-dd'),bean.sddscp_birthday) / 12)>=71"+cndSql+") as age10"+
+				" from dual";
+		 List list = this.getSession().createSQLQuery(sql)
+				 .addScalar("sddscpUsertype", StandardBasicTypes.INTEGER)
+				 .addScalar("sddscpSexB", StandardBasicTypes.INTEGER)
+				 .addScalar("sddscpSexG", StandardBasicTypes.INTEGER)
+				 .addScalar("sddscpNational", StandardBasicTypes.INTEGER)
+				 .addScalar("age1", StandardBasicTypes.INTEGER)
+				 .addScalar("age2", StandardBasicTypes.INTEGER)
+				 .addScalar("age3", StandardBasicTypes.INTEGER)
+				 .addScalar("age4", StandardBasicTypes.INTEGER)
+				 .addScalar("age5", StandardBasicTypes.INTEGER)
+				 .addScalar("age6", StandardBasicTypes.INTEGER)
+				 .addScalar("age7", StandardBasicTypes.INTEGER)
+				 .addScalar("age8", StandardBasicTypes.INTEGER)
+				 .addScalar("age9", StandardBasicTypes.INTEGER)
+				 .addScalar("age10", StandardBasicTypes.INTEGER).list();	
+		//f.append(" order by decode(bean.sddscpJobstatus,'公务员',1,'事业编制人员',2,'工勤',3,'离退休人员',4)");
+		return list;
+	}
+	
+	public List<Object[]> basicInfoListCount(String statisticType,Integer departId,String sddscpUsertype){
+		String cndSql = "";
+		if ("DZJG".equals(statisticType))  {
+			cndSql = " bean.sddscp_jobstatus='公务员'";
+		}else if ("SYDW".equals(statisticType)) {
+ 			cndSql = " bean.sddscp_jobstatus='事业编制人员'";
+		}else if ("GQ".equals(statisticType)) {
+			cndSql = " bean.sddscp_jobstatus='工勤'";
+		}else if ("LTX".equals(statisticType)) {
+			cndSql = " bean.sddscp_jobstatus='离退休党员'";
+		}else if ("ALL".equals(statisticType)){
+			//查询所有，不做任何操作
+		}
+		
+		if (departId!=null && departId>-1) {
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1' and bean.user_id in(" +
+					"select u.user_id from jc_user u where " +
+					"u.sddscp_jgdwname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_dzzname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_zbname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id))";
+		}else{
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1'";
+		}
+		
+		String sql = "select count(bean.user_id) as countAll from jc_user bean where "+cndSql;
+		List list = this.getSession().createSQLQuery(sql).addScalar("countAll", StandardBasicTypes.INTEGER).list();
+		return list;
+	}
+	
+	public List<Object[]> partyTimeList(String statisticType,Integer departId,String sddscpUsertype){
+		String cndSql = "";
+		if ("DZJG".equals(statisticType))  {
+			cndSql = " and bean.sddscp_jobstatus='公务员'";
+		}else if ("SYDW".equals(statisticType)) {
+ 			cndSql = " and bean.sddscp_jobstatus='事业编制人员'";
+		}else if ("GQ".equals(statisticType)) {
+			cndSql = " and bean.sddscp_jobstatus='工勤'";
+		}else if ("LTX".equals(statisticType)) {
+			cndSql = " and bean.sddscp_jobstatus='离退休党员'";
+		}else if ("ALL".equals(statisticType)){
+			//查询所有，不做任何操作
+		}
+		
+		if (departId!=null && departId>-1) {
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1' and bean.user_id in(" +
+					"select u.user_id from jc_user u where " +
+					"u.sddscp_jgdwname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_dzzname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_zbname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id))";
+		}else{
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1'";
+		}
+		String sql = "select (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')<='1937-07-06' ) as joinpartydate1,"+
+				" (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')>='1937-07-07' and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')<='1945-09-02') as joinpartydate2,"+
+				" (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')>='1945-09-03' and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')<='1949-09-30') as joinpartydate3,"+
+				" (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')>='1949-10-01' and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')<='1966-04-30') as joinpartydate4,"+
+				" (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')>='1966-05-01' and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')<='1976-10-31') as joinpartydate5,"+
+				" (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')>='1976-11-01' and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')<='1978-12-31') as joinpartydate6,"+
+				" (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')>='1979-01-01' and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')<='2002-10-31') as joinpartydate7,"+
+				" (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')>='2002-11-01' and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')<='2012-10-31') as joinpartydate8,"+
+				" (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and to_char(bean.sddscp_joinpartydate,'yyyy-mm-dd')>='2012-11-01') as joinpartydate9 from dual ";
+		
+		List list = getSession().createSQLQuery(sql)
+				.addScalar("joinpartydate1", StandardBasicTypes.INTEGER)
+				.addScalar("joinpartydate2", StandardBasicTypes.INTEGER)
+				.addScalar("joinpartydate3", StandardBasicTypes.INTEGER)
+				.addScalar("joinpartydate4", StandardBasicTypes.INTEGER)
+				.addScalar("joinpartydate5", StandardBasicTypes.INTEGER)
+				.addScalar("joinpartydate6", StandardBasicTypes.INTEGER)
+				.addScalar("joinpartydate7", StandardBasicTypes.INTEGER)
+				.addScalar("joinpartydate8", StandardBasicTypes.INTEGER)
+				.addScalar("joinpartydate9", StandardBasicTypes.INTEGER).list();
+		return list;
+	}
+	
+	public List<Object[]> partyTimeListCount(String statisticType,Integer departId,String sddscpUsertype){
+		String cndSql = "";
+		if ("DZJG".equals(statisticType))  {
+			cndSql = " and bean.sddscp_jobstatus='公务员'";
+		}else if ("SYDW".equals(statisticType)) {
+ 			cndSql = " and bean.sddscp_jobstatus='事业编制人员'";
+		}else if ("GQ".equals(statisticType)) {
+			cndSql = " and bean.sddscp_jobstatus='工勤'";
+		}else if ("LTX".equals(statisticType)) {
+			cndSql = " and bean.sddscp_jobstatus='离退休党员'";
+		}else if ("ALL".equals(statisticType)){
+			//查询所有，不做任何操作
+		}
+		
+		if (departId!=null && departId>-1) {
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1' and  bean.user_id in(" +
+					"select u.user_id from jc_user u where " +
+					"u.sddscp_jgdwname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_dzzname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_zbname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id))";
+		}else{
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1'";
+		}
+		
+		String sql = "select count(bean.user_id) as countAll from jc_user bean where "+cndSql;
+		List list = this.getSession().createSQLQuery(sql).addScalar("countAll", StandardBasicTypes.INTEGER).list();
+		return list;
+	}
+	
+	public List<Object[]> educationAnalysisList(String statisticType,Integer departId,String sddscpUsertype){
+		String cndSql = "";
+		if ("DZJG".equals(statisticType))  {
+			cndSql = " and bean.sddscp_jobstatus='公务员'";
+		}else if ("SYDW".equals(statisticType)) {
+ 			cndSql = " and bean.sddscp_jobstatus='事业编制人员'";
+		}else if ("GQ".equals(statisticType)) {
+			cndSql = " and bean.sddscp_jobstatus='工勤'";
+		}else if ("LTX".equals(statisticType)) {
+			cndSql = " and bean.sddscp_jobstatus='离退休党员'";
+		}else if ("ALL".equals(statisticType)){
+			//查询所有，不做任何操作
+		}
+		
+		if (departId!=null && departId>-1) {
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1' and bean.user_id in(" +
+					"select u.user_id from jc_user u where " +
+					"u.sddscp_jgdwname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_dzzname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_zbname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id))";
+		}else{
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1'";
+		}
+		String sql = "select (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and bean.sddscp_education='1') as sddscpEducation1,"+
+				" (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and bean.sddscp_education='2') as sddscpEducation2,"+
+				" (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and bean.sddscp_education='3') as sddscpEducation3,"+
+				" (select count(bean.user_id) from jc_user bean where 1=1 "+cndSql+" and bean.sddscp_education='4') as sddscpEducation4 from dual ";
+		
+		List list = getSession().createSQLQuery(sql)
+				.addScalar("sddscpEducation1", StandardBasicTypes.INTEGER)
+				.addScalar("sddscpEducation2", StandardBasicTypes.INTEGER)
+				.addScalar("sddscpEducation3", StandardBasicTypes.INTEGER)
+				.addScalar("sddscpEducation4", StandardBasicTypes.INTEGER).list();
+		return list;
+	}
+	
+	public List<Object[]> educationAnalysisListCount(String statisticType,Integer departId,String sddscpUsertype){
+		String cndSql = "";
+		if ("DZJG".equals(statisticType))  {
+			cndSql = " bean.sddscp_jobstatus='公务员'";
+		}else if ("SYDW".equals(statisticType)) {
+ 			cndSql = " bean.sddscp_jobstatus='事业编制人员'";
+		}else if ("GQ".equals(statisticType)) {
+			cndSql = " bean.sddscp_jobstatus='工勤'";
+		}else if ("LTX".equals(statisticType)) {
+			cndSql = " bean.sddscp_jobstatus='离退休党员'";
+		}else if ("ALL".equals(statisticType)){
+			//查询所有，不做任何操作
+		}
+		
+		if (departId!=null && departId>-1) {
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1' and bean.user_id in(" +
+					"select u.user_id from jc_user u where " +
+					"u.sddscp_jgdwname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_dzzname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_zbname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id))";
+		}else{
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1'";
+		}
+		
+		String sql = "select count(bean.user_id) as countAll from jc_user bean where "+cndSql;
+		List list = this.getSession().createSQLQuery(sql).addScalar("countAll", StandardBasicTypes.INTEGER).list();
+		return list;
+	}
+	
+	public List<Object[]> dutiesList(String statisticType, Integer departId) {
+		String cndSql = "";
+		if ("DZJG".equals(statisticType))  {
+			cndSql = " and bean.sddscp_jobstatus='公务员'";
+		}else if ("SYDW".equals(statisticType)) {
+ 			cndSql = " and bean.sddscp_jobstatus='事业编制人员'";
+		}else if ("GQ".equals(statisticType)) {
+			cndSql = " and bean.sddscp_jobstatus='工勤'";
+		}else if ("LTX".equals(statisticType)) {
+			cndSql = " and bean.sddscp_jobstatus='离退休党员'";
+		}else if ("ALL".equals(statisticType)){
+			//查询所有，不做任何操作
+		}
+		if (departId!=null && departId>-1) {
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1' and bean.user_id in(" +
+					"select u.user_id from jc_user u where " +
+					"u.sddscp_jgdwname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_dzzname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id) or "+
+					"u.sddscp_zbname in (select dp.depart_name from jc_department dp start with dp.depart_id="+departId+" connect by prior dp.depart_id=dp.parent_id))";
+		}else{
+			cndSql += " and bean.sddscp_isperororg='1' and bean.sddscp_isinjob='1'";
+		}
+		String sql = "select (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=4"+cndSql+" and (bean.sddscp_jgdwjob='书记' or bean.sddscp_dzzjob='书记' or sddscp_zbjob='书记')) as duties1 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=3 "+cndSql+" and (bean.sddscp_jgdwjob='书记' or bean.sddscp_dzzjob='书记' or sddscp_zbjob='书记')) as duties2 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=1 "+cndSql+" and (bean.sddscp_jgdwjob='书记' or bean.sddscp_dzzjob='书记' or sddscp_zbjob='书记')) as duties3 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=2 "+cndSql+" and (bean.sddscp_jgdwjob='书记' or bean.sddscp_dzzjob='书记' or sddscp_zbjob='书记')) as duties4 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=4 "+cndSql+" and (bean.sddscp_jgdwjob='专职副书记' or bean.sddscp_dzzjob='专职副书记' or sddscp_zbjob='专职副书记')) as duties5 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=3 "+cndSql+" and (bean.sddscp_jgdwjob='专职副书记' or bean.sddscp_dzzjob='专职副书记' or sddscp_zbjob='专职副书记')) as duties6 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=1 "+cndSql+" and (bean.sddscp_jgdwjob='专职副书记' or bean.sddscp_dzzjob='专职副书记' or sddscp_zbjob='专职副书记')) as duties7 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=2 "+cndSql+" and (bean.sddscp_jgdwjob='专职副书记' or bean.sddscp_dzzjob='专职副书记' or sddscp_zbjob='专职副书记')) as duties8 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=4 "+cndSql+" and (bean.sddscp_jgdwjob='副书记' or bean.sddscp_dzzjob='副书记' or sddscp_zbjob='副书记')) as duties9 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=3 "+cndSql+" and (bean.sddscp_jgdwjob='副书记' or bean.sddscp_dzzjob='副书记' or sddscp_zbjob='副书记')) as duties10 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=1 "+cndSql+" and (bean.sddscp_jgdwjob='副书记' or bean.sddscp_dzzjob='副书记' or sddscp_zbjob='副书记')) as duties11 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=2 "+cndSql+" and (bean.sddscp_jgdwjob='副书记' or bean.sddscp_dzzjob='副书记' or sddscp_zbjob='副书记')) as duties12 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=4 "+cndSql+" and (bean.sddscp_jgdwjob='委员' or bean.sddscp_dzzjob='委员' or sddscp_zbjob='委员')) as duties13 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=3 "+cndSql+" and (bean.sddscp_jgdwjob='委员' or bean.sddscp_dzzjob='委员' or sddscp_zbjob='委员')) as duties14 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=1 "+cndSql+" and (bean.sddscp_jgdwjob='委员' or bean.sddscp_dzzjob='委员' or sddscp_zbjob='委员')) as duties15 ,"+
+				" (select count(bean.user_id) from jc_user bean inner join jc_department dp on bean.depart_id=dp.depart_id where 1=1 and dp.sddspo_orglevel=2 "+cndSql+" and (bean.sddscp_jgdwjob='委员' or bean.sddscp_dzzjob='委员' or sddscp_zbjob='委员')) as duties16 from dual ";
+		
+		List list = getSession().createSQLQuery(sql)
+				.addScalar("duties1", StandardBasicTypes.INTEGER)
+				.addScalar("duties2", StandardBasicTypes.INTEGER)
+				.addScalar("duties3", StandardBasicTypes.INTEGER)
+				.addScalar("duties4", StandardBasicTypes.INTEGER)
+				.addScalar("duties5", StandardBasicTypes.INTEGER)
+				.addScalar("duties6", StandardBasicTypes.INTEGER)
+				.addScalar("duties7", StandardBasicTypes.INTEGER)
+				.addScalar("duties8", StandardBasicTypes.INTEGER)
+				.addScalar("duties9", StandardBasicTypes.INTEGER)
+				.addScalar("duties10", StandardBasicTypes.INTEGER)
+				.addScalar("duties11", StandardBasicTypes.INTEGER)
+				.addScalar("duties12", StandardBasicTypes.INTEGER)
+				.addScalar("duties13", StandardBasicTypes.INTEGER)
+				.addScalar("duties14", StandardBasicTypes.INTEGER)
+				.addScalar("duties15", StandardBasicTypes.INTEGER)
+				.addScalar("duties16", StandardBasicTypes.INTEGER).list();
+		return list;
+	}
+	
+	private Finder createCacheableFinder(String hql) {
+		Finder finder = Finder.create(hql);
+		finder.setCacheable(true);
+		return finder;
+	}
+	
+	@Autowired
+	private CmsDepartmentMng cmsDepartmentMng;
+	
+
+}

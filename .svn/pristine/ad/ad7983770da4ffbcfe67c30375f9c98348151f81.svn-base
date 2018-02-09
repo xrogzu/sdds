@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "../head.html"/>
+<script type="text/javascript">
+$(function() {
+	var result = true;
+	$("#jvForm").submit(function(){
+		var risenScScore = $("[name='risenScScore']").val();
+		if(risenScScore==""){
+			alert("请至少输入一项指标的成绩!");
+			return false;
+		}
+		if(result){
+			return true;
+		}else{
+			return false;
+		}
+	});
+	$("#jvForm").validate();
+});
+function checkIsNumber(id){
+	var risenScScore = $("#risenScScore"+id).val();
+	var risenMaxScore = $("#maxScore"+id).val();
+	var quotaId = $("#quotaId"+id).val();
+	var userId = $("[name='userId']").val();
+	var reg =/^\d+$/;
+	if(risenScScore!=""){
+		if(!reg.test(risenScScore)){
+			alert("评分得分为数字！");
+			result = false;
+		}else{
+			if(parseInt(risenScScore)>parseInt(risenMaxScore)){
+				alert("评分应小于该指标的总分！");
+				result = false;
+			}else{
+				var url = "existScore.do?quotaId="+quotaId+"&userId="+userId;
+				$.post(url,function(responseText){
+					if(responseText=="exists"){
+						alert("已添加此指标的评分!");
+						result = false;
+					}
+				});
+			}
+		}
+	}
+}
+</script>
+
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 先锋分 - 党员评分 - 添加</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input type="submit" value="<@s.m "global.backToList"/>" onclick="javascript:history.go(-1);" class="return-button"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="../risenScore/o_save.do">
+	<#if quotas??>
+		<#list quotas as quota>
+			<#if quota.risenqtAddType??>
+			<#if quota.risenqtAddType==2>
+			<tr>
+				<td colspan="2" style="color:red;">减分项目</td>
+			</tr>
+			</#if>
+			<tr>
+				<td>${quota.risenqtName!''}的分数</td>
+				<td>
+					<input type="text" id="risenScScore${quota.id!''}" name="risenScScore" onChange="checkIsNumber(${quota.id!''});"/>
+					<input type="hidden" id="quotaId${quota.id!''}" name="quotaId" value="${quota.id!''}">
+					<input type="hidden" id="maxScore${quota.id!''}" value="${quota.risenqtScore!''}">
+				</td>
+			</tr>
+			<tr>
+				<td>指标说明</td>
+				<td>
+					<textarea cols="60" rows="5" name="risenScDescribtion"></textarea>
+				</td>
+			</tr>
+			<#else>
+			<tr>
+				<td>${quota.risenqtName!''}的分数</td>
+				<td>
+					<input type="text" id="risenScScore${quota.id!''}" name="risenScScore" onChange="checkIsNumber(${quota.id!''});"/>
+					<input type="hidden" id="quotaId${quota.id!''}" name="quotaId" value="${quota.id!''}">
+					<input type="hidden" id="maxScore${quota.id!''}" value="${quota.risenqtScore!''}">
+				</td>
+			</tr>
+			<tr>
+				<td>指标说明</td>
+				<td>
+					<textarea cols="60" rows="5" name="risenScDescribtion"></textarea>
+				</td>
+			</tr>
+			</#if>
+		</#list>
+	<#else>
+		暂时还不能评分!
+	</#if>
+<@p.td colspan="1" ><input type="hidden" name="userId" value="${userId!}"/><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td><@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

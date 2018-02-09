@@ -1,0 +1,296 @@
+package com.jeecms.core.manager.impl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.annotations.OnDelete;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+import com.ibm.db2.jcc.am.i;
+import com.jeecms.cms.entity.assist.CmsGuestbookCtg;
+import com.jeecms.cms.entity.main.Channel;
+import com.jeecms.cms.manager.assist.CmsGuestbookCtgMng;
+import com.jeecms.cms.manager.main.ChannelMng;
+import com.jeecms.common.hibernate4.Updater;
+import com.jeecms.common.page.Pagination;
+import com.jeecms.core.dao.CmsDepartmentDao;
+import com.jeecms.core.entity.CmsDepartment;
+import com.jeecms.core.manager.CmsDepartmentMng;
+import com.jeecms.core.manager.CmsUserMng;
+import com.risen.entity.CoreDictionary;
+import com.risen.service.ICoreDictionaryService;
+
+@Service
+@Transactional
+public class CmsDepartmentMngImpl implements CmsDepartmentMng {
+	
+	@Transactional(readOnly = true)
+	public List<CmsDepartment> getList(Integer parentId,boolean all){
+		 List<CmsDepartment> list=dao.getList(parentId,all);
+		return list;
+	}
+	
+	@Transactional(readOnly = true)
+	public Pagination getPage(String name, int pageNo,
+			int pageSize) {
+		return dao.getPage( name, pageNo, pageSize);
+	}
+
+	@Transactional(readOnly = true)
+	public CmsDepartment findById(Integer id) {
+		CmsDepartment entity = dao.findById(id);
+		return entity;
+	}
+
+	public CmsDepartment save(CmsDepartment bean) {
+		dao.save(bean);
+		return bean;
+	}
+	
+	public CmsDepartment save(CmsDepartment bean,Integer channelIds[],Integer[] controlChannelIds,Integer[]ctgIds) {
+		CmsDepartment model = dao.save(bean);
+		if (channelIds != null) {
+			Channel channel;
+			for (Integer cid : channelIds) {
+				channel = channelMng.findById(cid);
+				bean.addToChannels(channel);
+			}
+		}
+		if (controlChannelIds != null) {
+			Channel channel;
+			for (Integer cid : controlChannelIds) {
+				channel = channelMng.findById(cid);
+				bean.addToControlChannels(channel);
+			}
+		}
+		if(ctgIds!=null){
+			CmsGuestbookCtg ctg;
+			for(Integer cid:ctgIds){
+				ctg=guestBookCtgMng.findById(cid);
+				bean.addToGuestBookCtgs(ctg);
+			}
+		}
+		cmsUserMng.registerMember(bean.getName().trim(), null, "123456", "127.0.0.1", 1, 0, null, null,
+				null, null, null, null, null,null, null, null, null, null, null, null, null, null, null, 
+				null, null, null, null, null, null, model.getId(), null, null, null,null, null, null, null,"2",
+				bean.getName(),bean.getSddspoLogincode() ,1,null,null,"委员",null,null,"1","1","1",bean.getName(),null,null,false, null, null,false);
+		return bean;
+	}
+
+	public CmsDepartment update(CmsDepartment bean) {
+		Updater<CmsDepartment> updater = new Updater<CmsDepartment>(bean);
+		CmsDepartment entity = dao.updateByUpdater(updater);
+		return entity;
+	}
+	
+	public CmsDepartment update(CmsDepartment bean,Integer channelIds[],Integer[] controlChannelIds,Integer[]ctgIds) {
+		CmsDepartment entity = findById(bean.getId());
+		Updater<CmsDepartment> updater = new Updater<CmsDepartment>(bean);
+		updater.include("parent");
+		entity = dao.updateByUpdater(updater);
+		entity.getChannels().clear();
+		entity.getControlChannels().clear();
+		if (channelIds != null) {
+			Channel channel;
+			for (Integer cid : channelIds) {
+				channel = channelMng.findById(cid);
+				entity.addToChannels(channel);
+			}
+		}
+		if (controlChannelIds != null) {
+			Channel channel;
+			for (Integer cid : controlChannelIds) {
+				channel = channelMng.findById(cid);
+				entity.addToControlChannels(channel);
+			}
+		}
+		entity.getGuestBookCtgs().clear();
+		if(ctgIds!=null){
+			CmsGuestbookCtg ctg;
+			for(Integer cid:ctgIds){
+				ctg=guestBookCtgMng.findById(cid);
+				entity.addToGuestBookCtgs(ctg);
+			}
+		}
+		return entity;
+	}
+
+	public void updatePriority(Integer[] ids, Integer[] priorities) {
+		if (ids == null || priorities == null || ids.length <= 0
+				|| ids.length != priorities.length) {
+			return;
+		}
+		CmsDepartment department;
+		for (int i = 0, len = ids.length; i < len; i++) {
+			department = findById(ids[i]);
+			department.setPriority(priorities[i]);
+		}
+	}
+
+	public CmsDepartment deleteById(Integer id) {
+		CmsDepartment bean = new CmsDepartment();
+		if(findlistByPid(id)){
+			cmsUserMng.deleteUserBydepartid(id);
+			bean = dao.deleteById(id);
+		}
+		return bean;
+	}
+
+	public CmsDepartment[] deleteByIds(Integer[] ids) {
+		CmsDepartment[] beans = new CmsDepartment[ids.length];
+		for (int i = 0, len = ids.length; i < len; i++) {
+			beans[i] = deleteById(ids[i]);
+		}
+		return beans;
+	}
+	public boolean nameExist(String name) {
+		return dao.findByName(name)!=null;
+	}
+	
+
+	/**
+	 * 换届提醒
+	 */
+	@Transactional (readOnly = true)
+	public List<CmsDepartment> changeRemindList(Date today,String departmentName,Integer departid,Integer pid){
+		List<CmsDepartment> list = new ArrayList<CmsDepartment>();
+		List<CmsDepartment> departments = dao.changeRemindList(departmentName,departid,pid);
+			if(departments.size()>0){
+			for (int i = 0; i < departments.size(); i++) {
+				if(departments.get(i).getSddspoChangelasttime()!=null){
+					Long time = ((departments.get(i).getSddspoChangelasttime().getTime())-(today.getTime()));
+					//departments.get(i).setOverplus(String.valueOf((time+86400000*2)/86400000));
+					departments.get(i).setOverplus(String.valueOf((time/86400000)));
+					if((time/86400000)>=0){
+						departments.get(i).setIsplus("p");	//正数
+					}else {
+						departments.get(i).setOverplus(String.valueOf((time/86400000)-(2*(time/86400000))));
+						departments.get(i).setIsplus("m");
+					}
+					if((time/86400000)>365){
+						departments.get(i).setOverplus(">1年");
+					}
+					list.add(departments.get(i));
+				}
+			}
+		}
+		
+		return list;
+	}
+	/**
+     * 获取字典键值列表
+     * @param corecdType
+     * @return
+     */
+	@Transactional(readOnly = true)
+    public List<CmsDepartment> getCorecdKeyList(String corecdType){
+		List<CoreDictionary> corecdKeyList = coreDictionaryService.getCorecdKeyList(corecdType);
+		List<CmsDepartment> list = new ArrayList<CmsDepartment>();
+		if(corecdKeyList.size()>0){
+			for (int i = 0; i < corecdKeyList.size(); i++) {
+				CmsDepartment model = new CmsDepartment();
+				if(StringUtils.hasText((corecdKeyList.get(i).getCorecdKey()))){
+					model.setKey(corecdKeyList.get(i).getCorecdKey());
+				}
+				if(StringUtils.hasText(corecdKeyList.get(i).getCorecdVal())){
+					model.setValue(corecdKeyList.get(i).getCorecdVal());
+				}
+				list.add(model);
+			}
+		}
+		return list;
+	}
+
+	/**
+     * 根据父级id查询组织列表(判断删除)
+     */
+	@Override
+    public boolean findlistByPid(Integer pid){
+    	boolean b = false;
+    	List<Object []> list = dao.findlistByPid(pid);
+    	if(list.size()<=1){
+    		b = true;
+    	}
+    	return b;
+    }
+    /**
+     * 导入组织小程序
+     */
+	public void impOrgToUser(){
+		List<CmsDepartment> list = dao.findNotInUser();
+		String sddspoLogincode = "";
+		if(list.size()>0){
+			for (int i = 0; i < list.size(); i++) {
+				if (StringUtils.hasText(list.get(i).getSddspoLogincode())) {
+					sddspoLogincode = list.get(i).getSddspoLogincode();
+				}
+				if(!("xxxxxxx".equals(list.get(i).getName().trim()))){
+					cmsUserMng.registerMember(list.get(i).getName().trim(), null, "123456", "127.0.0.1", 1, 0, null, null,
+					null, null, null, null, null,null, null, null, null, null, null, null, null, null, null, 
+					null, null, null, null, null, null, list.get(i).getId(), null, null, null,null, null, null, null,"2",
+					list.get(i).getName(),sddspoLogincode  ,1,null,null,"委员",null,null,"1","1","1",list.get(i).getName().trim(),null,null,false, null, null,false);
+				}
+			System.out.println(" ID : " + list.get(i).getId());
+			System.out.println(" name : " + list.get(i).getName().trim());
+			System.out.println(" logincode : " + sddspoLogincode);
+			System.out.println("已成功导入 ： " + (i+1) + "条数据!");
+			}
+		}
+	}
+	/**
+     * 替换书记
+     */
+	@Override
+    public CmsDepartment changeSecretaryByDid(String sddspoSecretary,String sddspoSecretaryidc,Integer sddspoSecretaryid,Integer departid,Date sddspoChangelasttime){
+    	CmsDepartment model = new CmsDepartment();
+    	model.setSddspoSecretary(sddspoSecretary);
+    	model.setSddspoSecretaryid(sddspoSecretaryid);
+    	model.setSddspoSecretaryidc(sddspoSecretaryidc);
+    	model.setId(departid);
+    	model.setSddspoChangelasttime(sddspoChangelasttime);
+    	return dao.changeSecretaryByDid(model);
+    }
+	
+	private CmsDepartmentDao dao;
+	
+	@Autowired
+	private ChannelMng channelMng;
+	@Autowired
+	private CmsGuestbookCtgMng guestBookCtgMng;
+
+	@Autowired
+	public void setDao(CmsDepartmentDao dao) {
+		this.dao = dao;
+	}
+
+	
+	public List<CmsDepartment> baseScore(Integer parentId) {
+		
+		return dao.baseScore(parentId);
+	}
+
+
+	@Autowired
+	public ICoreDictionaryService coreDictionaryService;
+	@Autowired
+	public CmsUserMng cmsUserMng;
+
+	public List<CmsDepartment> getDeptByType(String type) {
+		
+		return dao.getDeptByType(type);
+	}
+
+	@Override
+	public int getMaxPriority() {
+		
+		return  dao.getMaxPriority();
+	}
+    public List<CmsDepartment> getDeptByTypeAndLoginId(String type,Integer loginId){
+    	return dao.getDeptByTypeAndLoginId(type,loginId);
+    }
+    
+}

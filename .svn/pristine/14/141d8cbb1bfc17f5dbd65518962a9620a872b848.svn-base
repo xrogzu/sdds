@@ -1,0 +1,541 @@
+<!DOCTYPE HTML>
+<html>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>首页 - ${site.name} - 山东地税智慧党建</title>
+	<meta http-equiv="keywords" content="${site.keywords!}"/>
+	<meta http-equiv="description" content="${site.description!}"/>
+	<script src="${base}/r/cms/currency/script/jquery1.42.min.js"></script>
+    <script src="${base}/r/cms/currency/script/jquery.SuperSlide.2.1.1.js"></script>
+    <script language="javascript" type="text/javascript" src="${base}/r/cms/currency/My97DatePicker/WdatePicker.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/currency/css/css.css">
+<head>
+<!-- 滚动条样式 -->
+<style type="text/css"> 
+#gongao{width:290px;height:50px;overflow:hidden;line-height:30px;font-size:13px;font-family:'宋体';color:#0C77CF;font-weight:bold;} 
+#gongao #scroll_begin, #gongao #scroll_end{display:inline} 
+</style> 
+<!-- 滚动条样式 -->
+
+
+<script type="text/javascript"> 
+//滚动条js
+$(function(){
+	getEvent();
+});
+function ScrollImgLeft(){ 
+	
+	var speed=50; 
+	var scroll_begin = document.getElementById("scroll_begin"); 
+	var scroll_end = document.getElementById("scroll_end"); 
+	var scroll_div = document.getElementById("scroll_div"); 
+	scroll_end.innerHTML=scroll_begin.innerHTML; 
+	function Marquee(){ 
+	if(scroll_end.offsetWidth-scroll_div.scrollLeft<=0) 
+	scroll_div.scrollLeft-=scroll_begin.offsetWidth; 
+	else 
+	scroll_div.scrollLeft++; 
+	} 
+	var MyMar=setInterval(Marquee,speed); 
+	scroll_div.onmouseover=function() {clearInterval(MyMar);} 
+	scroll_div.onmouseout=function() {MyMar=setInterval(Marquee,speed);} 
+} 
+
+
+function getToday(date){
+	$.post('getAll.jspx',{"date":date},function(data){
+		
+		var t="";
+		$("#dataInfo").html("");
+		if(data.length<1){
+			$("#dataInfo").append("<li>暂无活动</li>");
+		}else{
+			
+			for(var i=0;i<data.length;i++){
+				t=checkType(data[i].risenlcMeetingtype);
+				$("#dataInfo").append("<li><a href='javascript:;' onClick='showInfo("+data[i].risenlcUuid+");'>"+Format(data[i].risenlcOdate,true)+":在"+data[i].risenlcAddress+"开展由"+data[i].risenlcHoldername+"组织的"+t+"</a></li>");
+			}
+		}
+	});
+}	
+
+var dates=null;
+function getEvent(){
+	$.ajax({  
+         type : "post",  
+          url : "getEvent.jspx",  
+          async : false,  
+          success : function(data){ 
+          
+            dates=new Array();
+			for(var i=0;i<data.length;i++){
+				dates[i]=Format(data[i],false);
+			}
+			WdatePicker({eCont:'div1', specialDates:dates,onpicked:function(dp){
+				//alert('你选择的日期是:'+dp.cal.getDateStr());
+				getToday(dp.cal.getDateStr());
+			    $("#alert1").show();
+			    $(".zezo").show();
+			}})
+          }  
+     });
+	/* $.post('getEvent.jspx',null,function(data){
+		debugger;
+		
+		
+	}); */
+}
+function showData(id){
+	$.post('getData.jspx',{"id":id},function(data){
+	
+		
+		$("#data1").html("");
+		if(data==null||data==""){
+			$("#data1").append("<li>暂无数据</li>");
+		}else{
+		var t=checkType(data.risenlcMeetingtype);
+				
+				$("#data1").append("<li>活动时间："+Format(data.risenlcOdate,true)+"</li>");
+				$("#data1").append("<li>活动类型："+t+"</li>");
+				$("#data1").append("<li>举办人："+data.risenlcHoldername+"</li>");
+				$("#data1").append("<li>联系人："+data.risenlcContactor+"</li>");
+				$("#data1").append("<li>联系人电话："+data.risenlcCtphone+"</li>");
+				$("#data1").append("<li>活动地点："+data.risenlcAddress+"</li>");
+				$("#data1").append("<li>所属组织："+data.risenlcOrgname+"</li>");
+				$("#data1").append("<li>参与者："+data.risenlcParticipant+"</li>");
+				$("#data1").append("<li>预计所需时间："+data.risenlcExpectdate+"</li>");
+			}
+	});
+}	
+function checkType(type){
+	var t='';
+	if(type=="1"){
+		t="支部党员大会";
+	}else if(data.risenlcMeetingtype=="2"){
+		t="支部委员会";
+	}else if(data.risenlcMeetingtype=="3"){
+		t="党小组会";
+	}else if(data.risenlcMeetingtype=="4"){
+		t="党课";
+	}else if(data.risenlcMeetingtype=="5"){
+		t="组织生活会";
+	}else if(data.risenlcMeetingtype=="6"){
+		t="民主评议";
+	}else if(data.risenlcMeetingtype=="7"){
+		t="主题党日";
+	}
+	return t;
+}
+</script> 
+
+
+<body>
+<div class="zezo"></div>
+    [#include "../include/header.html"/]
+    <div class="conter" id="container">
+         <div class="coen">
+             <div class="time1" >
+                  <div class="ti1">
+                      <div id="slideBox" class="slideBox">
+                        <div class="hd">
+                            <ul><li></li><li></li><li></li></ul>
+                        </div>
+                        <div class="bd">
+                            <ul>
+                            	[@cms_content_list typeId='2' count='3' titLen='18' channelId='196' orderBy='4' channelOption='1' dateFormat='yyyy-MM-dd']
+      							[#list tag_list as a]
+                                <li><a href="${a.url}" target="_blank"><img src="${a.titleImg!site.defImg}" /></a></li>
+                                [/#list]
+      							[/@cms_content_list]
+                            </ul>
+                        </div>
+		            </div>  
+               </div>
+                  
+		<script type="text/javascript">
+		jQuery(".slideBox").slide({mainCell:".bd ul",autoPlay:true});
+		</script>
+                  <div class="ti2">
+                       <span><a target="_blank" href="${base}/zbdt/index.jhtml" >支部动态</a></span>
+                       <ul>
+                       	   [@cms_content_list typeId='1' count='6' channelId='197' orderBy='4' titLen='18' channelOption='1' dateFormat='yyyy-MM-dd']
+				               [#list tag_list as a]
+				                <li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+				               [/#list]
+				           [/@cms_content_list]
+                       </ul>
+                  </div>
+                  <div class="ti2">
+                       <span><a target="_blank" href="${base}/tzgg/index.jhtml">通知公告</a></span>
+                       <ul>
+                           [@cms_content_list typeId='1' count='6' channelId='198' orderBy='4' titLen='18' channelOption='1' dateFormat='yyyy-MM-dd']
+				               [#list tag_list as a] 
+				                <li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+				               [/#list]
+				           [/@cms_content_list]
+                       </ul>
+                  </div>
+             </div>
+             
+             <div class="time2">
+                  <div class="title"><span>党务管理</span></div>
+                  <div class="ti1">
+                       <span class="soan"><a href="javascript:;">组织生活日记</a></span>
+                       <div class="y-total"  id="div1"></div>
+                       <div id="alert1" class="y-baes" style="width: 450px;">
+                            <div><a class="jrei">今日提醒</a><a id="b1" class="jrei1" href="javascript:;">×</a></div>
+                            <ul id="dataInfo" style="width: 450px;padding-left: 45px;">
+                               
+                            </ul>
+                       </div>
+                       <div id="alert2" class="y-baes" style="width: 450px;">
+                            <div><a class="jrei">活动详情</a><a id="b2" class="jrei1" href="javascript:;">×</a></div>
+								<ul id="data1" style="font-size: 18px;padding-left:30%;padding-top: 10px; ">
+									
+								</ul>
+
+
+						<!-- <ul id="dataInfo1" style="width: 450px;">
+                               
+                            </ul> -->
+                       </div>
+                       
+                       <div class="tuxi">
+                            <div class="zhoy">
+                            	<span class="zh1">今日提醒：</span>
+                            	[#if day="1"]暂无活动
+                           	   [#else]
+                           	   <a>${day.risenlcOdate?string("yyyy-MM-dd HH:mm:ss")}将组织
+                           	    			[#if day.risenlcMeetingtype=='1']支部党员大会[/#if]
+											[#if day.risenlcMeetingtype=='2']支部委员会[/#if]
+											[#if day.risenlcMeetingtype=='3']党小组会[/#if]
+											[#if day.risenlcMeetingtype=='4']党课[/#if]
+											[#if day.risenlcMeetingtype=='5']组织生活会[/#if]
+											[#if day.risenlcMeetingtype=='6']民主评议[/#if]
+											[#if day.risenlcMeetingtype=='7']主题党日[/#if]，地点${day.risenlcAddress}。</a>
+                           	    <span><a href="javascript:;" onClick="showInfo(${day.risenlcUuid});">【查看详细】</a></span>
+                           	    [/#if]
+                           	    <!-- <a>今日14：00将开展本部本月党课，地点微第七会议室。</a>
+                           	    <span><a href="">【查看详细】</a></span> -->
+                            </div>
+                            <div class="jroy"><span class="zh1">本月提醒：</span>
+								[#if month??]
+									<div id="gongao"> 
+									<div style="width:300px;height:50px;margin:0 auto;white-space: nowrap;overflow:hidden;" id="scroll_div" class="scroll_div"> 
+										<div id="scroll_begin" class="zhoy"> 
+										[#list month as b]
+											${b.risenlcOdate?string("yyyy-MM-dd HH:mm:ss")}将组织本部本月
+											[#if b.risenlcMeetingtype=='1']支部党员大会[/#if]
+											[#if b.risenlcMeetingtype=='2']支部委员会[/#if]
+											[#if b.risenlcMeetingtype=='3']党小组会[/#if]
+											[#if b.risenlcMeetingtype=='4']党课[/#if]
+											[#if b.risenlcMeetingtype=='5']组织生活会[/#if]
+											[#if b.risenlcMeetingtype=='6']民主评议[/#if]
+											[#if b.risenlcMeetingtype=='7']主题党日[/#if]，地点${b.risenlcAddress}。<a href="javascript:;" onClick="showInfo(${b.risenlcUuid});">【查看详细】</a>
+										[/#list]
+							
+												<!-- 1今日12：00将开展本部本月党课，地点微第七会议室。<a href="">【查看详细】</a>
+												2今日13：00将开展本部本月党课，地点微第七会议室。<a href="">【查看详细】</a>
+												3今日14：00将开展本部本月党课，地点微第七会议室。<a href="">【查看详细】</a>
+												4今日15：00将开展本部本月党课，地点微第七会议室。<a href="">【查看详细】</a> -->
+										</div> 
+										<div id="scroll_end"></div> 
+									</div> 
+									<script type="text/javascript">ScrollImgLeft();</script> 
+								</div> 
+                           	 	[#else]
+									暂无活动
+								[/#if]
+							</div>
+                       </div>
+                  </div>
+                  
+                  <div class="ti2">
+                           <span class="soan"><a target="_blank" href="${base}/dfjn/index.jhtml">党费缴纳</a></span>
+                           <ul>
+	                          [@cms_content_list typeId='1' count='6' channelId='199' orderBy='4' titLen='18' channelOption='1' dateFormat='yyyy-MM-dd']
+					               [#list tag_list as a]
+					                <li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+					               [/#list]
+					          [/@cms_content_list]
+                           </ul>
+                  </div>
+                  <div class="ti3">
+                           <span class="soan"><a target="_blank" href="${base}/dwgk/index.jhtml">党务公开</a></span>
+                           <ul>
+                               [@cms_content_list typeId='1' count='6' channelId='200' orderBy='4' titLen='18' channelOption='1' dateFormat='yyyy-MM-dd']
+					               [#list tag_list as a]
+					                <li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+					               [/#list]
+					          [/@cms_content_list]
+                           </ul>            
+                  </div>
+                  
+                  <div class="fantp">
+                       <a href=""><img src="${base}/r/cms/currency/images/12.png" alt=""><span>发展党员</span></a>
+                       <a href=""><img src="${base}/r/cms/currency/images/13.png" alt=""><span>先锋指数</span></a>
+                       <a href=""><img src="${base}/r/cms/currency/images/14.png" alt=""><span>党费计算器</span></a>
+                       <a href=""><img src="${base}/r/cms/currency/images/15.png" alt=""><span>组织信息</span></a>
+                       <a href=""><img src="${base}/r/cms/currency/images/27.png" alt=""><span>党员信息</span></a>
+                  </div>
+             </div>
+             
+             <div class="time3">
+                  <div class="title"><span>支部风采</span><a target="_blank" href="${base}/zbfc/index.jhtml"><img src="${base}/r/cms/currency/images/6.png" alt=""></a></div>
+                  <div class="ti1">
+                       <span class="soan"><a target="_blank" href="${base}/tsgz/index.jhtml">特色工作</a></span>
+                       <ul>
+                            [@cms_content_list typeId='1' count='7' channelId='201' orderBy='4' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+			               	[/#list]
+			          		[/@cms_content_list]
+                       </ul> 
+                  </div>  
+                  <div class="ti2">
+                       <span class="soan"><a target="_blank" href="${base}/zdjs/index.jhtml">制度建设</a></span>
+                       <ul>
+                            [@cms_content_list typeId='1' count='7' channelId='202' orderBy='4' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+			               	[/#list]
+			          		[/@cms_content_list]
+                       </ul>
+                  </div>   
+             </div>
+             
+            <div class="time4">
+                  <div class="title"><span>网上党校</span><a href=""><img src="${base}/r/cms/currency/images/6.png" alt=""></a></div>
+                  
+                  <div class="ti1">
+                       <span class="soan"><a target="_blank" href="${base}/dnfg/index.jhtml">党内法规</a></span>
+                       <div class="neis">
+                           <ul>
+                               [@cms_content_list typeId='1' count='7' channelId='635' orderBy='4' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+			               	[/#list]
+			          		[/@cms_content_list]
+                           </ul>  
+                       </div>
+                  </div>
+                  
+                  <div class="ti1">
+                       <span class="soan"><a target="_blank" href="${base}/dwzb/index.jhtml">党务指南</a></span>
+                       <div class="neis">
+                           <ul>
+                            [@cms_content_list typeId='1' count='7' channelId='636' orderBy='4' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+			               	[/#list]
+			          		[/@cms_content_list]
+                           </ul>  
+                       </div>
+                  </div>
+                  
+                  <div class="ti1">
+                       <span class="soan"><a target="_blank" href="${base}/dbyl/index.jhtml">党报要论</a></span>
+                       <div class="neis">
+                           <ul>
+                               [@cms_content_list typeId='1' count='7' channelId='638' orderBy='4' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+			               	[/#list]
+			          		[/@cms_content_list]
+                           </ul>  
+                       </div>
+                  </div>
+                  
+                  <div class="ti1">
+                       <span class="soan"><a target="_blank" href="${base}/wxys/index.jhtml">文献影视</a></span>
+                       <div class="neis">
+                           <ul>
+                               [@cms_content_list typeId='1' count='7' channelId='646' orderBy='4' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+			               	[/#list]
+			          		[/@cms_content_list]
+                           </ul>  
+                       </div>
+                  </div>
+                  
+                  <div class="ti1">
+                       <span class="soan"><a target="_blank" href="${base}/gxjd/index.jhtml">国学经典</a></span>
+                       <div class="neis">
+                           <ul>
+                               [@cms_content_list typeId='1' count='7' channelId='645' orderBy='4' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+			               	[/#list]
+			          		[/@cms_content_list]
+                           </ul>  
+                       </div>
+                  </div>
+                  
+                  <div class="ti2">
+                       <div class="neis">
+                            <a href=""><img src="${base}/r/cms/currency/images/17.png" alt=""></a>
+                            <a href=""><img src="${base}/r/cms/currency/images/18.png" alt=""></a>
+                            <a href=""><img src="${base}/r/cms/currency/images/19.png" alt=""></a>
+                       </div>
+                  </div>
+             </div>
+             
+             
+             <div class="time5">
+                  <div class="title"><span>文化生活</span><a target="_blank" href="${base}/whsh/index.jhtml"><img src="${base}/r/cms/currency/images/6.png" alt=""></a></div>
+                  <div id="xiae">
+                         <div class="xito" id="zder">
+                              <ul>
+                                   <li class="dcn">书画作品</li>
+                                   <li>文学园地</li>
+                                   <li>摄影天地</li>
+                                   <li>健康养生</li>
+                              </ul>
+                         </div>
+                         <div class="xibt" id="sfds">
+                              <div class="din">
+                                   <ul class="ske">
+                                        [@cms_content_list typeId='1' count='7' channelId='647' orderBy='4' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+						               	[#list tag_list as a]
+						                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a><span>${a.date?string(dateFormat)}</span></li>
+						               	[/#list]
+						          		[/@cms_content_list]
+                                   </ul>
+                                  <ul>
+                                       [@cms_content_list typeId='1' count='7' channelId='647' orderBy='5' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+						               	[#list tag_list as a]
+						                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a><span>${a.date?string(dateFormat)}</span></li>
+						               	[/#list]
+						          		[/@cms_content_list]
+                                   </ul>
+                              </div>
+                              
+                              <div>
+                                   <ul class="ske">
+                                        [@cms_content_list typeId='1' count='7' channelId='648' orderBy='4' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+						               	[#list tag_list as a]
+						                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a><span>${a.date?string(dateFormat)}</span></li>
+						               	[/#list]
+						          		[/@cms_content_list]
+                                   </ul>
+                                   <ul>
+                                       [@cms_content_list typeId='1' count='7' channelId='648' orderBy='5' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+						               	[#list tag_list as a]
+						                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a><span>${a.date?string(dateFormat)}</span></li>
+						               	[/#list]
+						          		[/@cms_content_list]
+                                   </ul> 
+                              </div>
+                              
+                              <div>
+                                   <ul class="ske">
+                                        [@cms_content_list typeId='1' count='7' channelId='651' orderBy='4' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+						               	[#list tag_list as a]
+						                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a><span>${a.date?string(dateFormat)}</span></li>
+						               	[/#list]
+						          		[/@cms_content_list]
+                                   </ul>
+                                   <ul>
+                                       [@cms_content_list typeId='1' count='7' channelId='651' orderBy='5' titLen='20' channelOption='1' dateFormat='yyyy-MM-dd']
+						               	[#list tag_list as a]
+						                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a><span>${a.date?string(dateFormat)}</span></li>
+						               	[/#list]
+						          		[/@cms_content_list]
+                                   </ul>
+                              </div>
+                              <div>
+                                   <ul class="ske">
+                                        [@cms_content_list typeId='1' count='7' channelId='649' orderBy='4' titLen='15' channelOption='1' dateFormat='yyyy-MM-dd']
+						               	[#list tag_list as a]
+						                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a><span>${a.date?string(dateFormat)}</span></li>
+						               	[/#list]
+						          		[/@cms_content_list]
+                                   </ul>
+                                   <ul>
+                                       [@cms_content_list typeId='1' count='7' channelId='649' orderBy='5' titLen='15' channelOption='1' dateFormat='yyyy-MM-dd']
+						               	[#list tag_list as a]
+						                	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a><span>${a.date?string(dateFormat)}</span></li>
+						               	[/#list]
+						          		[/@cms_content_list]
+                                   </ul>
+                              </div>
+                         </div>
+	             </div>
+             </div>
+			[#include "../include/friend_link.html"/]
+         </div>
+    </div>
+    [#include "../include/footer.html"/]
+<!-- <script>
+WdatePicker({eCont:'div1', specialDates:dates,onpicked:function(dp){
+	//alert('你选择的日期是:'+dp.cal.getDateStr());
+	getToday(dp.cal.getDateStr());
+    $("#alert1").show();
+    $(".zezo").show();
+}})
+</script> -->
+<script>
+	window.onload = function(){
+		var zto = document.getElementById("zder");
+		var zrc = zto.getElementsByTagName("li");
+		var sef = document.getElementById("sfds");
+		var zsr = sef.getElementsByTagName("div")
+		for(var i=0; i<zrc.length; i++){
+			zrc[i].sade = i;
+			zrc[i].onclick = function(){	
+			    for(var i=0; i<zrc.length; i++){
+				   zrc[i].className = "";
+				   zsr[i].className = ""; 
+				}
+				this.className = "dcn";
+				zsr[this.sade].className = "din";
+			};
+		};
+	};
+</script>
+<script>
+function showInfo(id){
+	showData(id);
+	$("#alert2").show();
+    $(".zezo").show();
+}
+    $(function(){
+        $("#b1").click(function(){
+             $("#alert1").hide();
+             $(".zezo").hide();
+        });
+        $("#b2").click(function(){
+             $("#alert2").hide();
+             $(".zezo").hide();
+        });
+    });
+    //格式化日期
+    function Format(str,flag){  
+    debugger;
+    
+    	
+   
+            var oDate = new Date(str),  
+            oYear = oDate.getFullYear(),  
+            oMonth = oDate.getMonth()+1,  
+            oDay = oDate.getDate(),  
+            oHour = oDate.getHours(),  
+            oMin = oDate.getMinutes(),  
+            oSen = oDate.getSeconds(),  
+            oTime = oYear +'-'+ getzf(oMonth) +'-'+ getzf(oDay) +' '+ getzf(oHour) +':'+ getzf(oMin) +':'+getzf(oSen);//最后拼接时间 
+            if(!flag){
+             	oTime = oYear +'-'+ getzf(oMonth) +'-'+ getzf(oDay);
+            }
+            return oTime;  
+        }
+         //补0操作  
+        function getzf(num){  
+            if(parseInt(num) < 10){  
+                num = '0'+num;  
+            }  
+            return num;  
+        }  
+</script>
+</body>
+</html>

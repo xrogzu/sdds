@@ -1,0 +1,60 @@
+package com.risen.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.IRisenQuotaDao;
+import com.risen.entity.RisenQuota;
+import com.risen.service.IRisenQuotaService;
+
+@Service
+@Transactional
+public class RisenQuotaService implements IRisenQuotaService {
+
+	@Override
+	public Pagination getPage(int pageNo, int pageSize, Integer deptId,String risenType) {
+		// TODO Auto-generated method stub
+		return dao.getPage(pageNo, pageSize, deptId,risenType);
+	}
+
+	@Override
+	public RisenQuota save(RisenQuota quota) {
+		// TODO Auto-generated method stub
+		return dao.save(quota);
+	}
+
+	@Override
+	public RisenQuota findById(Integer id) {
+		// TODO Auto-generated method stub
+		return dao.findById(id);
+	}
+
+	@Override
+	public void delete(Integer id) {
+		// TODO Auto-generated method stub
+		dao.delete(id);
+	}
+
+	@Override
+	public RisenQuota update(RisenQuota bean) {
+		// TODO Auto-generated method stub
+		return dao.update(bean);
+	}
+	
+	@Override
+	public boolean existQuota(String quotaName, Integer departId,String risenType,String risenAddType) {
+		// TODO Auto-generated method stub
+		return dao.existQuota(quotaName, departId,risenType,risenAddType);
+	}
+	
+	@Autowired
+	private IRisenQuotaDao dao;
+
+	@Override
+	public Pagination getPage(int pageNo, int pageSize, Integer deptId,
+			String risenType, Integer  id) {
+		return dao.getPage(pageNo, pageSize, deptId,risenType,id);
+	}
+}

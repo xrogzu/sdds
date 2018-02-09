@@ -1,0 +1,250 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>首页 - ${site.name}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" ></meta>
+    <script type="text/javascript" src="${base}/r/cms/www/risen/script/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src="${base}/r/cms/www/risen/script/jquery.nicescroll.js"></script> -->
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+    <style>
+    	.article{ 
+	    	width:98%;
+	    	height:auto;
+	    	margin-top:10px;
+	    	margin-bottom:60px;
+	    	
+    	}
+		dl{
+			float: left;
+			width:156px;
+			border:1px solid #D8D8D8;
+			margin-left:10px;
+			margin-top:10px;
+			height:200px;
+		}
+		dt,dd{text-align: center;}
+		dd{
+		    padding: 2px 5px; height: 34px; line-height: 20px; overflow: hidden;
+		}
+		.surv_Btn1 input {
+            border:0px; 
+		    color: #fff;
+		    font-size: 19px;
+		    padding: 10px 60px;
+            margin:auto;
+        }
+        .box{width:800px;}
+        .btn{width:100px;margin:0 auto;display:block;}
+        #mySpan{            
+            color:#3333ff;
+            margin-left:4px;
+            margin-top:6px;
+            font-size: 19px;
+            line-height:18px;   
+        }
+        #touSubj{           
+            color:#3333ff;           
+            margin-top:6px;
+            font-size: 19px;
+            line-height:18px;            
+        }
+        .ym_top span{
+            position: relative;
+            left: 10px;
+        }
+        
+        .list_ym .ym_top{
+            position: relative;
+            left: 25px;
+        }
+        .article dl dt a img{
+            width:157px;
+            height:120px;
+        }
+        .imag{
+            width:150px; 
+            height:120px ;
+        }
+        p{
+            text-indent: 2em;
+            color:#3333ff;
+            margin-left:-23px;
+            margin-top:6px;
+            font-size: 16px;
+            line-height:1.4;
+        }
+        
+    </style>
+    [#include "../include/header.html"/]
+    
+<body>
+  <div class="coen" id="container">
+    <div class="content1" style='height: auto;'>
+      <div class="slideTxtBox" id="conter">
+        <div class="" id="ji_list1" style='width:1320px;height:960px;background:none;'>
+          <div class="list_ym" style='height: auto;margin-left:-5px;width:1244px;'>
+            <div class="banner-wrapper" style="position: relative;left:35px;width: 100%;">
+              <img class="banner" src="${base}/r/cms/www/risen/images/toupiao_banner.png" alt="banner">
+	          [#if ballot.backgroundImg??]
+	          	<img class="line" src="${base}${ballot.backgroundImg!}" alt="line" style="background-repeat:no-repeat;width:1200px;height:80px;">
+              [#else]
+              	<img class="line" src="${base}/r/cms/www/risen/images/toupiao_line.png" alt="line">
+              [/#if]
+            </div>
+            <!--  <h1 style="padding-left: 70px;"><span id="touSubj">投票主题：</span><span id="mySpan" >${ballot.title?html}</span></h1> -->
+            <div id="desDiv" style="margin-bottom: 18px; margin-top:18px; margin-left: 35px;">
+              <p style="text-indent: 2em;color:#3333ff;margin-left:4px;margin-top:6px;font-size: 16px;line-height:1.4;" id="descri">
+                 ${ballot.introduction!}
+		        <br/> 
+		      </p>
+            </div>
+      		<div class="ym_top"><span>${ballot.title!}</span></div>
+      		<input type="hidden" name="maxCount" value="${ballot.multiSelect!}" id="maxCount"/>
+	     	<input type="hidden" name="ballotId" value="${ballot.ballotId!}" id="ballotId"/>
+	     	
+	     	
+	     	<div class="article">   		
+	     	  [#if pagination??]
+			    [#list pagination.list as c]
+			      <dl style="">
+				    <dt>
+					  [#if c.itemUrl??]
+					    <a href="${c.itemUrl!}" target="_blank"><img src="${base}${c.picture!}" class="imag"/></a>
+					  [#else]
+					    <img style="height:120px;" src="${base}${c.picture!}" class="imag"/>
+					  [/#if]
+				    </dt>
+				   <dd>${c.item!}</dd>
+				   <!--<div style="width:100%;height:20px;text-indent:10px;text-align:left;">
+					 [#if c.describtion??]
+						[#if c.describtion?length gt 10]
+							<a title="${c.describtion}">${c.describtion?substring(0,10)}...</a>
+						[#else]
+							${c.describtion!''}
+						[/#if]
+					 [#else]
+						
+					 [/#if]
+				   </div>-->
+				  <div id="viewCount" onClick="vote(${c.itemId!});" style="width:100%;height:28px;text-align:center;margin-bottom:4px;position: relative;
+    top: 5px;cursor: pointer;">
+					 <input type="image"  id="ids${c.itemId!}" value="${c.itemId!}" src="${base}/r/cms/www/risen/images/rec-false.png" style="width:30px;height:28px;"/>
+				  </div>
+			     </dl>
+			   [/#list]
+			  [/#if]
+		    </div>
+		    <div style="width: 1244px; text-align: center;">  
+			    <div class="surv_Btn1">
+			      <input type="button" value="提交投票" id="subBallotItem" style="cursor: pointer;background-color: #2c77c5;" onclick="subForm()">
+			    </div>
+			 </div>	    
+	      </div>
+	    </div>
+	  </div>
+	</div>
+   </div>
+[#include "../include/footer.html"/]
+<input type="hidden" id="nowDate" value=""/>
+<script type="text/javascript"> 
+    $(document).ready(function(){
+	    $('.carousel').carousel({
+			directionNav:true,
+			speed:500, 
+			carouselWidth:421,
+			carouselHeight:373,
+			frontWidth:160,
+			frontHeight:218,
+			hAlign:'center',
+			vAlign:'center',
+			autoplay:false,
+			autoplayInterval:5000,
+			shadow:false,
+			reflection:false,
+			reflectionHeight:0.2,
+			reflectionOpacity:0.5,
+			description:false,
+			descriptionContainer:'.carousel_description'
+	    });
+    });
+</script>
+<script type="text/javascript">
+   var maxCount = $('input[name="maxCount"]').val();
+   var hideLength = 0;
+   var arr=[];
+   var $ballotId = $('#ballotId').val();
+   Array.prototype.removeByValue = function(val) {
+	   for(var i=0; i<this.length; i++) {
+	      if(this[i] == val) {
+	        this.splice(i, 1);
+	        break;
+	      }
+	   }
+   }
+   function vote(id){
+        var aa = document.getElementById("ids"+id);
+        var viewC = document.getElementById('viewCount');
+		if(aa.getAttribute('src')=='${base}/r/cms/www/risen/images/rec-false.png'){
+			if(arr.length>=maxCount){
+				alert('最多允许投选'+maxCount+'个！');
+			}else{
+				aa.src='${base}/r/cms/www/risen/images/rec-true.png';
+				arr.push(id);
+			}
+		}else{
+			aa.src='${base}/r/cms/www/risen/images/rec-false.png';
+			arr.removeByValue(id);
+		}
+     }  
+     function subForm(){
+     	var nowDate = '${.now?date}';
+		var eventEndDate = '${ballot.endTime!}';
+		if(eventEndDate<nowDate){
+			alert("活动已结束");
+			return;
+		}
+         if(arr.length!=maxCount){
+             alert('投票数量必须是'+maxCount+'个');
+             return;
+         }
+     	 var strVal = arr.toString();
+     	 //alert('zhi'+strVal);
+     	 var dataOb = {"ids":strVal};
+         if(hideLength<maxCount){
+	         var url = "${base}/ballotItem/vote.jspx?ballotId="+$ballotId;
+	         $.ajax({  
+		         type : "post",  
+		         url : url,  
+		         data : dataOb,
+		         dataType : "text" , 
+		         success : function(data){
+			        //alert(''+data);
+			        if(data.substring(0,7)=="success"){
+			        	alert("投票成功!");
+			        	//$("#ids"+id).hide();
+			        	//$("#showCount"+id).show();
+			        	var totalCount = data.substring(7,data.length);
+			        	//$("#viewCount").html("总票数:"+totalCount);
+			        	hideLength++;
+			        }else if(data.substring(0,7)=="failure"){
+			        	alert("您已投过票!");
+			        }else{
+			        	alert("此活动已结束不能投票!");
+			        }
+			   	}
+   	        });
+       }else{
+	        alert("您必须投选"+maxCount+"个单位的票数!");// 对应着客户或用户输入的最多可以投多少票 的设定值
+       }
+   }
+
+  </script>
+
+  </body>
+</html>

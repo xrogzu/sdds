@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<#include "wenku_upload.html"/>
+<style type="text/css">
+	.return-button{background:url(${base}/res/jeecms/images/return-button.png) 8px center no-repeat #fff; text-indent:10px;}
+</style>
+<script type="text/javascript">
+$(function() {
+	var endResult = false;
+	$("#jvForm").validate();
+	$("[name='source']").click(function(){
+		var source = $("[name='source']:checked").val();
+		if(source=="outer"){
+			$("#outerSource").show();
+		}else{
+			$("#outerSource").hide();
+		}
+	});
+	$("[name='item']").change(function(){
+		var item = $("[name='item']").val();
+		var ballotId = ${ballotId!};
+		var url = "existItem.do?item="+item+"&ballotId="+ballotId;
+		$.post(url,function(result){
+			if(result=="noexist"){
+				endResult = true;
+			}else{
+				alert("此候选项已添加!");
+			}
+		})
+	});
+	$("#jvForm").submit(function(){
+		var picPath = $("[name='picture']").val();
+		if(picPath==""){
+			alert("请上传图片!");
+			return false;
+		}else{
+			var picStyle = picPath.substring(picPath.lastIndexOf(".")+1,picPath.length).toLowerCase();
+			if((picStyle=="jpg")||(picStyle=="jepg")||(picStyle=="gif")||(picStyle=="bmp")||(picStyle=="png")){
+				if(endResult){
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				alert("请上传jpg,jepg,gif,bmp,png的格式图片!");
+				return false;
+			}
+		}
+	});
+});
+</script>
+
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: E票通 - 在线投票 - 添加</div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="../ballotItem/o_save.do?ballotId=${ballotId!}">
+<@p.text label="候选项" colspan="1" width="100" name="item" required="0" class="required" maxlength="100"/><@p.tr/>
+<tr><td class="pn-flabel pn-flabel-h">上传文件</td><td>
+<div>
+	<input type="text" id="docPath" name="picture" style="width:265px"/>
+</div>
+<div style="margin-top: 5px;">
+	<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+	<input type="text" id="docFileText"/>  
+	<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+	<input onchange="$('#docFileText').val(this.value)" size="19" type="file" name="docFile" id="docFile" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+	<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc();" class="upload-button"/>
+	</span>
+</div>
+</td></tr><@p.tr/>
+<tr>
+	<td class="pn-flabel pn-flabel-h">外部资源</td>
+	<td>
+		<input name="source" type="radio" value="local" checked="checked" />本地资源
+		<input name="source" type="radio" value="outer" />外部资源
+		<span id="outerSource" style="margin-left:10px;display:none;">资源地址:<input name="itemUrl" type="text"/></span>
+	</td>
+</tr><@p.tr/>
+<@p.textarea label="描述" id="describtion" rows="6" cols="100" name="describtion"></@p.textarea><@p.tr/>
+<@p.td colspan="2"><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td><@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<style>
+	.btn_alink{
+		width:80px;
+		height:25px;
+		border:1px solid black;
+		border-radius:5px;
+		text-align:center;
+		line-height:25px;
+		display:block;
+		float:left;
+		background-color:#429fe2;
+	}
+</style>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var f = getTableForm();
+	f.action="o_delete.do";
+	f.submit();
+}
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 组织生活日历  - 年度评议 - 列表</div>
+</div>
+<div class="box-positon">
+	<form class="ropt">
+		<a href="../risenDiscussion/v_add.do?userId=${userId}" class="btn_alink" style="color:#FFFFFF;">添加</a>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<#if pagination??>
+<@p.table value=pagination;RisenDiscussion,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+		<input type='checkbox' name='ids' value='${RisenDiscussion.id!''}'/><#t/>
+	</@p.column><#t/>
+	<@p.column code="党员姓名">${RisenDiscussion.risendsUserid.username!''}</@p.column><#t/>
+	<@p.column code="党员成绩">
+		<#if RisenDiscussion.risendsScore==1>优秀
+		<#elseif RisenDiscussion.risendsScore==2>合格
+		<#elseif RisenDiscussion.risendsScore==3>基本合格
+		<#else>不合格</#if>
+	</@p.column><#t/>
+	<@p.column code="评议年份">${RisenDiscussion.risendsYear!''}</@p.column><#t/>
+	<@p.column code="备注">${RisenDiscussion.risendsRemark!''}</@p.column><#t/>
+	<@p.column code="global.operate" align="center">
+		<a href="../risenDiscussion/v_edit.do?id=${RisenDiscussion.risendsId!''}&pageNo=${pageNo!}&userId=${RisenDiscussion.risendsUserid.id!''}" class="pn-opt"><@s.m "global.edit"/></a> | <#rt/>
+		<a href="../risenDiscussion/o_delete.do?ids=${RisenDiscussion.risendsId!''}&pageNo=${pageNo!}&userId=${RisenDiscussion.risendsUserid.id!''}" class="pn-opt">删除</a>
+	</@p.column><#t/>
+</@p.table>
+</#if>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

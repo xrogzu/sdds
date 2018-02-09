@@ -1,0 +1,138 @@
+package com.risen.entity;
+
+import java.util.Date;
+
+public class RisenOrgLifeCalendar {
+	private Integer risenlcUuid;//编号
+	private Integer risenlcOrgid;//所属组织编号
+	private String risenlcOrgname;//所属组织名称
+	private Integer risenlcHolderid;//举办人编号
+	private String risenlcHoldername;//举办人姓名
+	private String risenlcMeetingtype;//活动类型 1.支部党员大会 2.支部委员会 3.党小组会 4.党课
+	private String risenlcAddress;//活动地点
+	private String risenlcContactor;//联系人
+	private String risenlcCtphone;//联系人电话
+	private String risenlcParticipant;//参与人 多个逗号隔开
+	private Integer risenlcExpectdate;//预计所需时间
+	private Date risenlcReminddate;//提醒时间
+	private String risenlcComment;//描述
+	private Date risenlcOdate;//举办时间
+	
+	/**
+	 * 这4个字段用于条件查询
+	 */
+	private Date startDate;//活动时间起始日期
+	private Date endDate;//活动时间结束日期
+	private Date startDate1;//提醒时间起始日期
+	private Date endDate1;//提醒时间结束日期
+	public Integer getRisenlcUuid() {
+		return risenlcUuid;
+	}
+	public void setRisenlcUuid(Integer risenlcUuid) {
+		this.risenlcUuid = risenlcUuid;
+	}
+	public Integer getRisenlcOrgid() {
+		return risenlcOrgid;
+	}
+	public void setRisenlcOrgid(Integer risenlcOrgid) {
+		this.risenlcOrgid = risenlcOrgid;
+	}
+	public String getRisenlcOrgname() {
+		return risenlcOrgname;
+	}
+	public void setRisenlcOrgname(String risenlcOrgname) {
+		this.risenlcOrgname = risenlcOrgname;
+	}
+	public Integer getRisenlcHolderid() {
+		return risenlcHolderid;
+	}
+	public void setRisenlcHolderid(Integer risenlcHolderid) {
+		this.risenlcHolderid = risenlcHolderid;
+	}
+	public String getRisenlcHoldername() {
+		return risenlcHoldername;
+	}
+	public void setRisenlcHoldername(String risenlcHoldername) {
+		this.risenlcHoldername = risenlcHoldername;
+	}
+	public String getRisenlcMeetingtype() {
+		return risenlcMeetingtype;
+	}
+	public void setRisenlcMeetingtype(String risenlcMeetingtype) {
+		this.risenlcMeetingtype = risenlcMeetingtype;
+	}
+	public String getRisenlcAddress() {
+		return risenlcAddress;
+	}
+	public void setRisenlcAddress(String risenlcAddress) {
+		this.risenlcAddress = risenlcAddress;
+	}
+	public String getRisenlcContactor() {
+		return risenlcContactor;
+	}
+	public void setRisenlcContactor(String risenlcContactor) {
+		this.risenlcContactor = risenlcContactor;
+	}
+	public String getRisenlcCtphone() {
+		return risenlcCtphone;
+	}
+	public void setRisenlcCtphone(String risenlcCtphone) {
+		this.risenlcCtphone = risenlcCtphone;
+	}
+	public String getRisenlcParticipant() {
+		return risenlcParticipant;
+	}
+	public void setRisenlcParticipant(String risenlcParticipant) {
+		this.risenlcParticipant = risenlcParticipant;
+	}
+	public Integer getRisenlcExpectdate() {
+		return risenlcExpectdate;
+	}
+	public void setRisenlcExpectdate(Integer risenlcExpectdate) {
+		this.risenlcExpectdate = risenlcExpectdate;
+	}
+	public Date getRisenlcReminddate() {
+		return risenlcReminddate;
+	}
+	public void setRisenlcReminddate(Date risenlcReminddate) {
+		this.risenlcReminddate = risenlcReminddate;
+	}
+	public String getRisenlcComment() {
+		return risenlcComment;
+	}
+	public void setRisenlcComment(String risenlcComment) {
+		this.risenlcComment = risenlcComment;
+	}
+	public Date getRisenlcOdate() {
+		return risenlcOdate;
+	}
+	public void setRisenlcOdate(Date risenlcOdate) {
+		this.risenlcOdate = risenlcOdate;
+	}
+	public Date getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public Date getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	public Date getStartDate1() {
+		return startDate1;
+	}
+	public void setStartDate1(Date startDate1) {
+		this.startDate1 = startDate1;
+	}
+	public Date getEndDate1() {
+		return endDate1;
+	}
+	public void setEndDate1(Date endDate1) {
+		this.endDate1 = endDate1;
+	}
+	
+	
+}

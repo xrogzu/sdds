@@ -1,0 +1,14 @@
+package com.risen.service;
+
+import java.util.List;
+
+import com.jeecms.core.entity.CmsDepartment;
+import com.risen.entity.RisenChangeremindrecord;
+
+public interface IRisenChangeremindrecordService {
+
+	public RisenChangeremindrecord save(String sddsccOrgname,Integer sddsccOrgid,String sddsccOsecretaryname,Integer sddsccOsecretaryid,
+			String sddsccOsecretaryidc,String sddsccNsecretaryname,Integer sddsccNsecretaryid,String sddsccNsecretaryidc,String sddsccRemark,String sddsccFile);
+	public String getFilePath(Integer orgid);
+	
+}

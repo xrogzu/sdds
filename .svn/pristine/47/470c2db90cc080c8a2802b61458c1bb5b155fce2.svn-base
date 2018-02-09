@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenTarget" table="RISEN_TARGET">
+	 <id name="id" type="integer" column="ID">
+			<generator class="sequence"><param name="sequence">RISEN_TARGET_SD</param></generator>
+		</id>
+		<property name="risentgTitle" column="RISENTG_TITLE" type="string" not-null="true" length="255"/>
+		<property name="risentgSdate" column="RISENTG_SDATE" type="timestamp" not-null="false" length="20"/>
+		<property name="risentgEdate" column="RISENTG_EDATE" type="timestamp" not-null="false" length="20"/>
+		<property name="risentgContent" column="RISENTG_CONTENT" type="string" not-null="false" />
+		<property name="risentgTotalScore" column="RISENTG_TOTALSCORE" type="integer" not-null="false" />
+		<property name="risentgNumPercent" column="RISENTG_NUMPERCENT" type="integer" not-null="false" />
+		<property name="risentgGualityPercent" column="RISENTG_QUALITYPERCENT" type="integer" not-null="false" />
+		<property name="risentgCorgName" column="RISENTG_CORGNAME" type="string" not-null="false" length="200"/>
+		<property name="risentgCorgId" column="RISENTG_CORGID" type="string" not-null="false" length="100"/>
+		<property name="risentgCuserName" column="RISENTG_CUSERNAME" type="string" not-null="false" length="200"/>
+		<property name="risentgCuserId" column="RISENTG_CUSERID" type="string" not-null="false" length="100"/>
+		<property name="risentgCdate" column="RISENTG_CDATE" type="timestamp" not-null="false"  />
+		<property name="risentgStatus" column="RISENTG_Status" type="string" not-null="false"  />
+	</class>
+</hibernate-mapping> 

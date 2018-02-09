@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<script src="${base}/r/cms/html5/html5.js"></script>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+});
+function jump(){
+	var pid = $("[name='pid']").val();
+	var url = "../risenTargetDetail/showNext.do?parentId="+pid;
+	window.location.href=url;
+}
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 目标管理 > 我的目标</div>
+</div>
+<div class="box-positon ck">
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="../../risenTargetDetail/o_update.do">
+<@p.text label="内容" colspan="1" width="50" value="${RisenTargetDetail.risentgdContent!''}" name="risentgdContent" readonly="readonly" maxlength="100"/><@p.tr/>
+<@p.text label="完成时间" colspan="1" width="50" value="${RisenTargetDetail.risentgdFinishdate!''}" name="risentgdFinishdate" readonly="readonly" maxlength="100"/><@p.tr/>
+<@p.text label="上传文件" id="risentgdFile" value="${RisenTargetDetail.risentgdFile!''}" readonly="readonly" name="risentgdFile" />
+<a href="${base}${RisenTargetDetail.risentgdFile!''}" download="上传文件"  style="margin-left:430px;position:absolute;top:195px;font-size:14px;">下载文件</a><@p.tr/>
+<@p.tr/>
+<@p.td><@p.hidden name="id" value="${RisenTargetDetail.id!}"/>
+<@p.hidden name="pid" value="${RisenTargetDetail.risentgdPid!}"/>
+<@p.hidden name="parentid" value="${RisenTargetDetail.risentgdParentId!}"/>
+<@p.button value="关闭" style="width:80px;height:30px;" onclick="jump();"/>
+</@p.td>
+</@p.form>
+</div>
+</body>
+</html>

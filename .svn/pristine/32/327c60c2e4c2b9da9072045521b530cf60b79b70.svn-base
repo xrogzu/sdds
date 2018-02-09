@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenQaires" table="rs_qaires">
+	 <id name="id" type="integer" column="rs_id">
+			<generator class="sequence"><param name="sequence">RISEN_QAIRES_SD</param></generator>
+		</id>
+		<property name="title" column="rs_title" type="string" not-null="true" length="255"/>
+		<property name="description" column="rs_description" type="string" not-null="false" length="255"/>
+		<property name="startTime" column="rs_start_time" type="timestamp" not-null="false" length="20"/>
+		<property name="endTime" column="rs_end_time" type="timestamp" not-null="false" length="20"/>
+		<property name="totalCount" column="rs_total_count" type="integer" not-null="false" />
+		<property name="disabled" column="rs_is_disabled" type="java.lang.Boolean" not-null="false"/>
+		<property name="status" column="rs_status" type="integer" not-null="false"/>
+	</class>
+</hibernate-mapping> 

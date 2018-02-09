@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<link href="${base}/res/common/css/jquery.flot.css" rel="stylesheet" type="text/css"/>
+<!--[if lte IE 8]><![endif]-->
+<script src="${base}/res/common/js/excanvas.min.js" type="text/javascript" ></script>
+<script src="${base}/res/common/js/jquery.flot.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.time.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.categories.min.js" type="text/javascript"></script>
+<script src="${base}/thirdparty/echarts/echarts.js" type="text/javascript" ></script>
+<script class="code" type="text/javascript">
+	$(function() {
+		var myChart_basicInfo = echarts.init(document.getElementById('tab_basicInfo'));
+
+		option = {
+    title: {
+        text: '堆叠区域图'
+    },
+    tooltip : {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            label: {
+                backgroundColor: '#6a7985'
+            }
+        }
+    },
+    legend: {
+        data:['2015年','2016年','2017年','2018年','2019年']
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : [
+            <#list list as s>
+				'${(s[0]!)?replace('市局机关党委','')}'
+				<#if s_has_next>,</#if>
+			</#list>
+            ]
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+   
+        {
+            name: '2015年',
+            type:'line',
+            stack: '总计分',
+            areaStyle: {normal: {}},
+            data:[
+             <#list list as scroe>
+      		'${scroe[1]!}'
+      		<#if scroe_has_next>,</#if>
+      		</#list>
+            ]
+        },
+          {
+            name: '2016年',
+            type:'line',
+            stack: '总计分',
+            areaStyle: {normal: {}},
+            data:[
+      		   <#list list as scroe>
+      		'${scroe[2]!}'
+      		<#if scroe_has_next>,</#if>
+      		</#list>
+            ]
+        },
+          {
+            name: '2017年',
+            type:'line',
+            stack: '总计分',
+            areaStyle: {normal: {}},
+            data:[
+      		   <#list list as scroe>
+      		'${scroe[3]!}'
+      		<#if scroe_has_next>,</#if>
+      		</#list>
+            ]
+        },
+          {
+            name: '2018年',
+            type:'line',
+            stack: '总计分',
+            areaStyle: {normal: {}},
+            data:[
+      		   <#list list as scroe>
+      		'${scroe[4]!}'
+      		<#if scroe_has_next>,</#if>
+      		</#list>
+            ]
+        },
+          {
+            name: '2019年',
+            type:'line',
+            stack: '总计分',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top'
+                }
+            },
+            areaStyle: {normal: {}},
+            data:[
+      		   <#list list as scroe>
+      		'${scroe[5]!}'
+      		<#if scroe_has_next>,</#if>
+      		</#list>
+            ]
+        }
+    ]
+};
+
+		myChart_basicInfo.setOption(option);
+	});	
+</script>
+<style>
+	table{border-collapse:collapse;}
+	td { width: 144px; text-align: center; font-size: 15px; display: block; float: left; height: 65px; border-bottom: 1px solid #ccc;
+	 border-right: 1px solid #ccc; line-height: 30px; border-collapse：collapse;}
+	.td_tow { width: 144px; text-align: center; font-size: 15px; display: block; float: left; height: 30px; border-bottom: 1px solid #ccc;
+	 border-right: 1px solid #ccc; line-height: 30px; border-collapse：collapse;}
+	.rightTd{ border-left: 1px solid #ccc; width: 105px;}
+	tr { display: block; margin-bottom: 20px;}
+	.fristTr{ border-top: 1px solid #ccc;}
+	.province{float:left;width:60px;height:30px;font-size:16px;border:1px solid #DCF0FF;margin-left:5px;text-align:center;line-height:30px;}
+</style>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: <@s.m "cms.function.statistic"/> > 党员入党时间情况分析</div>
+</div>
+<div class="statistic">
+  <div class="sta-tab" style="width:1267px;">
+    <div class="tab-con" style="width:1267px;">
+     
+      <div class="tab-main" style="height:445px;width:1267px;">
+        <div>
+        	<div id="tab_basicInfo" style="float:left; width:99%;height:444px;"></div>
+			<!-- <div id="tab_basicInfo_dzjg" style="float:left; width:99%;height:444px;"></div>
+			<div id="tab_basicInfo_sydw" style="float:left; width:99%;height:444px;"></div>
+			<div id="tab_basicInfo_gq" style="float:left; width:99%;height:444px;"></div>
+			<div id="tab_basicInfo_ltx" style="float:left; width:99%;height:444px;"></div> -->
+		</div>
+      </div>
+      
+      
+      <script type="text/javascript">
+		$(document).ready(function () {
+			
+		});
+	  </script>
+    </div>
+  </div>
+</div>
+</body>
+</html>

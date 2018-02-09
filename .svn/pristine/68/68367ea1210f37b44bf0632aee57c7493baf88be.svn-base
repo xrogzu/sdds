@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript" charset="utf-8" src="../thirdparty/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="../thirdparty/ueditor/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="../thirdparty/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function() {
+	//部门对话框
+	$("#departDialog").dialog({
+		autoOpen: false,
+		modal: true,
+		width: 280,
+		height: 420,
+		position: ["center",20],
+		buttons: {
+			"OK": function() {
+			var departId = $("input[name='departId']:checked").val();
+				$("#deptId").val($("input[name='departId']:checked").val());
+				if(departId!=null && departId!=""){
+					$("#deptName").val($("input[name='departId']:checked+span").html());
+				}else{
+					$("#deptName").val("省局党组党建工作指导组");
+				}
+				$("#deptName").show();
+				$(this).dialog("close");
+			}
+		}
+	});
+	$("#jvForm").submit(function(){
+		var risentgNumPercent = $("[name='risentgNumPercent']").val();
+		var risentgGualityPercent = $("[name='risentgGualityPercent']").val();
+		var risentgTotalScore = $("[name='risentgTotalScore']").val();
+		
+		var testNumber = /^\d{1,2}$/;
+		var reg =/^\d+$/;
+		if(!reg.test(risentgTotalScore)){
+			alert("目标分数为数字！");
+			return false;
+		}
+		if(!testNumber.test(risentgNumPercent)){
+			alert("数量分占比为1-99的正整数");
+			return false;
+		}
+		if(!testNumber.test(risentgGualityPercent)){
+			alert("质量分占比为1-99的正整数");
+			return false;
+		}
+		if(parseInt(risentgNumPercent)+parseInt(risentgGualityPercent) !=100){
+			alert("数量分占比和质量分占比加起来应该是100%");
+			return false;
+		}
+		return true;
+	});
+ 	//initUeditors();
+	$("#jvForm").validate();
+});
+/**
+*初始化富文本编辑器
+*/
+function initUeditors(){
+	//初始化 ueditor 自定义需要的按钮
+	  var ue = UE.getEditor('editor', {
+	  	    toolbars: [['undo', 
+				  	    'redo', 
+				  	    'bold', 
+				  	    'italic', 
+				  	    'underline', 
+				  	    'strikethrough', 
+				  	    'cleardoc', 
+				  	    'fontfamily', 
+				  	    'fontsize', 
+				  	    'emotion', 
+				  	    'searchreplace', 
+				  	    'justifyleft', 
+				        'justifyright', 
+				        'justifycenter', 
+				        'justifyjustify', 
+				        'forecolor', 
+				        'backcolor', 
+				        'touppercase', 
+       					 'tolowercase', ]],
+       					 autoWidthEnabled: false,
+	  	        autoHeightEnabled: true,    
+	  	        autoFloatEnabled: true});
+}
+</script>
+
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 目标管理 > 制定目标</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input class="return-button" type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_save.do">
+<@p.text label="标　　题" colspan="2" width="50" name="risentgTitle" required="true" class="required" style="width:90%;" maxlength="100"/><@p.tr/>
+<@p.text label="开始时间" id="risentgSdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:$dp.$('risentgEdate').value})" style="width:70%;" colspan="1" width="50" name="risentgSdate" required="true" class="required" />
+<@p.text label="结束时间" id="risentgEdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:$dp.$('risentgSdate').value})" style="width:70%;" colspan="1" width="50" name="risentgEdate" required="true" class="required" /><@p.tr/>
+<@p.text label="目标总分" colspan="1" width="50" name="risentgTotalScore" required="true" class="required" maxlength="100" style="width:68%;"/> <@p.tr/>
+<@p.text label="数量占比%" colspan="1" width="50" name="risentgNumPercent" required="true" class="required" maxlength="100" style="width:68%;"/>
+<@p.text label="质量占比%" colspan="1" width="50" name="risentgGualityPercent" required="true" class="required" maxlength="100" style="width:70%;"/><@p.tr/>
+<tr><td style="width:20%;" class="pn-flabel pn-flabel-h">指派组织:</td><td colspan="3">
+<#if xitong?? && jiguan?? && (xitong=="exists" && jiguan=="exists")>
+<input type="radio" name="addWay" value="all" checked="checked"/>系统
+<input type="radio" name="addWay" value="some"/>机关
+<#elseif jiguan?? && jiguan=="exists">
+<input type="radio" name="addWay" value="some" checked="checked"/>机关
+</#if>
+<input type="hidden" id="deptId" name="deptId">
+<input type="text" id="deptName" name="deptName" readonly="readonly" style="display: none;"  class="pn-fcontent" style="width:70%;"></td>
+</tr>
+<tr><td style="width:20%;" class="pn-flabel pn-flabel-h">目标描述:</td>
+<td colspan="3"><textarea cols="200" rows="5" id="risentgContent" name="risentgContent"></textarea></td>
+</tr>
+<@p.td colspan="2" ><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td><@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

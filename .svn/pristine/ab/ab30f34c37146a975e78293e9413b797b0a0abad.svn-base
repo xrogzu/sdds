@@ -1,0 +1,77 @@
+package com.jeecms.core.dao;
+
+import java.util.List;
+
+import com.jeecms.common.hibernate4.Finder;
+import com.jeecms.common.hibernate4.Updater;
+import com.jeecms.common.page.Pagination;
+import com.jeecms.core.entity.CmsDepartment;
+import com.jeecms.core.entity.CmsUser;
+
+public interface CmsDepartmentDao {
+
+	public List<CmsDepartment> getList(Integer parentId,boolean all);
+
+	public Pagination getPage(String name, int pageNo,int pageSize);
+
+	public CmsDepartment findById(Integer id);
+
+	public CmsDepartment findByName(String name);
+
+	public CmsDepartment save(CmsDepartment bean);
+
+	public CmsDepartment deleteById(Integer id);
+
+	public CmsDepartment updateByUpdater(Updater<CmsDepartment> updater);
+	/**
+	 * 换届提醒List
+	 */
+	public List<CmsDepartment> changeRemindList(String departmentName,Integer departid,Integer pid);
+	/**
+	 * 设置加分基数
+	 * @param parentId
+	 * @return
+	 */
+	public List<CmsDepartment>baseScore(Integer parentId);
+	/**
+     * 根据父级id查询组织列表
+     */
+    public List<Object[]> findlistByPid(Integer pid);
+  
+    /**
+     * 导入组织小程序
+     */
+	public List<CmsDepartment> findNotInUser();
+    /**
+     * 根据类型获取组织
+     * @author slc 2016-12-6 下午5:07:28
+     * @param type
+     * @return
+     */
+    public List<CmsDepartment> getDeptByType(String type);
+    /**
+     * 获取最大排序值
+     * @return
+     */
+    public int getMaxPriority ();
+    /**
+     * 替换书记
+     */
+    public CmsDepartment changeSecretaryByDid(CmsDepartment model);
+    /**
+     * 新增党员职务关联
+     */
+    public CmsDepartment updatejob(CmsDepartment model);
+    /**
+     * 修改user数据工具
+     * @return
+     */
+    List<CmsDepartment> findalllistdepart();
+    /**
+     * 根据类型,当前登陆者获取组织列表
+     * @author slc 2016-12-6 下午5:07:28
+     * @param type
+     * @return
+     */
+    public List<CmsDepartment> getDeptByTypeAndLoginId(String type,Integer loginId);
+}

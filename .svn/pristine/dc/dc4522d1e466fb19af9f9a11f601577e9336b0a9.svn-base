@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var f = getTableForm();
+	f.action="o_delete.do";
+	f.submit();
+}
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 目标管理 > 我的目标</div>
+</div>
+<div class="body-box">
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<@p.table value=pagination;RisenTarget,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+		<input type='checkbox' name='ids' value='${RisenTarget.id!''}'/><#t/>
+	</@p.column><#t/>
+	<@p.column code="党组织名称">${RisenTarget.risentgCorgName!''}</@p.column><#t/>
+	<@p.column code="标题">${RisenTarget.risentgTitle!''}</@p.column><#t/>
+	<@p.column code="开始时间"><#if RisenTarget.risentgSdate??>${RisenTarget.risentgSdate?date}<#else></#if></@p.column><#t/>
+	<@p.column code="结束时间"><#if RisenTarget.risentgEdate??>${RisenTarget.risentgEdate?date}<#else></#if></@p.column><#t/>
+	<@p.column code="目标描述"><a title="${RisenTarget.risentgContent!''}"><@text_cut s=RisenTarget.risentgContent len=30 append='...' /></a></@p.column><#t/>
+	<@p.column code="目标总分">${RisenTarget.risentgTotalScore!''}</@p.column><#t/>
+	<@p.column code="目标数量占分比"><#if RisenTarget.risentgNumPercent??>${RisenTarget.risentgNumPercent!''}%<#else></#if></@p.column><#t/>
+	<@p.column code="目标质量占分比"><#if RisenTarget.risentgGualityPercent??>${RisenTarget.risentgGualityPercent!''}%<#else></#if></@p.column><#t/>
+	<@p.column code="global.operate" align="center">
+			<#if RisenTarget.risentgStatus=="0">
+				<a href="../risenTargetDetail/showInfo.do?parentId=${RisenTarget.id!''}" class="pn-opt">承接任务</a>
+			<#elseif RisenTarget.risentgStatus=="9" >
+				<a href="../risenTargetDetail/v_flist.do" class="pn-opt">已完成</a>
+			<#else>
+			<a href="../risenTargetDetail/showInfo.do?parentId=${RisenTarget.id!''}" class="pn-opt">进行中</a>
+			</#if>
+	</@p.column><#t/>
+</@p.table>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

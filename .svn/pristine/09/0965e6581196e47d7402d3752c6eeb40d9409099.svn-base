@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="CoreDictionary" table="core_dictionnary">
+		<meta attribute="sync-DAO">false</meta>
+		<cache usage="read-write"/>
+		<id name="id" type="integer" column="id">
+			<generator class="sequence"><param name="sequence">CORE_DICTIONNARY_SQ</param></generator>
+		</id>
+		<property name="corecdKey" column="corecd_key" type="string" not-null="true" length="200"/>
+		<property name="corecdVal" column="corecd_val" type="string" not-null="true" length="200"/>
+		<property name="corecdType" column="corecd_type" type="string" not-null="true" length="200"/>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,98 @@
+package com.risen.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.IRisenIntegralDao;
+import com.risen.dao.IRisenIntegralRecordDao;
+import com.risen.entity.RisenIntegral;
+import com.risen.entity.RisenIntegralRecord;
+import com.risen.service.IRisenIntegralRecordService;
+
+@Service
+@Transactional
+public class RisenIntegralRecordServiceImpl implements IRisenIntegralRecordService {
+	@Transactional(readOnly = true)
+	public Pagination getPage(int pageNo, int pageSize) {
+		Pagination page = dao.getPage(pageNo, pageSize);
+		return page;
+	}
+	
+	@Transactional(readOnly = true)
+	public RisenIntegralRecord findById(Integer id) {
+		RisenIntegralRecord entity = dao.findById(id);
+		return entity;
+	}
+
+	public RisenIntegralRecord save(RisenIntegralRecord bean) {
+		dao.save(bean);
+		return bean;
+	}
+	
+	public void deleteByIds(Integer[] ids) {
+		
+		for (int i = 0,len = ids.length; i < len; i++) {
+			 delete(ids[i]);
+		}
+		
+	}
+	@Autowired
+	private IRisenIntegralRecordDao dao;
+	
+	@Autowired
+	private IRisenIntegralDao itdao;
+	
+	public RisenIntegralRecord update(RisenIntegralRecord bean) {
+		bean=dao.update(bean);
+		return bean;
+	}
+
+	public void delete(Integer id) {
+		dao.delete(id);
+		
+	}
+
+	@Override
+	public Pagination getPage(int pageNo, int pageSize, RisenIntegralRecord bean) {
+		Pagination page = dao.getPage(pageNo, pageSize,bean);
+		return page;
+	}
+
+	@Override
+	public int confirmShare(Integer[] ids,Integer type,Integer score) {
+		RisenIntegralRecord ir=dao.getByid(ids[0]);
+		RisenIntegral it=null;
+		for (int j = 0; j < ids.length; j++) {
+			
+			try {
+				
+				ir=dao.getByid(ids[0]);
+				it=itdao.findByOrgId(ir.getRisenirOrgid());
+				if(type==1){//type=1时是采用默认加分规则
+					dao.confirmShare(ids[j],it.getRisenitBase());
+					itdao.confirmShare(ir.getRisenirOrgid(), it.getRisenitBase());
+				}else if(type==2){//type=2的时候是采纳时自定义加分
+					dao.confirmShare(ids[j],score);
+					itdao.confirmShare(ir.getRisenirOrgid(), score);
+				}
+				
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+			
+		
+		return 1;
+	}
+
+	@Override
+	public RisenIntegralRecord findByContentId(Integer id) {
+		// TODO Auto-generated method stub
+		return dao.findByContentId(id);
+	}
+	
+	
+}

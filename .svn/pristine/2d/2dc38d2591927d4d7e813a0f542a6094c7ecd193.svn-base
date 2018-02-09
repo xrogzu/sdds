@@ -1,0 +1,81 @@
+(function (window, undefined) {
+    var time;
+    var i = document.getElementById("linklist").children.length;
+    var index = 0;
+
+    //大首页图片 轮播
+    (function initImgLinkPlayer() {
+      
+        init(); // 初始化定时器
+        addListener(); //添加鼠标时间 移入移出、点击等
+    })();
+
+
+    //添加各种鼠标事件
+    function addListener() {
+        $("#ImgLinkBox").mouseenter(function () {
+            //鼠标移入播放器 取消定时器
+            if (time) {
+                clearTimeout(time);
+            }
+        });
+
+        $("#ImgLinkBox").mouseleave(function () {
+            //鼠标移出播放器 重启定时器
+            init();
+        });
+
+        $("#btnLeft").click(function () {
+            if (index - 1 >= 0) {
+                index--;
+            }
+            showImg(index);
+        });
+
+        $("#btnRight").click(function () {
+        	
+            if (index + 1 >= i - 3) {
+                index = 0;
+            }
+            else {
+                index++;
+            }
+            showImg(index);
+        });
+    }
+
+
+    //图片播放器初始化
+    function init() {
+        if (time) {  //如果有定时器则先清除
+            clearTimeout(time);
+        }
+        time = setInterval(function () {
+            if (index == i - 4) {
+                index = 0;
+            }
+            else {
+                index++;
+            }
+            slidePics(); //设置定时器 一段时间移动图片
+        }, 50000000);
+    }
+
+    function showImg(obj) {  //现实图片 有参数则选择传入值对应的图片，否则按照索引自动累加
+        if (obj || obj === 0) { //有参数传入 说明鼠标选择了某个小点
+            index = obj; //将索引改为当前选择的小点
+            slidePics(); //立刻查看选择的图片 而不是等待定时器
+        }
+    }
+
+    // 向左移动图片
+    function slidePics() {
+        $("#linklist").animate({ "left": (-1 * index * 230) + "px" }, 800, function () {   //图片切换 
+            //回调函数
+
+        });
+    }
+
+
+
+})(window, undefined);

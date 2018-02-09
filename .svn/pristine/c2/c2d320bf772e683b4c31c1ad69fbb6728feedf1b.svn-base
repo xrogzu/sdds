@@ -1,0 +1,25 @@
+package com.risen.dao.impl;
+
+import org.springframework.stereotype.Repository;
+
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.risen.dao.IRisenChangeremindrecordDao;
+import com.risen.entity.RisenChangeremindrecord;
+
+@Repository
+public class RisenChangeremindrecordDaoImpl extends HibernateBaseDao<RisenChangeremindrecord, Integer> implements IRisenChangeremindrecordDao{
+
+	@Override
+	protected Class<RisenChangeremindrecord> getEntityClass() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RisenChangeremindrecord save(RisenChangeremindrecord model) {
+		// TODO Auto-generated method stub
+		getSession().save(model);
+		return model;
+	}
+
+}

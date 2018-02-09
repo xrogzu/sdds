@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenTargetDetail" table="RISEN_TARGETDETAIL">
+		<id name="id" type="integer" column="RISENTGD_ID">
+			<generator class="sequence"><param name="sequence">RISEN_TARGETDETAIL_SD</param></generator>
+		</id>
+		<property name="risentgdPid" column="RISENTGD_pid" type="integer" not-null="false" length="255"/>
+		<property name="risentgdOrgname" column="RISENTGD_ORGNAME" type="string"/>
+		<property name="risentgdOrgid" column="RISENTGD_ORGID" type="string"/>
+		<property name="risentgdContent" column="RISENTGD_CONTENT" type="string"/>
+		<property name="risentgdFinishdate" column="RISENTGD_FININSHDATE" type="date"/>
+		<property name="risentgdNumscore" column="RISENTGD_NUMSCORE" type="integer"/>
+		<property name="risentgdQualityscore" column="RISENTGD_QUALITYSCORE" type="integer"/>
+		<property name="risentgdStatus" column="RISENTGD_STATUS" type="string"/>
+		<property name="risentgdCuserid" column="RISENTGD_CUSERID" type="string" />
+		<property name="risentgdCusername" column="RISENTGD_CUSERNAME" type="string" />
+		<property name="risentgdFile" column="RISENTGD_FILE" type="string" length="1000"/>
+	</class>
+</hibernate-mapping>

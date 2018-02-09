@@ -1,0 +1,93 @@
+package com.risen.dao.impl;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.util.StringUtils;
+
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.IRisenIntegralRecordDao;
+import com.risen.entity.RisenIntegralRecord;
+
+public class RisenIntegralRecordDaoImpl extends HibernateBaseDao<RisenIntegralRecord, Integer> implements
+		IRisenIntegralRecordDao {
+
+	@Override
+	public Pagination getPage(int pageNo, int pageSize) {
+		Criteria crit = getSession().createCriteria(RisenIntegralRecord.class);
+		Pagination page = findByCriteria(crit, pageNo, pageSize);
+		return page;
+	}
+
+	@Override
+	public RisenIntegralRecord save(RisenIntegralRecord bean) {
+		getSession().save(bean); 
+		return bean;
+	}
+
+	@Override
+	public RisenIntegralRecord findById(Integer id) {
+		RisenIntegralRecord bean=get(id);
+		return bean;
+	}
+
+	@Override
+	public void delete(Integer id) {
+		RisenIntegralRecord entity = super.get(id);
+		getSession().delete(entity);
+	}
+
+	@Override
+	public RisenIntegralRecord update(RisenIntegralRecord bean) {
+		getSession().update(getSession().merge(bean));
+		return bean;
+	}
+
+	@Override
+	protected Class<RisenIntegralRecord> getEntityClass() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Pagination getPage(int pageNo, int pageSize, RisenIntegralRecord bean) {
+		Criteria crit = getSession().createCriteria(RisenIntegralRecord.class);
+		if(bean!=null){
+			if(!StringUtils.isEmpty(bean.getRisenirOrgid())){
+				crit.add(Restrictions.eq("risenirOrgid", bean.getRisenirOrgid()));
+			}
+			if(!StringUtils.isEmpty(bean.getRisenirResult())){
+				crit.add(Restrictions.eq("risenirResult", bean.getRisenirResult()));
+			}
+			if(!StringUtils.isEmpty(bean.getRisenirTargetorgid())){
+				crit.add(Restrictions.eq("risenirTargetorgid", bean.getRisenirTargetorgid()));
+			}
+		}
+		crit.addOrder(Order.desc("risenirHandledate"));
+		Pagination page = findByCriteria(crit, pageNo, pageSize);
+		return page;
+	}
+
+	@Override
+	public int confirmShare(Integer ids,Integer score) {
+		StringBuffer sql=new StringBuffer();
+		sql.append("update risen_integralrecord set risenir_result=1,risenir_score ="+score+" where risenir_uuid="+ids);
+		return getSession().createSQLQuery(sql.toString()).executeUpdate();
+	}
+
+	@Override
+	public RisenIntegralRecord getByid(Integer id) {
+		String sqlString="select * from risen_integralrecord where risenir_uuid="+id;
+		RisenIntegralRecord bean=(RisenIntegralRecord) getSession().createSQLQuery(sqlString).addEntity(RisenIntegralRecord.class).uniqueResult();
+		return bean;
+	}
+
+	@Override
+	public RisenIntegralRecord findByContentId(Integer id) {
+		String sqlString="select * from risen_integralrecord where risenir_contentid="+id;
+		RisenIntegralRecord bean=(RisenIntegralRecord) getSession().createSQLQuery(sqlString).addEntity(RisenIntegralRecord.class).uniqueResult();
+		return bean;
+	}
+
+}

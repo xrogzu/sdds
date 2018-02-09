@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var f = getTableForm();
+	f.action="o_delete.do";
+	f.submit();
+}
+function toPage(date){
+	$("#risenlcOdate").val(date);
+	$("#tform").submit();
+	//window.location.href="../risenIntegralRecord/v_list.do?risenlcOdate="+date+"&pageNo=${pageNo}";
+}
+</script>
+</head>
+<body>
+<div class="box-positon ove">
+	<div class="position-div"><@s.m "global.position"/>: <@s.m "risenIntegralRecord.function"/> - <@s.m "global.list"/></div>
+</div>
+<!-- <div class="box-positon">
+	<form class="ropt">
+		<input class="add" type="submit" value="<@s.m "global.add"/>" onclick="this.form.action='v_add.do';"/>
+	</form>
+	<div class="clear"></div>
+</div> -->
+<div class="body-box">
+<form id="tableForm" method="post">
+
+<!-- 举办时间：<input type="text" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="risenlcOdate" name="risenlcOdate" value="${(risenIntegralRecord.risenlcOdate?string('yyyy-MM-dd'))!''}"/>
+提醒时间：<input type="text" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="risenlcReminddate" name="risenlcReminddate" value="${(risenIntegralRecord.risenlcReminddate?string('yyyy-MM-dd'))!''}"/>
+<input class="query" type="submit" value="查询"/> -->
+
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+	<@p.table value=list;department,i,has_next><#rt/>
+		<@p.column align="center" title="序号">${department.groupid!''}</@p.column><#t/>
+		<@p.column align="center" code="组织名称">${"department."}</@p.column><#t/>
+		<@p.column align="center" code="department.risenirOrgname">${department.risenirOrgname}</@p.column><#t/>
+		<@p.column align="center" code="总分">${department.score}</@p.column><#t/>
+		<@p.column align="center" code="department.score">${department.score!''}</@p.column><#t/>
+	<!-- <@p.column align="center" code="本月积分">${(risenIntegralRecord.risenirHandledate?string("yyyy-MM-dd HH:mm:ss"))!''}</@p.column><#t/> 
+		<@p.column align="center" code="risenIntegralRecord.risenirScore">${risenIntegralRecord.risenirScore!''}</@p.column><#t/>-->
+		<@p.column align="center" code="操作"></@p.column><#t/>
+		
+	</@p.table>
+</form>
+
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

@@ -1,0 +1,23 @@
+#ji_list{width:1280px; margin: 0 auto; background:url(../images/bgsk_list.png) no-repeat center top; height:715px;  }
+.list_ym{width:900px; float: left; height:700px;  margin:10px; margin-left:20px;   overflow: hidden; margin-right:20px; margin-top:8px;   }
+.list_ym .ym_top{width:100%;height:40px; border-bottom:solid 1px #d8d8d8; line-height:40px; height:41px;  }
+.list_ym .ym_top span{font-size:18px; font-weight: bold; color:#bb976d; border-bottom:solid #bb976d 3px; float: left; }
+.list_ym .ym_top a{float: right; margin-top:8px; }
+.list_ym .ym_tu ul{margin-top:15px; }
+.list_ym .ym_tu li{line-height:34px; height:34px; overflow: hidden; border-bottom:solid 1px #ccc;   }
+.list_ym .ym_tu li a{font-size:14px; padding-left:10px; line-height:34px; height:34px; background:url(../images/16.png) no-repeat 0 16px;  width:810px; float: left; overflow: hidden;}
+.list_ym .ym_tu li span{float: right;}
+
+.list_rc{width:300px; float: left; height:273px;  overflow: hidden; margin-top:8px;   }
+.list_rc .rc_top{width:100%;height:40px; border-bottom:solid 1px #d8d8d8; line-height:40px; height:41px;  }
+.list_rc .rc_top span{font-size:18px; font-weight: bold; color:#bb976d; border-bottom:solid #bb976d 3px; float: left; }
+.list_rc .rc_top a{float: right; margin-top:8px; }
+.list_rc .rc_tu ul{margin-top:15px; }
+.list_rc .rc_tu li{line-height:34px; height:34px; overflow: hidden; border-bottom:solid 1px #ccc;   }
+.list_rc .rc_tu li a{font-size:14px; padding-left:10px; line-height:34px; height:34px; background:url(../images/16.png) no-repeat 0 10px;}
+
+.article{width:900px; float: left; height:660px;  overflow-y:scroll; margin:10px; margin-left:20px;    margin-right:20px; margin-top:8px; }
+.tens{text-align: center;}
+.tens a{margin:0 10px;}
+.art_tit{text-align: center; height:50px; display: block; line-height:50px; font-size:20px; font-weight: bold; color:#bb976d; }
+.artinr{line-height:30px; height:620px; font-size:14px; display: block; padding:10px;  }

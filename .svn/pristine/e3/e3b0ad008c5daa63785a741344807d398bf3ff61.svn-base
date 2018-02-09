@@ -1,0 +1,40 @@
+package com.risen.service.impl;
+
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.risen.dao.IRisenChangeremindrecordDao;
+import com.risen.entity.RisenChangeremindrecord;
+import com.risen.service.IRisenChangeremindrecordService;
+
+@Service
+@Transactional
+public class RisenChangeremindrecordServiceImpl implements IRisenChangeremindrecordService {
+
+	@Override
+	public RisenChangeremindrecord save(String sddsccOrgname, Integer sddsccOrgid,
+			String sddsccOsecretaryname, Integer sddsccOsecretaryid,
+			String sddsccOsecretaryidc, String sddsccNsecretaryname,
+			Integer sddsccNsecretaryid, String sddsccNsecretaryidc,
+			String sddsccRemark) {
+		// TODO Auto-generated method stub
+		RisenChangeremindrecord model = new RisenChangeremindrecord();
+		model.setSddsccOrgname(sddsccOrgname);
+		model.setSddsccOrgid(sddsccOrgid);
+		model.setSddsccOsecretaryname(sddsccOsecretaryname);
+		model.setSddsccOsecretaryidc(sddsccOsecretaryidc);
+		model.setSddsccOsecretaryid(sddsccOsecretaryid);
+		model.setSddsccNsecretaryid(sddsccNsecretaryid);
+		model.setSddsccNsecretaryidc(sddsccNsecretaryidc);
+		model.setSddsccNsecretaryname(sddsccNsecretaryname);
+		model.setSddsccRecoddate(new Date());
+		model.setSddsccRemark(sddsccRemark);
+		return risenChangeremindrecordDao.save(model);
+	}
+
+	@Autowired
+	private IRisenChangeremindrecordDao risenChangeremindrecordDao;
+}

@@ -1,0 +1,52 @@
+<#if isRoot>
+		<#if isJgdw>
+				[{
+					"text": "<a href='../changeremind/changeRemind_list.do?pid=${parentdepart.id!}' target='changeRemindRightFrame'>${parentdepart.name!}</a>",
+					"classes": "folder",
+					"expanded": true,
+					"children": [
+						<#list list as depart>
+							{
+							"id": "${depart.id}",
+							"text": "<a href='../changeremind/changeRemind_list.do?pid=${depart.id}' target='changeRemindRightFrame'>${depart.name}</a>",
+							"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+							"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+							}<#if depart_has_next>,</#if>
+						</#list>
+						]
+					}]
+			<#else>
+				[{
+					"text": "<a href='../changeremind/changeRemind_list.do?pid=${parentdepart.id!}' target='changeRemindRightFrame'>${parentdepart.name!}</a>",
+					"classes": "folder",
+					"expanded": true,
+					"children": 
+						[{
+							"text": "<a href='../changeremind/changeRemind_list.do?pid=${self.id!}' target='changeRemindRightFrame'>${self.name!}</a>",
+							"classes": "folder",
+							"expanded": true,
+							"children": [
+								<#list list as depart>
+									{
+									"id": "${depart.id}",
+									"text": "<a href='../changeremind/changeRemind_list.do?pid=${depart.id}' target='changeRemindRightFrame'>${depart.name}</a>",
+									"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+									"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+									}<#if depart_has_next>,</#if>
+								</#list>
+							]
+						}]
+				}]
+			</#if>
+<#else>
+	[
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<a href='../changeremind/changeRemind_list.do?pid=${depart.id}' target='departmentRightFrame'>${depart.name}</a>",
+		"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+		"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+</#if>

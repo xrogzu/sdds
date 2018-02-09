@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+</script>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 问卷调查 - 问卷记录列表</div>
+	<form class="ropt">
+	    <input type="hidden" name="qairesId" value="${qairesId!}"/>
+		<input type="submit" class="return-button" value="<@s.m "global.backToList"/>" onclick="this.form.action='${base}/admin/qaires/qairesRecord/v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div>--用户信息--
+  <ul>
+     <li style="height:20px;line-height:20px;">姓名：${user.realname!}</li>
+     <li style="height:20px;line-height:20px;">身份证：${user.idNum!}</li>
+     <li style="height:20px;line-height:20px;">手机号码：${user.mobile!}</li>
+     <li style="height:20px;line-height:20px;">联系地址：${user.comefrom!'暂无'}</li>
+     <li style="height:20px;line-height:20px;">工作单位：${user.intro!'暂无'}</li>
+  </ul>
+</div>
+--问卷信息--
+<div class="body-box">
+<form id="tableForm" method="post">
+<input type="hidden" name="recordId" value="${recordId!}"/>
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<@p.table value=pagination;detail,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+		<input type='checkbox' name='ids' value='${detail.id!}'/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center">${detail.id!}</@p.column><#t/>
+	<@p.column code="考试时间" align="center">${detail.record.recordTime!}</@p.column><#t/>
+	<@p.column code="题目ID" align="center">${detail.topic.id!}</@p.column><#t/>
+	<@p.column code="题目标题" align="center">${detail.topic.title!}</@p.column><#t/>
+	<@p.column code="题目类型" align="center"><#if detail.topic.type==1>单选题<#elseif detail.topic.type==2>多选题<#elseif detail.topic.type==3>判断题<#elseif detail.topic.type==4>问答题</#if></@p.column><#t/>
+	<@p.column code="问卷内容" align="center"><#if detail.topic.type==4>${detail.detailContent!}<#else>${detail.answer!}</#if></@p.column><#t/>
+</@p.table>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

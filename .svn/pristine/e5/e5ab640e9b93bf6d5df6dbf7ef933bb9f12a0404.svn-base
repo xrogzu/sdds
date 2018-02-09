@@ -1,0 +1,503 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script typ3e="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+});
+</script>
+<style>
+	.bold{font-size:16px;}
+</style>
+</head>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 发展党员流程 - 展示</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';" class="return-button"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="v_list.do">
+<!-- ######edit html fields start###### -->	
+	<#assign mark = (risenDevparty.risendpExpands1)?number/>
+	 <table width="100%" class="pn-ftable" cellpadding="2" cellspacing="1" border="0"> 
+   <tbody>
+    <tr> 
+     <!-- ######edit html fields start###### --> 
+     <td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>姓 名:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpName!}" name="risendpName" class="required" /></td>
+     <td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>身份证号码:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpIdnumber!}" name="risendpIdnumber" /></td>
+    </tr> 
+    <tr>
+     <td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>性 别:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><label><input type="radio" value="${risenDevparty.risendpSex!'1'}" checked="checked" name="risendpSex" />男</label> <label><input type="radio" value="${risenDevparty.risendpSex!'0'}" name="risendpSex" />女</label></td> 
+     <td width="20%" class="pn-flabel pn-flabel-h">出生日期:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" name="risendpBirth" value="<#if risenDevparty.risendpBirth??>${risenDevparty.risendpBirth?date}</#if>" /></td>
+    </tr> 
+    <tr>
+     <td width="20%" class="pn-flabel pn-flabel-h">所在党支部:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpBranch!}" name="risendpBranch" /></td>
+     <td width="20%" class="pn-flabel pn-flabel-h">民 族:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpNation!}" name="risendpNation" /></td>
+    </tr> 
+    <tr>
+     <td width="20%" class="pn-flabel pn-flabel-h">籍 贯:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" value="${risenDevparty.risendpNative!}" name="risendpNative" /></td>
+     <td width="20%" class="pn-flabel pn-flabel-h">婚姻状况:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><label><input type="radio" value="${risenDevparty.risendpMarriage!'1'}" checked="checked" name="risendpMarriage" />未婚</label> <label><input type="radio" value="${risenDevparty.risendpMarriage!'2'}" name="risendpMarriage" />已婚</label></td> 
+    </tr> 
+     <!-- 第1步 --> 
+    <tr class="flow_1" style="display:none;">
+     <td width="20%" class="pn-flabel pn-flabel-h">提交申请入党时间（申请书落款时间）:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSdate" value="${risenDevparty.risendpSdate!''}" /></td>
+     <td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly value="${risenDevparty.risendpInfo!''}" name="risendpInfo"/></td>
+    </tr> 
+     <!-- 第2步 --> 
+    <tr class="flow_2" style="display:none;">
+     <td width="20%" class="pn-flabel pn-flabel-h">谈话时间:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTalktime" value="<#if risenDevparty.risendpTalktime??>${risenDevparty.risendpTalktime?string('yyyy-MM-dd')}</#if>" /></td>
+     <td width="20%" class="pn-flabel pn-flabel-h">谈话人:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTalkperson" value="${risenDevparty.risendpTalkperson!''}"/></td>
+    </tr >
+    <tr class="flow_2" style="display:none;">
+     <td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     <td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTalkinfo"  value="${risenDevparty.risendpTalkinfo!''}" /></td> 
+    </tr> 
+    <!-- 第3步 --> 
+    <tr class="flow_3" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">确定积极分子时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpActivetime" value="<#if risenDevparty.risendpActivetime??>${risenDevparty.risendpActivetime?string('yyyy-MM-dd')}</#if>"   onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpActiveinfo"  value="${risenDevparty.risendpActiveinfo!''}"  /></td>
+    </tr>
+    <!-- 第4步 --> 
+    <tr class="flow_4" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">申请入党时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpRegtime"  value="<#if risenDevparty.risendpRegtime??>${risenDevparty.risendpRegtime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">公示时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNoticetime"  value="<#if risenDevparty.risendpNoticetime??>${risenDevparty.risendpNoticetime?string('yyyy-MM-dd')}</#if>"      /></td>
+    	
+    </tr>
+    <tr class="flow_4" style="display:none;"> 	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会召开时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpConvoketime"  value="<#if risenDevparty.risendpConvoketime??>${risenDevparty.risendpConvoketime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">备案时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpOnfiletime"  value="<#if risenDevparty.risendpOnfiletime??>${risenDevparty.risendpOnfiletime?string('yyyy-MM-dd')}</#if>"   /></td>
+    </tr>	
+   	<tr class="flow_4" style="display:none;"> 
+    	<td width="20%" class="pn-flabel pn-flabel-h">培养联系人:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpLinkman" value="${risenDevparty.risendpLinkman!''}"  /></td>
+    </tr> 
+    <tr class="flow_4" style="display:none;"> 
+    	<td width="20%" class="pn-flabel pn-flabel-h">党员推荐情况:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpRecinfo!''}</textarea>
+     	</td>
+     </tr> 
+    <tr class="flow_4" style="display:none;"> 
+    	<td width="20%" class="pn-flabel pn-flabel-h">群团组织推优情况:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpOrgrecinfo!''}</textarea>
+     	</td>
+    </tr> 
+    <tr class="flow_4" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpOnfileinfo"  value="${risenDevparty.risendpOnfileinfo!''}"  /></td>
+    </tr>
+    <!-- 第5步 --> 
+    <tr class="flow_5" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">所在党支部:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFiveBranch" value="${risenDevparty.risendpFiveBranch!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">姓		名:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFiveName" value="${risenDevparty.risendpFiveName!''}"  /></td>
+   </tr>
+   <tr class="flow_5" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">性		别:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFiveSex"  value="${risenDevparty.risendpRecinfo!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">出生日期:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFiveBirth"   value="${risenDevparty.risendpFiveBirth!''}"  /></td>
+   </tr > 
+   <tr class="flow_5" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">学历:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFiveEducation" value="${risenDevparty.risendpFiveEducation!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">民族:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFiveNation" value="${risenDevparty.risendpFiveNation!''}"  /></td>
+  </tr> 
+  <tr class="flow_5" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFiveInpartytime"  value="<#if risenDevparty.risendpFiveInpartytime??>${risenDevparty.risendpFiveInpartytime?string('yyyy-MM-dd')}</#if>"  /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">与入党积极分子关系:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFiveRelation"  value="${risenDevparty.risendpFiveRelation!''}"   /></td>
+   </tr>
+   <!-- 第六步 -->
+	<tr class="flow_6" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSixTime" value="<#if risenDevparty.risendpSixTime??>${risenDevparty.risendpSixTime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察人:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSixPerson" value="${risenDevparty.risendpSixPerson!''}"  /></td>
+  </tr> 
+  <tr class="flow_6" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察情况:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpSixInfo!''}</textarea>
+     	</td>
+   </tr>
+   <tr class="flow_6" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSixRelatedinfo"  value="${risenDevparty.risendpSixRelatedinfo!''}"  /></td>
+   </tr>
+  <!-- 第七步 -->
+  <tr class="flow_7" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会召开时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSevenTime" value="<#if risenDevparty.risendpSevenTime??>${risenDevparty.risendpSevenTime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会参加人员:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSevenName" value="${risenDevparty.risendpSevenName!''}"  /></td>
+  </tr> 
+  <tr class="flow_7" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会意见:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpSevenOpinion!''}</textarea>
+     	</td>
+   </tr>
+   <tr class="flow_7" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSevenInfo"  value="${risenDevparty.risendpSevenInfo!''}"  /></td>
+   </tr>
+   <!-- 第八步 -->
+   <tr class="flow_8" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">申请入党时间:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEightTime"  value="<#if risenDevparty.risendpEightTime??>${risenDevparty.risendpEightTime?string('yyyy-MM-dd')}</#if>"  /></td>
+   </tr>
+   <tr class="flow_8" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会讨论<br>通过时间</>召开时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEightDiscusstime" value="<#if risenDevparty.risendpEightDiscusstime??>${risenDevparty.risendpEightDiscusstime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">列为积极分子时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEightActivetime" value="<#if risenDevparty.risendpEightActivetime??>${risenDevparty.risendpEightActivetime?string('yyyy-MM-dd')}</#if>"  /></td>
+   </tr>
+   <!-- 第九步 -->
+   <tr class="flow_9" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">所在党支部:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNineBranch" value="${risenDevparty.risendpNineBranch!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">姓		名:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNineName" value="${risenDevparty.risendpNineName!''}"  /></td>
+   </tr>
+   <tr class="flow_9" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">学历:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNineXl" value="${risenDevparty.risendpNineXl!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">民族:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNineNation" value="${risenDevparty.risendpNineNation!''}"  /></td>
+  </tr> 
+  <tr class="flow_9" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">性		别:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNineXl"  value="${risenDevparty.risendpNineXl!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">出生日期:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNineBirth"   value="${risenDevparty.risendpNineBirth!''}"  /></td>
+   </tr > 
+  <tr class="flow_9" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNineInpartytime"  value="<#if risenDevparty.risendpNineInpartytime??>${risenDevparty.risendpNineInpartytime?string('yyyy-MM-dd')}</#if>"  /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">与入党积极分子关系:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNineRelation"  value="${risenDevparty.risendpNineRelation!''}"   /></td>
+   </tr>
+   <!-- 第十步 -->
+   <tr class="flow_10" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTenInfo"  value="${risenDevparty.risendpTenInfo!''}"  /></td>
+   </tr>
+   <!-- 第十一步 -->
+   <tr class="flow_11" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">培训时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpElevenTime" value="<#if risenDevparty.risendpElevenTime??>${risenDevparty.risendpElevenTime?string('yyyy-MM-dd')}</#if>"  /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">培训分数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpElevenScore" value="${risenDevparty.risendpElevenScore!'0'}"  /></td>
+  </tr> 
+  <tr class="flow_11" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">培训地点:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpElevenAddress"  value="${risenDevparty.risendpElevenAddress!''}"  /></td>
+   </tr>
+   <tr class="flow_11" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">培训内容:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpElevenContent!''}</textarea>
+     	</td>
+   </tr>
+   <tr class="flow_11" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpElevenInfo"  value="${risenDevparty.risendpElevenInfo!''}"  /></td>
+   </tr>
+   <!-- 第十二步 -->
+   <tr class="flow_12" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会召开时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwelveTime" value="<#if risenDevparty.risendpTwelveTime??>${risenDevparty.risendpTwelveTime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会参加人员:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwelvePer" value="${risenDevparty.risendpTwelvePer!''}"  /></td>
+  </tr> 
+  <tr class="flow_12" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会意见:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpTwelveOpinion!''}</textarea>
+     	</td>
+   </tr>
+   <tr class="flow_12" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwelveInfo"  value="${risenDevparty.risendpTwelveInfo!''}"  /></td>
+   </tr>
+   <!-- 第十三步 -->
+   <tr class="flow_13" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会召开时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpThirteenTime" value="<#if risenDevparty.risendpThirteenTime??>${risenDevparty.risendpThirteenTime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">支委会参加人员:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpThirteenPer" value="${risenDevparty.risendpThirteenPer!''}"  /></td>
+  </tr> 
+  <tr class="flow_13" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">预审意见:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpThirteenOpinion!''}</textarea>
+     	</td>
+   </tr>
+   <!-- 第十四步 -->
+    <tr class="flow_14" style="display:none;">  	
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党自愿书编号:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFourteenNo"  value="${risenDevparty.risendpFourteenNo!''}"  /></td>
+   </tr>
+   <!-- 第十五步 -->
+   <tr class="flow_15" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">召开支部大会时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFifteenTime" value="<#if risenDevparty.risendpFifteenTime??>${risenDevparty.risendpFifteenTime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">党员总数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFifteenCount" value="${risenDevparty.risendpFifteenCount!''}"  /></td>
+  </tr> 
+  <tr class="flow_15" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">应到党员数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFifteenShould" value="${risenDevparty.risendpFifteenShould!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">实到党员数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFifteenActual" value="${risenDevparty.risendpFifteenActual!''}"  /></td>
+  </tr> 
+  <tr class="flow_15" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">应到有表决权<br>党员数</>:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFifteenPoweractual" value="${risenDevparty.risendpFifteenPoweractual!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">同意票数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFifteenConsent" value="${risenDevparty.risendpFifteenConsent!''}"  /></td>
+  </tr> 
+  <tr class="flow_15" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">不同意票数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFifteenDisagree" value="${risenDevparty.risendpFifteenDisagree!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">弃权票数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFifteenDefault" value="${risenDevparty.risendpFifteenDefault!''}"  /></td>
+  </tr> 
+  <tr class="flow_15" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpFifteenInfo" value="${risenDevparty.risendpFifteenInfo!''}"   /></td>
+  </tr> 
+  <!-- 第十六步 -->
+  <tr class="flow_16" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">谈话时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSixteenTime" value="<#if risenDevparty.risendpSixteenTime??>${risenDevparty.risendpSixteenTime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">谈话人:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSixteenPerson" value="${risenDevparty.risendpSixteenPerson!''}"  /></td>
+  </tr> 
+  <tr class="flow_16" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">谈话情况:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpSixteenStatus!''}</textarea>
+     	</td>
+  </tr> 
+  <tr class="flow_16" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSixteenInfo" value="${risenDevparty.risendpSixteenInfo!''}"   /></td>
+  </tr> 
+  <!-- 第十七步 -->
+  <tr class="flow_17" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批人:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSeventeenPerson" value="${risenDevparty.risendpSeventeenPerson!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSeventeenTime" value="<#if risenDevparty.risendpSeventeenTime??>${risenDevparty.risendpSeventeenTime?string('yyyy-MM-dd')}</#if>"  /></td>
+  </tr> 
+  <tr class="flow_17" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批意见:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpSeventeenOpinion!''}</textarea>
+     	</td>
+  </tr> 
+  <tr class="flow_17" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpSeventeenInfo" value="${risenDevparty.risendpSeventeenInfo!''}"   /></td>
+  </tr> 
+  <!-- 第十八步 -->
+  <tr class="flow_18" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">工作单位:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEighteenDept" value="${risenDevparty.risendpEighteenDept!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">职务:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEighteenPost" value="${risenDevparty.risendpEighteenPost!''}"  /></td>
+  </tr> 
+  <tr class="flow_18" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党志愿书编号:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEighteenNo" value="${risenDevparty.risendpEighteenNo!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党申请时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEighteenTime" value="<#if risenDevparty.risendpEighteenTime??>${risenDevparty.risendpEighteenTime?string('yyyy-MM-dd')}</#if>"   /></td>
+  </tr> 
+  <tr class="flow_18" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">列为积极分子时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEighteenActivetime" value="<#if risenDevparty.risendpEighteenActivetime??>${risenDevparty.risendpEighteenActivetime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">预备党员接收时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEighteenInpartytime" value="<#if risenDevparty.risendpEighteenInpartytime??>${risenDevparty.risendpEighteenInpartytime?string('yyyy-MM-dd')}</#if>"  /></td>
+  </tr> 
+  <tr class="flow_18" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">确定为发展<br></>对象时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEighteenObjtime" value="<#if risenDevparty.risendpEighteenObjtime??>${risenDevparty.risendpEighteenObjtime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">是否两地公示:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEighteenNoticestatus" value="${risenDevparty.risendpEighteenNoticestatus!''}"   /></td>
+  </tr>
+  <tr class="flow_18" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpEighteenInfo" value="${risenDevparty.risendpEighteenInfo!''}"   /></td>
+  </tr>  
+  <!-- 第十九步 -->
+  <tr class="flow_19" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">编入党小组时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNineteenTime" value="<#if risenDevparty.risendpNineteenTime??>${risenDevparty.risendpNineteenTime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">编入党小组名称:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNineteenName" value="${risenDevparty.risendpNineteenName!''}"   /></td>
+  </tr>
+  <tr class="flow_19" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpNineteenInfo" value="${risenDevparty.risendpNineteenInfo!''}"   /></td>
+  </tr> 
+  <!-- 第二十步 --> 
+  <tr class="flow_20" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">入党宣誓时间:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentyTime" value="<#if risenDevparty.risendpTwentyTime??>${risenDevparty.risendpTwentyTime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	
+  </tr>
+  <tr class="flow_20" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentyInfo" value="${risenDevparty.risendpTwentyInfo!''}"   /></td>
+  </tr> 
+  <!-- 第二十一步 -->
+  <tr class="flow_21" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentyoneTime" value="<#if risenDevparty.risendpTwentyoneTime??>${risenDevparty.risendpTwentyoneTime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察人:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentyonePer" value="${risenDevparty.risendpTwentyonePer!''}"   /></td>
+  </tr>
+  <tr class="flow_21" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">考察情况:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpTwentyoneStatus!''}</textarea>
+     	</td>
+  </tr> 
+  <tr class="flow_21" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentyoneInfo" value="${risenDevparty.risendpTwentyoneInfo!''}"   /></td>
+  </tr> 
+  <!-- 第二十二步 -->
+  <tr class="flow_22" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">转正申请时间:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentytwoTime" value="<#if risenDevparty.risendpTwentytwoTime??>${risenDevparty.risendpTwentytwoTime?string('yyyy-MM-dd')}</#if>"   /></td>
+  </tr> 
+  <tr class="flow_22" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentytwoInfo" value="${risenDevparty.risendpTwentytwoInfo!''}"   /></td>
+  </tr> 
+  <!-- 第二十三步 -->
+  <tr class="flow_23" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">召开支部委员大会时间:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentythreeTime" value="<#if risenDevparty.risendpTwentythreeTime??>${risenDevparty.risendpTwentythreeTime?string('yyyy-MM-dd')}</#if>"   /></td>
+  </tr> 
+   <tr class="flow_23" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">党员总数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentythreeCount" value="${risenDevparty.risendpTwentythreeCount!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">应到正式党员数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentythreeShoult" value="${risenDevparty.risendpTwentythreeShoult!''}"   /></td>
+  </tr>
+   <tr class="flow_23" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">实到有表决权党员数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentythreePower" value="${risenDevparty.risendpTwentythreePower!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">实到正式党员数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentythreeActual" value="${risenDevparty.risendpTwentythreeActual!''}"   /></td>
+  </tr>
+   <tr class="flow_23" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">同意票数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentythreeConsent" value="${risenDevparty.risendpTwentythreeConsent!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">不同意票数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentythreeDisagree" value="${risenDevparty.risendpTwentythreeDisagree!''}"   /></td>
+  </tr>
+   <tr class="flow_23" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">弃权票数:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentythreeDefault" value="${risenDevparty.risendpTwentythreeDefault!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">党组织书记名称:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentythreeName" value="${risenDevparty.risendpTwentythreeName!''}"   /></td>
+  </tr>
+   <tr class="flow_23" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">书记签字时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentythreeMarktime" value="<#if risenDevparty.risendpTwentythreeMarktime??>${risenDevparty.risendpTwentythreeMarktime?string('yyyy-MM-dd')}</#if>"  /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">延长预备期:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentythreeLengthen" value="<#if risenDevparty.risendpTwentythreeLengthen??>${risenDevparty.risendpTwentythreeLengthen?string('yyyy-MM-dd')}</#if>"   /></td>
+  </tr>
+  <tr class="flow_23" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentytwoInfo" value="${risenDevparty.risendpTwentythreeInfo!''}"   /></td>
+  </tr>
+  <!-- 第二十四步 -->
+   <tr class="flow_24" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">党龄开始计算时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentyfourTime" value="<#if risenDevparty.risendpTwentyfourTime??>${risenDevparty.risendpTwentyfourTime?string('yyyy-MM-dd')}</#if>"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">转正支部大会时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentyfourBranch" value="<#if risenDevparty.risendpTwentyfourBranch??>${risenDevparty.risendpTwentyfourBranch?string('yyyy-MM-dd')}</#if>"   /></td>
+  </tr>
+   <tr class="flow_24" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批人:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentyfourPerson" value="${risenDevparty.risendpTwentyfourPerson!''}"   /></td>
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批时间:</td>
+     	<td colspan="1" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentyfourMarktime" value="${risenDevparty.risendpTwentyfourMarktime!''}"   /></td>
+  </tr>
+  <tr class="flow_24" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">审批意见:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpTwentyfourOpinion!''}</textarea>
+     	</td>
+  </tr>
+  <tr class="flow_24" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentyfourInfo" value="${risenDevparty.risendpTwentyfourInfo!''}"   /></td>
+  </tr>
+  <!-- 第二十五步 -->
+   <tr class="flow_25" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">材料存放地点:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent"><input type="text" readonly name="risendpTwentyfiveAddress" value="${risenDevparty.risendpTwentyfiveAddress!''}"   /></td>
+  </tr>
+  <tr class="flow_25" style="display:none;">
+    	<td width="20%" class="pn-flabel pn-flabel-h">相关资料:</td>
+     	<td colspan="3" width="30%" class="pn-fcontent">
+     		<textarea readonly>${risenDevparty.risendpTwentyfiveInfo!''}</textarea>
+     	</td>
+  </tr>
+    <tr>
+    <input type="hidden" name="risendpExpands1" value="${risenDevparty.risendpExpands1!}" /> 
+     <td colspan="2" class="pn-fbutton"> <input type="submit" value="关闭" class="submit" /> &nbsp; <input type="reset" value="重置" class="reset" /></td> 
+    </tr>
+	 </tbody>
+  </table>
+</@p.form>
+</div>
+</body>
+<script>
+$(function(){
+	var mark = "${risenDevparty.risendpExpands1}" ;
+	if(mark != "" && mark != null ){
+		mark = parseInt(mark);
+		for(var i = 0;i<mark;i++){
+			$(".flow_"+i).show();
+		}
+	}
+});
+</script>
+</html>

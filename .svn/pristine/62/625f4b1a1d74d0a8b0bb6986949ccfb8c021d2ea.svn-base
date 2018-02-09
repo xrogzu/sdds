@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function() {
+ 	initUeditors();
+	$("#jvForm").validate();
+});
+/**
+*初始化富文本编辑器
+*/
+function initUeditors(){
+	//初始化 ueditor 自定义需要的按钮
+	  var ue = UE.getEditor('editor', {
+	  	    toolbars: [['undo', 
+				  	    'redo', 
+				  	    'bold', 
+				  	    'italic', 
+				  	    'underline', 
+				  	    'strikethrough', 
+				  	    'cleardoc', 
+				  	    'fontfamily', 
+				  	    'fontsize', 
+				  	    'emotion', 
+				  	    'searchreplace', 
+				  	    'justifyleft', 
+				        'justifyright', 
+				        'justifycenter', 
+				        'justifyjustify', 
+				        'forecolor', 
+				        'backcolor', 
+				        'touppercase', 
+       					 'tolowercase', ]],
+       					 autoWidthEnabled: false,
+	  	        autoHeightEnabled: true,    
+	  	        autoFloatEnabled: true});
+}
+</script>
+
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: <@s.m "risenConfirmobject.function"/> - <@s.m "global.add"/></div>
+	<form class="ropt">
+		<input class="return-button" type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_save.do">
+<@p.text label="risenConfirmobject.risencoName" colspan="1" width="50" name="risencoName" required="true" class="required" maxlength="100"/>
+<@p.text label="risenConfirmobject.risencoIdcard" colspan="1" width="50" name="risencoIdcard" required="true" class="required" maxlength="100"/><@p.tr/>
+<!-- <@p.text label="risenConfirmobject.risencoOrgid" colspan="1" width="50" name="risencoOrgid" required="true" class="required" maxlength="100"/><@p.tr/>-->
+<@p.text label="risenConfirmobject.risencoOrgname" colspan="1" width="50" name="risencoOrgname" required="true" class="required" maxlength="100"/>
+<@p.text label="risenConfirmobject.risencoConfirmdate" colspan="1" width="50" name="risencoConfirmdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.td colspan="2" label="risenConfirmobject.risenComment" ><script id="editor"  name="risenComment" type="text/plain" style="width:60%;margin:0 auto;"></script></@p.td><@p.tr/>
+<@p.td colspan="2" ><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td><@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

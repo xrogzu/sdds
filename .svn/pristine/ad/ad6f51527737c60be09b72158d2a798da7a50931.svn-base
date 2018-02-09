@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<link href="${base}/res/common/css/jquery.flot.css" rel="stylesheet" type="text/css"/>
+<!--[if lte IE 8]><![endif]-->
+<script src="${base}/res/common/js/excanvas.min.js" type="text/javascript" ></script>
+<script src="${base}/res/common/js/jquery.flot.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.time.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.categories.min.js" type="text/javascript"></script>
+<script src="${base}/thirdparty/echarts/echarts.js" type="text/javascript" ></script>
+<style>
+	.province{float:left;width:60px;height:30px;font-size:16px;border:1px solid #DCF0FF;margin-left:5px;text-align:center;line-height:30px;}
+</style>
+<script class="code" type="text/javascript">
+	
+	$(function() {
+		var myChart_thisYearAdd = echarts.init(document.getElementById('tab_thisYearAdd'));
+		var myChart_thisYearDecrease = echarts.init(document.getElementById('tab_thisYearDecrease'));
+		
+		option_thisYearAdd = {
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    color:['#8fc31f','#f35833'],
+		    legend: {
+		        orient: 'vertical',
+		        x: 'left',
+		        <#if deptType??>
+		        	<#if deptType==1 || deptType==2>
+		        	 	data: ['发展党员','外区/县转入'],
+		        	<#elseif deptType==3>
+		        		data: ['发展党员','外市转入'],
+		        	<#elseif deptType==4>
+		        		data: ['发展党员','全省地税系统外转入'],
+		        	<#else>
+		        		data: ['发展党员','转入'],
+		        	</#if>
+		        <#else>
+		        	data: ['发展党员','转入'],
+		        </#if>
+		        formatter:function(name){
+		        	var oa = option_thisYearAdd.series[0].data;
+		        	var num = oa[0].value + oa[1].value;
+		        	for(var i = 0; i < option_thisYearAdd.series[0].data.length; i++){
+	                    if(name==oa[i].name){
+	                    	var bai = (oa[i].value/num * 100).toFixed(2);
+	                    	if(bai == "NaN"){
+	                    		bai = "0"
+	                    	}
+	                    	return  name + '     ' + oa[i].value + '     ' + bai + '%';
+	                    }
+		        	}
+		        }
+		    },
+		    toolbox: {
+		        show : true,
+		        feature : {
+		            mark : {show: true},
+		            dataView : {show: true, readOnly: false},
+		            magicType : {
+		                show: true, 
+		                type: ['pie', 'funnel'],
+		                option: {
+		                    funnel: {
+		                        x: '25%',
+		                        width: '50%',
+		                        funnelAlign: 'left',
+		                        max: 1548
+		                    }
+		                }
+		            },
+		            restore : {show: false},
+		            saveAsImage : {show: true}
+		        }
+		    },
+		    series : [
+		        {
+		            name: '上年底党员总数分析',
+		            type: 'pie',
+		            radius : '55%',
+		            center: ['50%', '50%'],
+		            data:[
+		            	<#if thisYearAddList_fazhan??>
+							<#list thisYearAddList_fazhan as fazhan>
+								{value:${fazhan!}, name:'发展党员'},
+							</#list>
+						<#else>
+							{value:0, name:'发展党员'},
+						</#if>
+						<#if thisYearAddList_zhuanru??>
+							
+								 <#if deptType??>
+						        	<#if deptType==1 || deptType==2>
+						        	 	{value:${thisYearAddList_zhuanru!'0'},name:'外区/县转入'}
+						        	<#elseif deptType==3>
+						        		{value:${thisYearAddList_zhuanru!'0'},name:'外市转入'}
+						        	<#elseif deptType==4>
+						        		{value:${thisYearAddList_zhuanru!'0'},name:'全省地税系统外转入'}
+						        	<#else>
+						        		{value:${thisYearAddList_zhuanru!'0'},name:'转入'}
+						        	</#if>
+						        <#else>
+						        	{value:${thisYearAddList_zhuanru!},name:'转入'}
+						        </#if>
+							
+						<#else>
+							<#if deptType??>
+					        	<#if deptType==1 || deptType==2>
+					        	 	{value:0, name:'外区/县转入'}
+					        	<#elseif deptType==3>
+					        		{value:0, name:'外市转入'}
+					        	<#elseif deptType==4>
+					        		{value:0, name:'全省地税系统外转入'}
+					        	<#else>
+					        		{value:0, name:'转入'}
+					        	</#if>
+					        <#else>
+					        	{value:0, name:'转入'}
+					        </#if>
+						</#if>
+		            ],
+		            itemStyle: {
+		                emphasis: {
+		                    shadowBlur: 10,
+		                    shadowOffsetX: 0,
+		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                }
+		            },
+		            itemStyle: {
+		                normal: {
+		                    label:{ 
+	                            show: true, 
+	//	                            position:'inside',
+	                            formatter: '{b} : {c} ({d}%)' 
+	                        }
+		                },
+	                    labelLine :{show:true}
+		            }
+		        }
+		    ]
+		};
+		
+		option_thisYearDecrease = {
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    color:['#8fc31f','#f35833','#00ccff','#ffcc00','#d40380','#04e8d3','#ddf706','#f59942','#01f97b'],
+		    legend: {
+		        orient: 'vertical',
+		        x: 'left',
+		        <#if deptType??>
+		        	<#if deptType==1 || deptType==2>
+			        	data: ['出党','停止党籍','死亡','转出外区/县'],
+			        <#elseif deptType==3>
+			        	data: ['出党','停止党籍','死亡','转出外市'],
+			        <#elseif deptType==4>
+			        	data: ['出党','停止党籍','死亡','转出全省地税系统'],
+			        <#else>
+			        	data: ['出党','停止党籍','死亡','转出'],
+			        </#if>
+			    <#else>
+			    	data: ['出党','停止党籍','死亡','转出'],
+		        </#if>
+		        formatter:function(name){
+		        	var oa = option_thisYearDecrease.series[0].data;
+		        	var num = oa[0].value + oa[1].value + oa[2].value + oa[3].value;
+		        	for(var i = 0; i < option_thisYearDecrease.series[0].data.length; i++){
+	                    if(name==oa[i].name){
+	                    	var bai = (oa[i].value/num * 100).toFixed(2);
+	                    	if(bai == "NaN"){
+	                    		bai = "0"
+	                    	}
+	                    	return  name + '     ' + oa[i].value + '     ' + bai + '%';
+	                    }
+		        	}
+		        }
+		    },
+		    toolbox: {
+		        show : true,
+		        feature : {
+		            mark : {show: true},
+		            dataView : {show: true, readOnly: false},
+		            magicType : {
+		                show: true, 
+		                type: ['pie', 'funnel'],
+		                option: {
+		                    funnel: {
+		                        x: '25%',
+		                        width: '50%',
+		                        funnelAlign: 'left',
+		                        max: 1548
+		                    }
+		                }
+		            },
+		            restore : {show: false},
+		            saveAsImage : {show: true}
+		        }
+		    },
+		    series : [
+		        {
+		            name: '上年底党员总数分析',
+		            type: 'pie',
+		            radius : '55%',
+		            center: ['60%', '50%'],
+		            data:[
+		            	{value:${outParty!'0'}, name:'出党'},
+		                {value:${stopParty!'0'}, name:'停止党籍'},
+		                {value:${deathParty!'0'}, name:'死亡'},
+		            	<#if thisYearDecreaseList??>
+							<#list thisYearDecreaseList as s>
+								<#if deptType??>
+									<#if deptType==1 || deptType==2>
+							        	{value:parseInt(${s!})-(parseInt(${outParty!'0'})+parseInt(${stopParty!'0'})+parseInt(${deathParty!'0'})),name:'转出外区/县'}
+							        <#elseif deptType==3>
+							        	{value:parseInt(${s!})-(parseInt(${outParty!'0'})+parseInt(${stopParty!'0'})+parseInt(${deathParty!'0'})),name:'转出外市'}
+							        <#elseif deptType==4>
+							        	{value:parseInt(${s!})-(parseInt(${outParty!'0'})+parseInt(${stopParty!'0'})+parseInt(${deathParty!'0'})),name:'转出全省地税系统'}
+							        <#else>
+							        	{value:parseInt(${s!})-(parseInt(${outParty!'0'})+parseInt(${stopParty!'0'})+parseInt(${deathParty!'0'})),name:'转出'}
+							        </#if>
+							    <#else>
+							    	{value:parseInt(${s!})-(parseInt(${outParty!'0'})+parseInt(${stopParty!'0'})+parseInt(${deathParty!'0'})),name:'转出'}
+						        </#if>
+							</#list>
+						<#else>
+							<#if deptType??>
+								<#if deptType==1 || deptType==2>
+						        	{value:0, name:'转出外区/县'}
+						        <#elseif deptType==3>
+						        	{value:0, name:'转出外市'}
+						        <#elseif deptType==4>
+						        	{value:0, name:'转出全省地税系统'}
+						        <#else>
+						        	{value:0, name:'转出'}
+						        </#if>
+						    <#else>
+						    	{value:0, name:'转出'}
+					        </#if>
+						</#if>
+		            ],
+		            itemStyle: {
+		                emphasis: {
+		                    shadowBlur: 10,
+		                    shadowOffsetX: 0,
+		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                }
+		            },
+		            itemStyle: {
+		                normal: {
+		                    label:{ 
+	                            show: true, 
+	//	                            position:'inside',
+	                            formatter: '{b} : {c} ({d}%)' 
+	                        }
+		                },
+	                    labelLine :{show:true}
+		            }
+		        }
+		    ]
+		};
+		
+		myChart_thisYearAdd.setOption(option_thisYearAdd);
+		myChart_thisYearDecrease.setOption(option_thisYearDecrease);
+	});	
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: <@s.m "cms.function.statistic"/> > 党员变化情况分析</div>
+</div>
+<#if isTop=="Yes">
+	<div style="float:left;margin-left:35px;margin-top:10px;margin-bottom:10px;">
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=1">省局</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=25">济南</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=26">青岛</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=42">淄博</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=43">枣庄</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=44">东营</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=45">烟台</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=46">潍坊</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=47">济宁</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=48">泰安</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=49">威海</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=50">日照</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=67">莱芜</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=65">临沂</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=63">德州</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=64">聊城</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=62">滨州</a></div>
+		<div class="province"><a href="v_list.do?queryModel=thisYearAdd&deptId=66">菏泽</a></div>
+	</div>
+</#if>
+<div class="statistic">
+  <div class="five">
+    <div class="item" style="margin-left:0;">
+      <p class="eng">LAST YEAR</p>
+      <p class="coun timer" data-to="${lastYearCount!}" data-speed="1000"></p>
+      <p class="chi">上年底总数</p>
+    </div>
+    <div class="item">
+      <p class="eng">INCREASE IN THIS YEAR</p>
+      <p class="coun timer" data-to="${thisYearAddCount!}" data-speed="1000"></p>
+      <p class="chi">本年内增加</p>
+    </div>
+    <div class="item">
+      <p class="eng">DECREASE IN THIS YEAR</p>
+      <p class="coun timer" data-to="${thisYearDecreaseCount!}" data-speed="1000"></p>
+      <p class="chi">本年内减少</p>
+    </div>
+    <div class="item">
+      <p class="eng">END OF THE YEAR</p>
+      <p class="coun timer" data-to="${endOfTheYearCount!}" data-speed="1000"></p>
+      <p class="chi">本年底应有数</p>
+    </div>
+    <div class="item">
+      <p class="eng">AT THE END OF THE YEAR</p>
+      <p class="coun timer" data-to="${atTheEndOfTheYearCount!}" data-speed="1000"></p>
+      <p class="chi">本年底实有数</p>
+    </div>
+    <div class="item">
+      <p class="eng">DIFFER</p>
+      <p class="coun timer" data-to="${differCount!}" data-speed="1000"></p>
+      <p class="chi">实有数与应有数之差</p>
+    </div>
+    <script src="${base}/res/jeecms/js/index.js" type="text/javascript"></script>
+  </div>
+  <div class="sta-tab">
+    <div class="sta-tab-nav">
+    	<a style="width:73px;" <#if statisticModel=="thisYearAdd">class="member on"<#else>class="member"</#if>class="month on" target="rightFrame" href="v_list.do?queryModel=thisYearAdd" ><span style="width:73px;"></span><@s.m "statistic.report.thisYearAdd"/></a>
+    	<a style="width:73px;" <#if statisticModel=="thisYearDecrease">class="member on"<#else>class="member"</#if>class="year" target="rightFrame" href="v_list.do?queryModel=thisYearDecrease" ><span style="width:73px;"></span><@s.m "statistic.report.thisYearDecrease"/></a>
+    	<!-- <a <#if statisticModel=="thisYearEnd">class="thisYearEnd on"<#else>class="thisYearEnd"</#if>class="total" target="rightFrame" href="v_list.do?queryModel=thisYearEnd"><span></span><@s.m "statistic.report.thisYearEnd"/></a>  -->
+    </div>
+    <div class="tab-con">
+      <!-- <div class="tab-con-top">
+	      <#if statisticModel=="section">
+	       <form action="v_list.do" target="rightFrame" >
+	      	<input name="begin" value="${begin!?string('yyyy-MM-dd')}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" style="width:100px; margin-right:8px;"/>
+	        <input name="end" value="${end!?string('yyyy-MM-dd')}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="Wdate" style="width:100px; margin-right:8px;"/>
+	        <input name="queryModel" value="section" type="hidden"/>
+	        <input type="submit" class="query" value="<@s.m 'global.query'/>" style="background-color:#3dc6ed;">
+	       </form>
+	      </#if>
+	      <a class="change-tab txt"><@s.m 'statistic.display.table'/></a>
+      </div> -->
+     
+      
+      <div class="tab-main" style="height:445px;">
+        <div>
+			<div id="tab_thisYearAdd" style="float:left; width:99%;height:444px;"></div>
+			<div id="tab_thisYearDecrease" style="float:left; width:99%;height:444px;"></div>
+		</div>
+      </div>
+      <script type="text/javascript">
+		$(document).ready(function () {
+          $(".change-tab").click(function(){
+			if($(this).text() == "<@s.m 'statistic.display.table'/>"){
+			  $(this).text("<@s.m 'statistic.display.img'/>");
+			  $(this).removeClass('txt');
+		      $(this).addClass('img');
+		      $(".tab-main").hide();
+		      $(".tab-pic-main").show();
+			}else{
+			  $(this).text("<@s.m 'statistic.display.table'/>");
+			  $(this).removeClass('img');
+			  $(this).addClass('txt'); 
+			  $(".tab-main").show();
+		      $(".tab-pic-main").hide();
+			 }
+		  })
+		  
+		  var statisticModel = '${statisticModel!}';
+		  if(statisticModel=="thisYearAdd"){
+		  	$("#tab_thisYearAdd").show();
+		  	$("#tab_lastYear").hide();
+		  	$("#tab_thisYearDecrease").hide();
+		  }else if(statisticModel=="thisYearDecrease"){
+		  	$("#tab_thisYearAdd").hide();
+		  	$("#tab_lastYear").hide();
+		  	$("#tab_thisYearDecrease").show();
+		  }
+		});
+	  </script>
+    </div>
+  </div>
+</div>
+</body>
+</html>

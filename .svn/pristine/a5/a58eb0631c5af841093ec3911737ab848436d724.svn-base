@@ -1,0 +1,30 @@
+<#if isRoot>
+[{
+	"text": "<input type='radio' name='departId'  value=''/>省局党组党建工作指导组</a>",
+	"classes": ""
+	<#if list?size gt 0>,
+	"expanded": true,
+	"children": [
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<input type='radio' name='departId'  value='${depart.id}'/><span>${depart.name}</span> ",
+		"classes": "",
+		"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+	</#if>
+}]
+<#else>
+	[
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<input type='radio' name='departId' value='${depart.id}'/><span>${depart.name}</span>",
+		"classes": "",
+		"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+</#if>

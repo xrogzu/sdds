@@ -1,0 +1,28 @@
+<#if isRoot>
+[{
+					"text": "<a href='../member/getListByDepartId.do?departId=${parentdepart.id!}&sddscpIsinjob=${parentdepart.sddscpIsinjob!}&sddscpChanges=${parentdepart.sddscpChanges!}&sddscpAssess=${parentdepart.sddscpAssess!}&sddscpAll=${sddscpAll!}' target='rightFrame2'>${parentdepart.name!}</a>",
+					"classes": "folder",
+					"expanded": false,
+					"children": [
+						<#list list as depart>
+							{
+							"id": "${depart.id}",
+							"text": "<a href='../member/getListByDepartId.do?departId=${depart.id!}&sddscpIsinjob=${parentdepart.sddscpIsinjob!}&sddscpChanges=${parentdepart.sddscpChanges!}&sddscpAssess=${parentdepart.sddscpAssess!}&sddscpAll=${sddscpAll!}' target='rightFrame2'>${depart.name}</a>",
+							"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+							"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+							}<#if depart_has_next>,</#if>
+						</#list>
+						]
+					}]
+<#else>
+	[
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<a href='../member/getListByDepartId.do?departId=${depart.id!}&sddscpIsinjob=${parentdepart.sddscpIsinjob!}&sddscpChanges=${parentdepart.sddscpChanges!}&sddscpAssess=${parentdepart.sddscpAssess!}&sddscpAll=${sddscpAll!}' target='rightFrame2'>${depart.name}</a>",
+		"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+		"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+</#if>

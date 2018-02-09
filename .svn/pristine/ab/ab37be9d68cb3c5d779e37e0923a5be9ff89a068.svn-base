@@ -1,0 +1,309 @@
+<script>
+    	function sitesnav(pid){
+    		$.ajax({  
+		         type : "post",  
+		          url : "${base}/getSites.jspx?pid="+pid,  
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			        $("#sr_dj").html("");
+			        if(data.length>0){
+			        	for(var i=0;i<data.length;i++){
+			          		$("#sr_dj").append("<a target='_blank' title="+data[i].name+" href='javascript:sitesnav2("+data[i].id+")'>"+data[i].name+"</a>");
+			        	}
+			        }
+		          }
+		     });
+    	}
+    	function sitesnav2(pid){
+    		$.ajax({  
+		         type : "post",  
+		          url : "${base}/getChannelPaths.jspx?departId="+pid,
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			        $("#go2").attr("href","#");
+			        if(data!=null && data!=""){
+			        	$("#go2").attr("href","${base}/jnds/"+data+"/index.jhtml");
+			        	$("#go2").attr("target","_blank");
+			        }else{
+			        	$("#go2").attr("href","#");
+			        }
+			        $.ajax({  
+				         type : "post",  
+				          url : "${base}/getSites.jspx?pid="+pid,  
+				          data : {},
+				          dataType : "json" , 
+				          success : function(data){
+					        $("#jd").html("");
+					        if(data.length>0){
+					        	$(".neir").css({"display":"none"});
+					        	$(".jied").show();
+					        	for(var i=0;i<data.length;i++){
+					        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+					          			$("#jd").append("<a target='_blank' href='${base}/jnds/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+					          		}else{
+					          			$("#jd").append("<a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+					          		}
+					        	}
+					        }
+				          }
+				     });
+				     }
+		     });
+    	}
+    	
+    	function findJgdw(pid){
+    		 $.ajax({  
+		         type : "post",  
+		          url : "${base}/getSites.jspx?pid="+pid,  
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			        $("#jgdw").html("");
+			        if(data.length>0){
+			        	for(var i=0;i<data.length;i++){
+			        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+			          			if(data[i].name!="省局机关党委"){
+			          				$("#jgdw").append("<a target='_blank' href='${base}/jnds/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+			          			}
+			          		}else{
+			          			$("#jgdw").append("<a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+			          		}
+			        	}
+			        }
+		          }
+		     });
+    	}
+    	
+    </script>
+</head>
+<body>
+<div class="coen" id="container">
+<div class="content">
+<div class="shdh">
+          <a href="javascript:;" class="shei"><img src="${base}/r/cms/www/risen/images/zh_dh.png" alt=""></a>
+          <div class="shnr">
+          <div class="shelf">
+               <img id="jens"  src="${base}/r/cms/www/risen/images/zh_map.png" width="570" height="360" usemap="#Map">
+<map name="Map">
+  <area shape="poly" coords="9,279,43,297,62,322,57,325,90,327,107,322,112,314,107,306,97,300,97,279,104,268,104,257,96,248,96,233,87,228,79,224,69,226" href="javascript:sitesnav(66)" title="菏泽" class="mac" onfocus="blur(this);">
+  <area shape="poly" coords="53,212,70,200,85,194,101,187,120,176,124,171,130,168,122,153,121,135,124,125,118,119,112,126,99,126,87,125,85,123,75,132,66,131,63,135,58,139,55,144" href="javascript:sitesnav(64)" title="聊城" class="mac" onfocus="blur(this);">
+  <area shape="poly" coords="92,205,85,211,100,225,109,243,116,258,111,276,108,290,108,294,115,299,130,297,142,296,154,298,167,313,178,333,178,337,181,332,181,327,181,321,151,278,155,273,163,272,172,267,179,267,194,260,194,251,198,239,195,233,166,229,154,235,142,233,135,228,134,218,120,225" href="javascript:sitesnav(47)" title="济宁" class="mac" onfocus="blur(this);">
+  <area shape="poly" coords="166,279,178,276,187,272,193,271,200,279,206,291,209,303,214,316,217,320,218,324,218,327,214,331,213,337,205,340,198,341,195,338,189,323,181,315,175,306,168,288,161,284" href="javascript:sitesnav(43)" title="枣庄" class="mac" onfocus="blur(this);">
+  <area shape="poly" coords="213,236,228,228,237,221,256,219,267,216,279,217,279,204,285,201,297,198,291,208,285,216,285,229,287,246,281,250,276,256,283,264,294,267,304,268,314,273,314,280,314,286,296,288,288,297,291,296,288,306,285,315,282,320,270,319,264,333,258,342,257,349,248,344,243,327,234,324,225,321,224,312,216,303,218,284,210,281,207,270,206,263,203,255,203,248" href="javascript:sitesnav(65)" class="mac" title="临沂" onfocus="blur(this);">
+  <area shape="poly" coords="105,196,117,205,130,203,136,197,136,188,145,184,154,182,165,186,180,182,183,176,189,172,193,189,195,195,202,200,208,204,214,210,223,210,231,212,227,219,222,219,216,227,213,228,204,230,200,224,195,223,186,223,182,223,174,220,165,220,156,222,152,228,149,228,146,224,141,220,142,211,140,206,132,209,128,212,123,213,114,213,104,212,102,206,102,203,103,197" href="javascript:sitesnav(48)" class="mac" title="泰安" onfocus="blur(this);">
+  <area shape="poly" coords="290,258,297,244,298,227,293,223,294,214,300,208,306,203,307,212,316,215,321,225,330,228,337,239,342,242,343,246,346,255,339,263,335,270,333,276,333,284,330,287,326,283,326,271,320,265,314,262,305,262,297,260" href="javascript:sitesnav(50)" title="日照" class="mac" onfocus="blur(this);">
+  <area shape="poly" coords="348,233,358,226,360,218,360,211,360,200,364,191,373,187,376,173,381,163,372,154,357,152,350,143,348,136,352,121,369,122,381,118,388,118,397,116,403,112,408,112,415,120,414,134,415,141,421,152,424,158,427,158,438,158,441,161,429,163,422,164,423,171,423,182,423,192,410,194,404,194,403,182,401,179,395,179,386,185,380,194,387,198,388,207,381,218,372,227,366,233,356,239,351,242" href="javascript:sitesnav(26)" title="青岛" class="mac" onfocus="blur(this);">
+  <area shape="poly" coords="345,223,351,214,351,202,352,188,363,187,372,169,363,161,348,158,342,148,342,137,342,124,345,116,341,112,327,113,318,113,314,110,306,104,297,101,296,97,290,101,284,110,282,116,278,123,275,128,270,137,261,149,255,156,254,165,261,174,262,189,273,195,279,188,288,189,292,189,300,192,301,198,312,198,315,203" href="javascript:sitesnav(46)" class="mac" title="潍坊" onfocus="blur(this);">
+  <area shape="poly" coords="195,170,207,166,214,163,219,171,225,177,228,188,227,194,221,195,219,201,213,201,209,200,204,194,203,190,197,181,195,178,195,175" href="javascript:sitesnav(67)" title="莱芜" class="mac" onfocus="blur(this);">
+  <area shape="poly" coords="270,210,265,198,257,187,255,179,249,169,243,155,247,148,252,138,259,136,267,128,264,125,257,125,245,119,242,109,242,104,242,98,231,94,218,99,213,104,226,108,234,116,237,129,231,134,228,138,227,147,224,156,219,156,228,165,231,171,231,185,231,197,231,208" href="javascript:sitesnav(42)" title="淄博" class="mac" onfocus="blur(this);">
+  <area shape="poly" coords="115,196,117,185,129,176,142,169,150,157,156,145,168,133,168,122,174,110,175,91,175,83,180,76,187,71,195,81,194,89,193,104,189,111,192,119,195,122,201,123,205,128,210,137,211,143,213,149,212,155,206,164,200,165,189,164,180,168,179,174,170,180,159,178,152,178,149,178,143,178,113,183,129,194,129,181" class="mac" href="javascript:sitesnav(25)" title="济南" onfocus="blur(this);">
+  <area shape="poly" coords="87,113,96,105,97,94,103,89,114,83,122,76,120,68,127,77,135,73,142,61,153,53,157,46,163,46,171,44,183,45,195,43,208,38,203,52,200,51,194,53,187,60,188,69,177,71,170,78,166,90,171,102,162,111,162,122,158,132,153,138,146,146,140,153,135,163,128,149,125,137,129,134,129,119,128,112,120,110,114,110,98,111,105,122,95,119,112,112" class="mac" href="javascript:sitesnav(63)" title="德州" onfocus="blur(this);">
+  <area shape="poly" coords="217,140,224,136,225,130,228,124,224,116,216,115,207,110,209,95,216,85,222,85,226,87,237,87,246,87,247,99,250,111,253,117,255,109,262,104,261,91,252,89,245,77,243,74,249,61,255,52,258,46,254,40,246,39,240,47,230,47,235,32,235,25,228,14,219,24,215,26,210,36,216,48,210,56,196,60,198,63,198,77,195,86,196,102,202,110,201,121" href="javascript:sitesnav(62)" class="mac" title="滨州" onfocus="blur(this);">
+  <area shape="poly" coords="270,119,280,107,287,94,296,85,298,74,301,68,304,56,310,44,305,35,295,25,293,19,285,19,284,29,273,35,269,32,260,25,258,29,264,42,258,65,252,67,252,75" href="javascript:sitesnav(44)" title="东营" class="mac" onfocus="blur(this);">
+  <area shape="poly" coords="355,116,376,117,391,110,405,102,421,107,424,120,424,138,426,147,430,150,441,146,448,146,457,142,460,139,465,139,468,139,474,137,471,127,462,125,459,118,456,112,459,103,465,100,478,100,487,100,496,94,505,86,511,79,495,77,479,77,470,73,455,64,443,56,441,49,434,43,404,47,372,87" href="javascript:sitesnav(45)" title="烟台" class="mac" onfocus="blur(this);">
+  <area shape="poly" coords="461,117,468,104,489,105,508,105,506,97,509,85,517,70,526,71,538,80,547,79,556,80,556,89,551,96,548,98,543,102,549,114,540,118,531,107,524,114,504,116,501,125,488,132" href="javascript:sitesnav(49)" title="威海" class="mac" onfocus="blur(this);">
+</map>
+      </div>
+      <div class="neir">
+           <div class="sh_dw">
+               <a href="javascript:;" id="gub">×</a>
+               <div class="ne_sp"><span></span><a id="go1" href="${base}/jnds/index.jhtml">点击进入</a></div>
+               <div class="ne_sr" id="sr_dj">               
+               </div>
+           </div>
+      </div>
+     
+      <div class="jied">
+           <div class="sh_dw">
+               <a href="javascript:;" id="gub1">×</a>
+               <div class="ne_sp"><span></span><a id="go2" href="javascript:;">点击进入</a></div>
+               <div class="ne_sr" id="jd">              
+               </div>
+           </div>
+      </div>  
+          
+      <div class="sheri">
+               <!--<div class="sh_tit">山东省地税党建站群</div>
+               <div class="sh_tr">
+                    <a href="${base}/jnds/index.jhtml">济南市局</a>
+                    <a href="#">青岛市局</a>
+                    <a href="#">淄博市局</a>
+                    <a href="#">枣庄市局</a>
+                    <a href="#">东营市局</a>
+                    <a href="#">烟台市局</a>
+                    <a href="#">潍坊市局</a>
+                    <a href="#">济宁市局</a>
+                    <a href="#">泰安市局</a>
+                    <a href="#">威海市局</a>
+                    <a href="#">日照市局</a>
+                    <a href="#">莱芜市局</a>
+                    <a href="#">临沂市局</a>
+                    <a href="#">德州市局</a>
+                    <a href="#">聊城市局</a>
+                    <a href="#">滨州市局</a>
+                    <a href="#">菏泽市局</a>
+               </div>
+      -->  
+               <div class="sh_tit"><a href="javascript:;">系统</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="javascript:findJgdw(1);">机关</a></div>
+               <div class="sh_tr">
+                    <a href="${base}/jnds/index.jhtml">济南市局</a>
+                    <a href="#">青岛市局</a>
+                    <a href="#">淄博市局</a>
+                    <a href="#">枣庄市局</a>
+                    <a href="#">东营市局</a>
+                    <a href="#">烟台市局</a>
+                    <a href="#">潍坊市局</a>
+                    <a href="#">济宁市局</a>
+                    <a href="#">泰安市局</a>
+                    <a href="#">威海市局</a>
+                    <a href="#">日照市局</a>
+                    <a href="#">莱芜市局</a>
+                    <a href="#">临沂市局</a>
+                    <a href="#">德州市局</a>
+                    <a href="#">聊城市局</a>
+                    <a href="#">滨州市局</a>
+                    <a href="#">菏泽市局</a>
+               </div>
+               <div class="sh_tr" style="display:none;" id="jgdw">
+               </div>  
+           </div>   
+           
+                             
+   </div>
+</div>
+     <script>
+        $(function(){
+        	$(".sh_tit a").click(function(){
+                var index = $(".sh_tit a").index(this);
+                $(".sh_tr").hide();
+                $(".sh_tr").eq(index).show(0);
+            }); 
+            $(".shei").click(function(){
+                 var hei = $(".shnr").height();
+                 if(hei == 0){
+                    $(".shnr").animate({height:'390px',right:'10px'});
+                 }else{
+                    $(".shnr").animate({height:'0px',right:'-1270px'});
+                 };                 
+            });
+            var shr = $(".sh_tr a");
+            for(var i=0; i<shr.length; i++){
+                $(".sh_tr a:eq("+i+")").addClass("son"+i);
+            };
+            $("#gub").click(function(){
+                $(".neir").hide();
+            });
+            $("#gub1").click(function(){
+                $(".jied").hide();
+            });
+            $("#sr_dj a").click(function(){
+                 $(".neir").fadeOut();
+                 $(".jied").fadeIn();
+            });
+            $(".mac").click(function(){
+                var tle = $(this).attr("title");
+                var csa = $(".sh_tr a").attr("title");
+                $(".neir").fadeOut();
+                $(".neir").fadeIn();
+                $(".jied").fadeOut();
+                $(".neir .ne_sp span").text(tle)
+                switch(tle)
+                    {
+                    case '菏泽':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map1.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son16").addClass("son");
+                      break;
+                    case '聊城':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map7.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son14").addClass("son");
+                      break;
+                    case '济宁':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map4.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son7").addClass("son");
+                      break;
+                    case '枣庄':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map17.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son3").addClass("son");
+                      break;
+                    case '临沂':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map3.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son12").addClass("son");
+                      break;
+                    case '泰安':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map5.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son8").addClass("son");
+                      break;
+                    case '日照':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map2.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son10").addClass("son");
+                      break;
+                    case '青岛':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map14.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son1").addClass("son");
+                      break;
+                    case '潍坊':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map13.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son6").addClass("son");
+                      break;
+                    case '莱芜':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map6.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son11").addClass("son");
+                      break;
+                    case '淄博':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map10.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son2").addClass("son");
+                      break;
+                    case '济南':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map9.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son0").addClass("son");
+                      break;
+                    case '德州':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map8.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son13").addClass("son");
+                      break;
+                    case '滨州':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map11.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son15").addClass("son");
+                      break;
+                    case '东营':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map12.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son4").addClass("son");
+                      break;
+                    case '烟台':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map15.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son5").addClass("son");
+                      break;
+                    case '威海':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/zh_map16.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son9").addClass("son");
+                      break;
+                    default:
+                    }
+            });
+            $("#sr_dj a").live("click",function(){
+                var tle = $(this).attr("title");
+            	$(".jied .ne_sp span").text(tle)
+			});
+        });
+         
+       
+     </script>

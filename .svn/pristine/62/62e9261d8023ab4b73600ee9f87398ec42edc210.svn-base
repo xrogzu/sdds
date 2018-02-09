@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<style type="text/css">
+ #searchresult
+ {
+  width: 141px;
+  position: absolute;
+  z-index: 1;
+  overflow: hidden;
+  left: 750px;
+  top: 71px;
+  background: #F7F7F7;
+  border-top: none;
+ }
+ .line
+ {
+  font-size: 12px;
+  background: #F7F7F7;
+  width: 141px;
+  
+ }
+ .hover
+ {
+  background: #D5D5D5;
+  width: 141px;
+  color: #fff;
+ }
+ .std
+ {
+  width: 141px;
+ }
+</style>
+<script type="text/javascript">
+	function getFilePath(orgid){
+		$.ajax({  
+	         type : "post",  
+	         url : "/admin/getFilePath.do?orgid="+orgid,  
+	         data : {},
+	         dataType : "json" , 
+	         success : function(data){
+		       window.open("http://"+document.location.host+data);
+		   	 }
+    	})
+	}
+</script>
+
+</head>
+<body>
+<div class="page-positon ove">
+	<div class="position-div"><@s.m "global.position"/>: 规范化党支部 - <@s.m "global.list"/></div>
+</div>
+<div class="body-box">
+<#include "wenku_upload.html"/>
+<div class=" ck">
+	<input type="submit" value="<@s.m "global.backToList"/>" onclick="javascript:history.go(-1);" class="return-button"/>
+	<div class="clear"></div>
+</div>
+<div style="padding-top:5px; padding-bottom:5px; text-indent:10px; border-bottom:1px solid #fff; border-top:1px solid #fff;">
+<form action="changeRemind_list.do" method="post">
+支部名称: <input type="text" name="departName" value="" style="width:100px"/>
+<input class="query" type="submit" value="查找"/>
+</form>
+</div>
+
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<@p.table value=list;dp,i,has_next><#rt/>
+	<@p.column code="机构名称" align="center">${dp.name!}</@p.column><#t/>
+	<@p.column code="确认换届日期" align="center">${(dp.sddspoChangecdate?string('yyyy-MM-dd'))!}</@p.column><#t/>
+	<@p.column code="操作" align="center"><a href="javascript:getFilePath(${dp.id!})">下载附件</a></@p.column><#t/>
+</@p.table>
+</div>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

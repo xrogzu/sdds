@@ -1,0 +1,19 @@
+package com.risen.service;
+
+import com.jeecms.common.page.Pagination;
+import com.risen.entity.RisenDevparty;
+
+public interface RisenDevpartyMng {
+	public Pagination getPage(int pageNo, int pageSize);
+
+	public RisenDevparty findById(Integer id);
+
+	public RisenDevparty save(RisenDevparty bean);
+
+	public RisenDevparty update(RisenDevparty bean);
+
+	public RisenDevparty deleteById(Integer id);
+	
+	public RisenDevparty[] deleteByIds(Integer[] ids);
+	Pagination getPage(int pageNo, int pageSize,Integer departId);
+}

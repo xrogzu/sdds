@@ -1,0 +1,84 @@
+package com.jeecms.core.manager;
+
+import java.util.Date;
+import java.util.List;
+
+import com.jeecms.common.page.Pagination;
+import com.jeecms.core.entity.CmsDepartment;
+
+public interface CmsDepartmentMng {
+
+	/**
+	 * 
+	 * @param parentId 父层部门id
+	 * @param all 是否查询所有部门
+	 * @return
+	 */
+	public List<CmsDepartment> getList(Integer parentId,boolean all);
+	
+	public Pagination getPage( String name, int pageNo,int pageSize);
+
+	public CmsDepartment findById(Integer id);
+
+	public CmsDepartment save(CmsDepartment bean);
+	
+	public CmsDepartment save(CmsDepartment bean,Integer channelIds[],Integer[] controlChannelIds,Integer[]ctgIds);
+
+	public CmsDepartment update(CmsDepartment bean);
+	
+	public CmsDepartment update(CmsDepartment bean,Integer channelIds[],Integer[] controlChannelIds,Integer[]ctgIds);
+
+	public void updatePriority(Integer[] ids, Integer[] priorities);
+
+	public CmsDepartment deleteById(Integer id);
+	
+	public CmsDepartment[] deleteByIds(Integer ids[]);
+
+	public boolean nameExist(String name);
+
+	/**
+	 * 换届提醒
+	 */
+	public List<CmsDepartment> changeRemindList(Date today,String departmentName,Integer departid,Integer pid);
+	/**
+	 * 设置加分基数
+	 * @param parentId
+	 * @return
+	 */
+	public List<CmsDepartment>baseScore(Integer parentId);
+	/**
+     * 获取字典键值列表
+     * @param corecdType
+     * @return
+     */
+    public List<CmsDepartment> getCorecdKeyList(String corecdType);
+    /**
+     * 根据父级id查询组织列表(判断删除)
+     */
+    public boolean findlistByPid(Integer pid);
+    /**
+     * 导入组织小程序
+     */
+	public void impOrgToUser();
+	 /**
+     *根据类型获取组织名称
+     * @author slc 2016-12-6 下午5:02:03
+     * @return
+     */
+    public List<CmsDepartment> getDeptByType(String type);
+    /**
+     * 获取最大排序值
+     * @return
+     */
+    public int getMaxPriority ();
+    /**
+     * 替换书记
+     */
+    public CmsDepartment changeSecretaryByDid(String sddspoSecretary,String sddspoSecretaryidc,Integer sddspoSecretaryid,Integer departid,Date sddspoChangelasttime);
+	 /**
+     *根据类型、登录者ID获取机构列表
+     * @author slc 2016-12-6 下午5:02:03
+     * @return
+     */
+    public List<CmsDepartment> getDeptByTypeAndLoginId(String type,Integer loginId);
+}

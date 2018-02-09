@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+  	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>development_main.html</title>
+	<link id="bootstrap_221" rel="stylesheet" type="text/css" class="library" href="/res/jeecms/css/bootstrap.min.css">
+     <link id="bootstrap_221" rel="stylesheet" type="text/css" class="library" href="/res/jeecms/css/development.css">
+	<script id="jquery_172" type="text/javascript" class="library" src="/res/jeecms/js/jquery-3.1.0.min.js"></script>
+	<script id="bootstrap_221" type="text/javascript" class="library" src="/res/jeecms/js/bootstrap.min.js"></script>
+  </head>
+  
+  <body>
+    <div class="tree well">
+    <ul>
+        <li>
+            <span><a href="javascript:;">申请入党</a></span>
+            <ul>
+                <li>
+                	<span><a href="../risenPartyapplication/v_add.do?risenpaFiletype=1">递交入党申请书</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenTalk/v_add.do?risentkFlag=1">党组织派人谈话</a></span>
+                </li>
+            </ul>
+        </li>
+       <li>
+            <span><a href="javascript:;">入党积极分子的确定和培养教育</a></span>
+            <ul>
+                <li>
+                	<span> <a href="../risenActive/v_add.do">确定入党积极分子</a></span>
+                </li>
+                <li>
+                	<span> <a  href="../risenPartyrecord/v_add.do?risenprFlag=1">上级党委备案</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenContact/v_add.do">指定培养联系人</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenFostereducation/v_add.do">培养教育考虑</a></span>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <span><a href="javascript:;">发展对象的确定和考虑</a></span>
+            <ul>
+                <li>
+                	<span><a href="../risenConfirmobject/v_add.do">确定发展对象</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenPartyrecord/v_add.do?risenprFlag=2">上级党委备案</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenPartyintroducer/v_add.do">确定入党介绍人</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenPoliticalcheck/v_add.do">进行政治审查</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenCentralizedtrain/v_add.do">开展集中培训</a></span>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <span><a href="javascript:;">预报党员的接收</a></span>
+            <ul>
+                <li>
+                	<span><a href="../risenCommitteereview/v_add.do">支部委员会审查</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenCommitteepre/v_add.do?risencpFlag=1">上级党委预审</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenPartyapplication/v_add.do?risenpaFiletype=2">填写入党志愿书</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenMeetingdiscuss/v_add.do?risenmdCount=1">支部大会讨论</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenTalk/v_add.do?risentkFlag=2">上级党委派人谈话</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenCommitteepre/v_add.do?risencpFlag=2">上级党委审批</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenPartyrecord/v_add.do?risenprFlag=3">在上一级党委组织部门备案</a></span>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <span><a href="javascript:;">预备党员的教育考察和转正</a></span>
+            <ul>
+                <li>
+                	<span><a href="../risenJoinorg/v_add.do">编入党委小组</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenOath/v_add.do">入党宣誓</a></span>
+                </li>
+                <li>
+                    <span><a href="../risenEducationcheck/v_add.do">继续教育考察(预备期一年)</a></span>
+                	<ul>
+                	    <li><span><a href="../risenMeetingdiscuss/v_add.do?risenmdCount=2">预备期严重违反违纪取消预备党员资格</a></span></li>
+                	    <li><span><a href="../risenMeetingdiscuss/v_add.do?risenmdCount=2">支部大会讨论</a></span></li>
+                	</ul>
+                </li>
+                <li>
+                	<span><a href="../risenPartyapplication/v_add.do?risenpaFiletype=3">提出转正申请</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenMeetingdiscuss/v_add.do?risenmdCount=3">支部大会讨论</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenCommitteepre/v_add.do?risencpFlag=3">上级党委审批</a></span>
+                </li>
+                <li>
+                	<span><a href="../risenMaterialfiling/v_add.do">档案归档</a></span>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div> 
+
+<script>
+    $(function () {
+    $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+    $('.tree li.parent_li > span').on('click', function (e) {
+        var children = $(this).parent('li.parent_li').find(' > ul > li');
+        if (children.is(":visible")) {
+            children.hide('fast');
+            $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+        } else {
+            children.show('fast');
+            $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+        }
+        e.stopPropagation();
+    });
+});
+</script>
+  </body>
+</html>

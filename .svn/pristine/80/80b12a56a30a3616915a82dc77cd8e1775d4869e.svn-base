@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+var i = 2;
+$(function(){
+	$("#jvForm").validate();
+	$("#jvForm").submit(function(){
+		var pattern = /^\d+$/;
+ 		var rs=$("#ydrs").val();
+ 		var as=$("#sdrs").val();
+ 	if(rs!=null && rs!=""){
+ 		if(pattern.test(rs)){
+ 			if(as!=null && as!=""){
+ 			 	if(pattern.test(as)){
+ 			 		return true;
+ 			 	}else{
+ 			 	alert("实到人数只能输入数字！");
+ 			 	return false;
+ 			 	}
+ 			}else{
+ 				return true;
+ 			}
+		}else{
+			alert("应到人数只能输入数字！");
+			return false;
+ 		} 
+ 		}else{
+ 		 if(as!=null && as!=""){
+ 			 	if(pattern.test(as)){
+ 			 		return true;
+ 			 	}else{
+ 			 	alert("实到人数只能输入数字！");
+ 			 	return false;
+ 			 	}
+ 			}else{
+ 				return true;
+ 			}
+ 		}
+	});
+});
+function addLd(){
+	if(i == 7){
+		alert("领导参会情况说明最多允许填写6人！");
+	}
+	$("#ld" + i).show();
+	++i;
+}
+</script>
+</head>
+<body>
+<div class="box-positon ove">
+	<div class="position-div"><@s.m "global.position"/>: <@s.m "risenOrgLifeCalendar.function"/> - 党员大会添加</div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_save.do">
+
+<@p.text label="时间" colspan="1" width="50" name="risenlcOdate" required="true" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="required" maxlength="100"/>
+
+<@p.text label="地点" colspan="1" width="50" name="risenlcAddress" required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="主持人" colspan="1" width="50" name="risenlcHoldername" required="true" class="required" maxlength="100"/>
+<@p.text label="记录人" colspan="1" width="50" name="risenlcContactor" maxlength="100"/><@p.tr/>
+<@p.textarea label="内容" style="width:70%;height:100px;" colspan="3" name="risenlcContent" required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="应到人数" id="ydrs" colspan="1" width="50" name="risenlcYdrs" maxlength="100"/>
+<@p.text label="实到人数" id="sdrs" colspan="1" width="50" name="risenlcSdrs" maxlength="100"/><@p.tr/>
+<@p.td colspan="4">
+<div style="width: 15%; height: auto; float: left;">
+	<span style="display: block; float: left;">党员领导干部参会情况</span>
+	<span onclick="addLd();" style="display: block; float: left; width: 60px; height: 20px; line-height: 20px; text-align: center; background: #3694D7; color: #fff;cursor: pointer; margin-left: 20px;">增加</span>
+</div>
+<div style="float: left; width: 80%">
+	<div id="ld1">
+		姓名：<input type="text" name="risenlcLd1"/>&nbsp;&nbsp;是否参加：<input type="radio" name="risenlcYn1" value="1" checked="checked"/>是<input type="radio" name="risenlcYn1" value="0"/>否&nbsp;&nbsp;备注：<input type="text" name="risenlcSm1" style="width: 42%;"/>
+	</div>
+	<div id="ld2" style="margin-top: 5px; display: none;">
+		姓名：<input type="text" name="risenlcLd2"/>&nbsp;&nbsp;是否参加：<input type="radio" name="risenlcYn2" value="1" checked="checked"/>是<input type="radio" name="risenlcYn2" value="0"/>否&nbsp;&nbsp;备注：<input type="text" name="risenlcSm2" style="width: 42%;"/>
+	</div>
+	<div id="ld3" style="margin-top: 5px; display: none;">
+		姓名：<input type="text" name="risenlcLd3"/>&nbsp;&nbsp;是否参加：<input type="radio" name="risenlcYn3" value="1" checked="checked"/>是<input type="radio" name="risenlcYn3" value="0"/>否&nbsp;&nbsp;备注：<input type="text" name="risenlcSm3" style="width: 42%;"/>
+	</div>
+	<div id="ld4" style="margin-top: 5px; display: none;">
+		姓名：<input type="text" name="risenlcLd4"/>&nbsp;&nbsp;是否参加：<input type="radio" name="risenlcYn4" value="1" checked="checked"/>是<input type="radio" name="risenlcYn4" value="0"/>否&nbsp;&nbsp;备注：<input type="text" name="risenlcSm4" style="width: 42%;"/>
+	</div>
+	<div id="ld5" style="margin-top: 5px; display: none;">
+		姓名：<input type="text" name="risenlcLd5"/>&nbsp;&nbsp;是否参加：<input type="radio" name="risenlcYn5" value="1" checked="checked"/>是<input type="radio" name="risenlcYn5" value="0"/>否&nbsp;&nbsp;备注：<input type="text" name="risenlcSm5" style="width: 42%;"/>
+	</div>
+	<div id="ld6" style="margin-top: 5px; display: none;">
+		姓名：<input type="text" name="risenlcLd6"/>&nbsp;&nbsp;是否参加：<input type="radio" name="risenlcYn6" value="1" checked="checked"/>是<input type="radio" name="risenlcYn6" value="0"/>否&nbsp;&nbsp;备注：<input type="text" name="risenlcSm6" style="width: 42%;"/>
+	</div>
+</div>
+</@p.td>
+<@p.tr/>
+<@p.editor colspan="4" label="会议记录" name="risenlcComment"/><@p.tr/>
+<@p.td colspan="4">
+	<input type="hidden" name="risenlcMeetingtype" value="${type!}"/>
+	<@p.submit code="global.submit" id="submit"/> &nbsp; <@p.reset code="global.reset"/>
+</@p.td>
+<@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

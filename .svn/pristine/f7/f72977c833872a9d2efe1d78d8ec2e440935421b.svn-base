@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>${channel.title!channel.name} - ${site.name}</title>
+    <link rel="stylesheet" href="${base}/r/cms/www/risen/css/wsrys.css">
+</head>
+<body>
+    <div class="back">
+         <div class="content">
+         [@cms_content_page count='9' orderBy='2' channelId=channel.id dateFormat='yyyy-MM-dd' currPageClass="currPageClass" norPageClass="norPageClass"]
+              <ul>
+                  [#list tag_pagination.list as a]
+               	  <li>
+               		<a href="${a.url!}" target="_blank"><img src="${a.typeImg!site.defImg}" /><span>[@text_cut s=a.title len=15 append=append/]</span></a>
+                  </li>
+                  [/#list]
+              </ul>
+              
+              <div class="page" style="color: #fff;">
+              [@cms_pagination sysPage='1'/]
+              </div>
+         [/@cms_content_page]
+         </div>
+    </div>
+</body>
+</html>

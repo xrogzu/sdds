@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>jeecms-left</title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function(){
+	Cms.leftLi();
+	$("li").each(function(i){
+		$(this).removeClass("leftCurr");
+		if(i==0){
+			$(this).addClass("leftCurr");
+		}else{
+			$(this).addClass("leftNol");
+		}
+		$(this).click( function () {
+			$("li").each(function(){
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$(".h3").each(function(){
+				$(this).next().hide();
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$(this).removeClass("leftNol");
+			$(this).addClass("leftCurr");
+		});
+	});
+	$(".h3").each(function(){
+		$(this).next().hide();
+		$(this).addClass("leftNol");
+		$(this).click( function () {
+			$(".h3").each(function(){
+				$(this).next().hide();
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$("li").each(function(){
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$(this).removeClass("leftNol");
+			$(this).addClass("leftCurr");
+		    $(this).next().show(); 
+		});
+	});
+	$(".h3-child div").each(function(i){
+		$(this).click( function () {
+			$(".h3-child div").each(function(){
+				$(this).removeClass();
+				$(this).addClass("leftmenuBG");
+			});
+			$(this).removeClass();
+			$(this).addClass("leftmenuBGCurr");
+		});
+	});
+});
+</script>
+</head>
+<body>
+<div class="w230 f_l ove">
+    <div class="fresh" style="font-size:12px; text-indent:36px;">
+       <#include "/jeecms_sys/date.html"/>
+	</div>
+    <div class="w229">
+    	<ol>
+    	<@cms_perm url="/member/v_list.do">
+		<li><a href="../member/topage.do?sddscpAll=1" target="rightFrame">党员基本信息维护</a></li>
+		</@cms_perm>
+		
+		<@cms_perm url="/member/v_list.do">
+        <li><a href="../risenDevparty/getAllActive.do" target="rightFrame">积极分子</a></li>
+        </@cms_perm>
+        
+        <@cms_perm url="/member/v_list.do">
+        <li><a href="../member/topage.do?sddscpChanges=0" target="rightFrame">预备党员</a></li>
+        </@cms_perm>
+        
+        <@cms_perm url="/member/v_list.do">
+		<li><a href="../member/topage.do?sddscpIsinjob=1" target="rightFrame">在职党员</a></li>
+		</@cms_perm>
+		
+		<@cms_perm url="/member/v_list.do">
+        <li><a href="../member/topage.do?sddscpIsinjob=0" target="rightFrame">离退休党员</a></li>
+        </@cms_perm>
+        
+		<!--  <@cms_perm url="/member/v_list.do">
+        <li><a href="../risenDevparty/v_list.do" target="rightFrame">发展党员</a></li>
+        </@cms_perm>-->
+		
+		
+		
+		<@cms_perm url="/member/v_list.do">
+        <li><a href="../member/topage.do?sddscpIsinjob=2" target="rightFrame">历史党员</a></li>
+        </@cms_perm>
+		
+		<@cms_perm url="/member/v_list.do">
+		<li><a href="../member/topage.do?sddscpAssess=1" target="rightFrame">优秀党员</a></li>
+		</@cms_perm>
+		<@cms_perm url="/member/v_list.do">
+		<li><a href="../member/topage.do?sddscpAssess=2" target="rightFrame">不合格党员</a></li>
+		</@cms_perm>
+		
+		
+		
+		
+		<!-- <@cms_perm url="/cmsFloatingact/v_list.do">
+		<li><a href="../cmsFloatingact/v_list.do" target="rightFrame">流动党员</a></li>
+		</@cms_perm> -->
+		<!-- <@cms_perm url="/group/v_list.do">
+		<li><a href="../group/v_list.do" target="rightFrame"><@s.m "cmsGroup.function"/></a></li>
+		</@cms_perm>
+		<@cms_perm url="/admin_global/v_list.do">
+		<li><a href="../admin_global/v_list.do" target="rightFrame"><@s.m "cmsAdminGlobal.function"/></a></li>
+		</@cms_perm>
+		<@cms_perm url="/admin_local/v_list.do">
+		<li><a href="../admin_local/v_list.do" target="rightFrame"><@s.m "cmsAdminLocal.function"/></a></li>
+		</@cms_perm>
+		<@cms_perm url="/role/v_list.do">
+		<li><a href="../role/v_list.do" target="rightFrame"><@s.m "cmsRole.function"/></a></li>
+		</@cms_perm>
+		<@cms_perm url="/account/v_list.do">
+		<li><a href="../account/v_list.do" target="rightFrame"><@s.m "cms.account.function"/></a></li>
+		</@cms_perm>
+		<@cms_perm url="/log/v_list_operating.do">
+		<li><a href="../log/v_list_operating.do" target="rightFrame"><@s.m "cmsLog.function.operating"/></a></li>
+		</@cms_perm>
+		<@cms_perm url="/log/v_list_login_success.do">
+		<li><a href="../log/v_list_login_success.do" target="rightFrame"><@s.m "cmsLog.function.loginSuccess"/></a></li>
+		</@cms_perm>
+		<@cms_perm url="/log/v_list_login_failure.do">
+		<li><a href="../log/v_list_login_failure.do" target="rightFrame"><@s.m "cmsLog.function.loginFailure"/></a></li>
+		</@cms_perm>
+	    <@cms_perm url="/message/v_list.do">
+		<li><a href="../message/v_list.do" target="rightFrame"><@s.m "cmsMessage.function"/> </a></li>
+		</@cms_perm> -->
+             </ol>
+        <!-- <#if ssxz=="zhibu">
+        <#elseif ssxz=="sheng">
+        	<h3 class="h3">党员增加</h3>
+			<div class="h3-child" style="margin:0; padding:0;" >
+				<div class="leftmenuBG"><a href="../RisenPartyChange/getAll.do" target="rightFrame">新发展党员</a></div>
+				<div class="leftmenuBG"><a href="../member/getInParty.do?inType=2" target="rightFrame">山东地税外转入</a></div>
+        	</div>
+			<h3 class="h3">党员减少</h3>
+			<div class="h3-child" style="margin:0; padding:0;" >
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=5" target="rightFrame">开除党籍党员</a></div>
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=9" target="rightFrame">去世党员</a></div>
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=6" target="rightFrame">转出山东地税系统</a></div>
+        	</div>
+        <#elseif ssxz=="shi">
+        	<h3 class="h3">党员增加</h3>
+			<div class="h3-child" style="margin:0; padding:0;" >
+				<div class="leftmenuBG"><a href="../RisenPartyChange/getAll.do" target="rightFrame">新发展党员</a></div>
+				<div class="leftmenuBG"><a href="../member/getInParty.do?inType=2" target="rightFrame">山东地税外转入</a></div>
+				<div class="leftmenuBG"><a href="../member/getInParty.do?inType=3" target="rightFrame">本市地税外转入</a></div>
+        	</div>
+			<h3 class="h3">党员减少</h3>
+			<div class="h3-child" style="margin:0; padding:0;" >
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=5" target="rightFrame">开除党籍党员</a></div>
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=9" target="rightFrame">去世党员</a></div>
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=6" target="rightFrame">转出山东地税系统</a></div>
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=7" target="rightFrame">转出本市地税系统</a></div>
+        	</div>
+        <#elseif ssxz=="xian">
+        	<h3 class="h3">党员增加</h3>
+			<div class="h3-child" style="margin:0; padding:0;" >
+				<div class="leftmenuBG"><a href="../RisenPartyChange/getAll.do" target="rightFrame">新发展党员</a></div>
+				<div class="leftmenuBG"><a href="../member/getInParty.do?inType=2" target="rightFrame">山东地税外转入</a></div>
+				<div class="leftmenuBG"><a href="../member/getInParty.do?inType=3" target="rightFrame">本市地税外转入</a></div>
+				<div class="leftmenuBG"><a href="../member/getInParty.do?inType=4" target="rightFrame">本县地税外转入</a></div>
+			</div>
+			<h3 class="h3">党员减少</h3>
+			<div class="h3-child" style="margin:0; padding:0;" >
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=5" target="rightFrame">开出党籍党员</a></div>
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=9" target="rightFrame">去世党员</a></div>
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=6" target="rightFrame">转出山东地税系统</a></div>
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=7" target="rightFrame">转出本市地税系统</a></div>
+				<div class="leftmenuBG"><a href="../member/getOutParty.do?outType=8" target="rightFrame">转出本县地税系统</a></div>
+			</div>
+        <#else></#if> -->
+     </div>
+</div>
+</body>
+</html>

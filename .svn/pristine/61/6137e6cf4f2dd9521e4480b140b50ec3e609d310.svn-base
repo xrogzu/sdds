@@ -1,0 +1,250 @@
+package com.jeecms.core.dao.impl;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
+
+import com.jeecms.common.hibernate4.Finder;
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.jeecms.common.page.Pagination;
+import com.jeecms.core.dao.CmsDepartmentDao;
+import com.jeecms.core.entity.CmsDepartment;
+
+@Repository
+public class CmsDepartmentDaoImpl extends
+		HibernateBaseDao<CmsDepartment, Integer> implements CmsDepartmentDao {
+	@SuppressWarnings("unchecked")
+	public List<CmsDepartment> getList(Integer parentId,boolean all){
+		Finder f = Finder.create("from CmsDepartment bean");
+		if(!all){
+			if(parentId!=null){
+				f.append(" where bean.parent.id=:parentId").setParam("parentId", parentId);
+			}else{
+				f.append(" where bean.parent is null ");
+			}
+		}
+		f.append(" order by bean.priority asc ");
+		return find(f);
+	}
+	public Pagination getPage( String name, int pageNo,int pageSize) {
+		Finder f = Finder.create("from CmsDepartment bean where 1=1");
+		if (StringUtils.isNotBlank(name)) {
+			f.append(" and bean.name like :name");
+			f.setParam("name", "%" + name + "%");
+		}
+		f.append(" order by bean.priority asc,weights desc");
+		return find(f, pageNo, pageSize);
+	}
+	
+
+	public CmsDepartment findById(Integer id) {
+		CmsDepartment entity = get(id);
+		return entity;
+	}
+	
+	public CmsDepartment findByName(String name) {
+		return findUniqueByProperty("name", name);
+	}
+
+	public CmsDepartment save(CmsDepartment bean) {
+		getSession().save(bean);
+		return bean;
+	}
+
+
+	public CmsDepartment deleteById(Integer id) {
+		CmsDepartment entity = super.get(id);
+		if (entity != null) {
+			getSession().delete(entity);
+		}
+		return entity;
+	}
+	/**
+	 *  模糊查询组织名
+	 */
+	public List<CmsDepartment> likeByName(String name) {
+		return likeUniqueByProperty("name", "%" + name + "%");
+	}
+	/**
+	 * 换届提醒List
+	 */
+	@SuppressWarnings("unchecked")
+	public List<CmsDepartment> changeRemindList(String departmentName,Integer departid,Integer pid){
+		String mainsql = "select t.depart_id,t.depart_name,t.sddspo_secretary,t.parent_id,t.sddspo_changelasttime,round(to_number(t.sddspo_changelasttime+0-sysdate)) as overplus from jc_department t where 1=1";
+		String condition1 = "";
+		String condition2 = "";
+		String pidsql = "";
+		if(pid != null && pid != 0){
+			pidsql = " and t.parent_id="+pid;
+		}
+		if(departid != null){
+			condition1 = " and t.depart_id="+departid;
+		}
+		if(!StringUtils.isBlank(departmentName)){
+			condition2 = " and t.depart_name like '%" + departmentName + "%'";
+		}
+		String orderby = " order by overplus";
+		String sql = mainsql + pidsql + condition1 + condition2 + orderby;
+		List<Object[]> list = getSession().createSQLQuery(sql).list();
+		List<CmsDepartment> list2 = new ArrayList<CmsDepartment>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		for (Object[] objects : list) {
+			CmsDepartment model = new CmsDepartment();
+			model.setId(Integer.valueOf(String.valueOf(objects[0])));
+			model.setName(String.valueOf(objects[1]));
+			model.setSddspoSecretary(String.valueOf(objects[2]));
+			if(objects[3]!=null && objects[3]!=""){
+				model.setPid(Integer.valueOf(String.valueOf(objects[3])));
+			}else {
+				model.setPid(0);
+			}
+			try {
+				model.setSddspoChangelasttime(sdf.parse(String.valueOf(objects[4])));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			model.setOverplus(String.valueOf(objects[5]));
+			list2.add(model);
+		}
+		return list2;
+	}
+	/**
+     * 根据父级id查询组织列表
+     */
+	@SuppressWarnings("unchecked")
+    public List<Object[]> findlistByPid(Integer pid){
+    	String sql = " select * from JC_DEPARTMENT where PARENT_ID = '" + pid + "'";
+    	List<Object[]> list = getSession().createSQLQuery(sql).list();
+    	return list;
+    }
+    
+    
+	protected Class<CmsDepartment> getEntityClass() {
+		return CmsDepartment.class;
+	}
+	@Override
+	public List<CmsDepartment> baseScore(Integer parentId) {
+		StringBuffer sql=new StringBuffer();
+		sql.append("select depart_id as id, depart_name as name,");
+		sql.append(" (select count(*) from jc_user t ");
+		sql.append(" where t.depart_id=b.depart_id)as meberCount ,");
+		sql.append(" case when c.risenit_base is null or c.risenit_base='' then 1 ");
+		sql.append(" else c.risenit_base end as score ");
+		sql.append(" from  jc_department b ");
+		sql.append("left join risen_integral c on b.depart_id=c.risenit_orgid ");
+		sql.append(" where parent_id="+parentId);
+		sql.append(" order by depart_id");
+   
+		/*String sql="select depart_id as id,depart_name as name,(select count(*) from jc_user t" +
+				" where t.depart_id=b.depart_id)as meberCount from jc_department b where parent_id="+parentId;*/
+		List<Object[]>list=null;
+		list=getSession().createSQLQuery(sql.toString()).list();
+		List<CmsDepartment>depts=new ArrayList<CmsDepartment>();
+		for (Object[] o : list) {
+			CmsDepartment dept=new CmsDepartment();
+			dept.setId(Integer.valueOf(o[0].toString()));
+			dept.setName(o[1].toString());
+			dept.setMeberCount(Integer.valueOf(o[2].toString()));
+			dept.setScore(Integer.valueOf(o[3].toString()));
+			depts.add(dept);
+		}
+		return depts;
+	}
+	
+	/**
+     * 导入组织小程序
+     */
+	@SuppressWarnings("unchecked")
+	public List<CmsDepartment> findNotInUser(){
+		/*String sql = " select * from jc_department c where c.depart_id not in (select a.depart_id from jc_user a inner join jc_department b on a.depart_id = b.depart_id) ";
+		List<Object[]> objList = getSession().createSQLQuery(sql).list();
+		List<CmsDepartment> modelList = new ArrayList<CmsDepartment>();
+		for (Object[] objs : objList) {
+			CmsDepartment model = new CmsDepartment();
+			model.setId(Integer.valueOf(objs[0].toString()));
+			model.setName(objs[1].toString());
+			try {
+				if(objs[27]!=null)
+				model.setSddspoLogincode(objs[27].toString());
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+			modelList.add(model);
+		}
+		return modelList;*/
+		String hql = " from CmsDepartment d where d.name not in (select u.username from CmsUser u where u.sddscpIsperororg = '2')";
+		Finder f = Finder.create(hql);
+		return find(f);
+	}
+	@Override
+	public List<CmsDepartment> getDeptByType(String type) {
+		Finder f = Finder.create("select bean.id,bean.name from CmsDepartment bean ");
+		f.append(" where bean.sddspoOrgtype=:type").setParam("type", type);
+		f.append(" order by bean.id");
+		return find(f);
+	}
+	@Override
+	public int getMaxPriority() {
+		String sql="select max(PRIORITY) from jc_department";
+		int pri=Integer.valueOf(getSession().createSQLQuery(sql).uniqueResult().toString()) ;
+		return pri;
+	}
+
+    /**
+     * 替换书记
+     */
+    public CmsDepartment changeSecretaryByDid(CmsDepartment model){
+    	/*String sql = "update jc_department set sddspo_secretary = '"
+    		+ sddspoSecretary + "' , sddspo_secretaryidc = '" 
+    		+ sddspoSecretaryidc + "' , sddspo_secretaryid = "
+    		+ sddspoSecretaryid + " where depart_id = " + departid;*/
+    	String hql = "update CmsDepartment bean set bean.sddspoSecretary=:sddspoSecretary,bean.sddspoSecretaryidc=:sddspoSecretaryidc,bean.sddspoSecretaryid=:sddspoSecretaryid,"
+    		+ "bean.sddspoChangelasttime=:sddspoChangelasttime where bean.id=:departid";
+    	Query query = getSession().createQuery(hql);
+    	query.setParameter("sddspoSecretary", model.getSddspoSecretary());
+    	query.setParameter("sddspoSecretaryidc", model.getSddspoSecretaryidc());
+    	query.setParameter("sddspoSecretaryid", model.getSddspoSecretaryid());
+    	query.setParameter("sddspoChangelasttime", model.getSddspoChangelasttime());
+    	query.setParameter("departid", model.getId());
+    	query.executeUpdate();
+    	return model;
+    }
+
+
+    /**
+     * 新增党员职务关联
+     */
+    public CmsDepartment updatejob(CmsDepartment model){
+    	String hql = "update CmsDepartment bean set bean.sddspoSecretary=:sddspoSecretary,bean.sddspoSecretaryidc=:sddspoSecretaryidc,bean.sddspoSecretaryid=:sddspoSecretaryid "+
+    	"where bean.id=:departid";
+    	Query query = getSession().createQuery(hql);
+    	query.setParameter("sddspoSecretary", model.getSddspoSecretary());
+    	query.setParameter("sddspoSecretaryidc", model.getSddspoSecretaryidc());
+    	query.setParameter("sddspoSecretaryid", model.getSddspoSecretaryid());
+    	query.setParameter("departid", model.getId());
+    	query.executeUpdate();
+    	return model;
+    }
+    
+    /**
+     * 修改user数据工具
+     */
+    public List<CmsDepartment> findalllistdepart(){
+    	Finder finder = Finder.create(" from CmsDepartment");
+    	return find(finder);
+    }
+	@Override
+	public List<CmsDepartment> getDeptByTypeAndLoginId(String type,Integer loginId) {
+		Finder f = Finder.create("select bean.id,bean.name from CmsDepartment bean ");
+		f.append(" where bean.sddspoOrgtype=:type and bean.parent.id=:loginId" ).setParam("type", type).setParam("loginId", loginId);
+		f.append(" order by bean.id");
+		return find(f);
+	}
+}

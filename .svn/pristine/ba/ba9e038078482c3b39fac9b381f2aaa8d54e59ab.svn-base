@@ -1,0 +1,113 @@
+package com.risen.dao.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Criteria;
+
+import com.ibm.db2.jcc.am.l;
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.IRisenIntegralDao;
+import com.risen.entity.RisenIntegral;
+import com.risen.entity.RisenOrgLifeCalendar;
+import com.sun.xml.internal.bind.v2.model.core.ID;
+
+public class RisenIntegralDaoImpl extends HibernateBaseDao<RisenIntegral, Integer> implements
+		IRisenIntegralDao {
+
+	@Override
+	public Pagination getPage(int pageNo, int pageSize) {
+		Criteria crit = createCriteria();
+		Pagination page = findByCriteria(crit, pageNo, pageSize);
+		return page;
+	}
+
+	@Override
+	public RisenIntegral save(RisenIntegral bean) {
+		getSession().save(bean); 
+		return bean;
+	}
+
+	@Override
+	public RisenIntegral findById(Integer id) {
+		RisenIntegral bean=get(id);
+		return bean;
+	}
+
+	@Override
+	public void delete(Integer id) {
+		RisenIntegral entity = super.get(id);
+		getSession().delete(entity);
+	}
+
+	@Override
+	public RisenIntegral update(RisenIntegral bean) {
+		getSession().update(getSession().merge(bean));
+		return bean;
+	}
+
+	@Override
+	protected Class<RisenIntegral> getEntityClass() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RisenIntegral findByOrgId(Integer id) {
+		String sql="from RisenIntegral r where r.risenitOrgid=:id";
+		RisenIntegral bean=(RisenIntegral) getSession().createQuery(sql).setParameter("id", id).uniqueResult();
+		return bean;
+	}
+
+	@Override
+	public List<RisenIntegral> getReportData(Integer orgId) {
+		StringBuffer sql=new StringBuffer();
+		sql.append(" select  t.depart_id, t.depart_name,case when  ");
+		sql.append(" t1.risenit_score is null then 0 else  t1.risenit_score end as risenit_score ");
+		sql.append(" from jc_department t left join Risen_Integral t1 on t.depart_id = t1.risenit_orgid ");
+		sql.append(" where t.parent_id="+orgId);
+		sql.append(" order by t.depart_id");
+		List<RisenIntegral>list=new ArrayList<RisenIntegral>();
+		List<Object[]> obj=null;
+		try {
+			obj=getSession().createSQLQuery(sql.toString()).list();
+			for (Object[] o : obj) {
+				RisenIntegral bean=new RisenIntegral();
+				bean.setRisenitOrgid(Integer.valueOf(o[0].toString()));
+				bean.setRisenitOrgname(o[1].toString());
+				bean.setRisenitScore(Integer.valueOf(o[2].toString()));
+				list.add(bean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	@Override
+	public void updateBaseScore(Integer orgId, Integer score) {
+		String sql=" update risen_integral set risenit_base="+score+" where risenit_orgid="+orgId;
+		getSession().createSQLQuery(sql).executeUpdate();
+	}
+
+	@Override
+	public void batchUpdBaseScore(Integer[] orgId, Integer score) {
+		StringBuffer ids=new StringBuffer();
+		for (Integer i : orgId) {
+			ids.append(i+",");
+		}
+		ids.deleteCharAt(ids.lastIndexOf(","));
+		String sql=" update risen_integral set risenit_base="+score+" where risenit_orgid in ("+ids.toString()+")";
+		getSession().createSQLQuery(sql).executeUpdate();
+		
+	}
+
+	@Override
+	public int confirmShare(Integer orgId, Integer score) {
+		String sql="update risen_integral set risenit_score=risenit_score+"+score+" where risenit_orgid="+orgId;
+		return getSession().createSQLQuery(sql).executeUpdate();
+	}
+
+}

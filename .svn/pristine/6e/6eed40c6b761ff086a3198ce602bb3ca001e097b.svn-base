@@ -1,0 +1,270 @@
+package com.risen.action;
+
+import static com.jeecms.common.page.SimplePage.cpn;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.jeecms.common.page.Pagination;
+import com.jeecms.common.web.CookieUtils;
+import com.jeecms.core.entity.CmsDepartment;
+import com.jeecms.core.entity.CmsSite;
+import com.jeecms.core.entity.CmsUser;
+import com.jeecms.core.manager.CmsDepartmentMng;
+import com.jeecms.core.web.WebErrors;
+import com.jeecms.core.web.util.CmsUtils;
+import com.risen.entity.RisenIntegral;
+import com.risen.entity.RisenIntegralRecord;
+import com.risen.service.IRisenIntegralRecordService;
+import com.risen.service.IRisenIntegralService;
+
+@Controller
+public class RisenPartyBuildPerformanceAct {
+	private static final Logger log = LoggerFactory.getLogger(RisenPartyBuildPerformanceAct.class);
+
+	@RequiresPermissions("partyBuild:v_list")
+	@RequestMapping("/partyBuild/v_list.do")
+	public String list(Integer pageNo, HttpServletRequest request, ModelMap model,RisenIntegralRecord bean) {
+		//CmsUser user = CmsUtils.getUser(request);
+		bean.setRisenirTargetorgid(CmsUtils.getUser(request).getDepartment().getId());
+		bean.setRisenirResult(1);
+		Pagination pagination = manager.getPage(cpn(pageNo), CookieUtils
+					.getPageSize(request),bean);
+		model.addAttribute("pagination",pagination);
+		model.addAttribute("pageNo",pagination.getPageNo());
+		
+		return "partyBuild/list";
+	} 
+	
+	@RequiresPermissions("partyBuild:shareContent")
+	@RequestMapping("/partyBuild/shareContent.do")
+	public String shareContent(Integer pageNo, HttpServletRequest request, ModelMap model,RisenIntegralRecord bean){
+		bean.setRisenirTargetorgid(CmsUtils.getUser(request).getDepartment().getId());
+		bean.setRisenirResult(0);
+		Pagination pagination = manager.getPage(cpn(pageNo), CookieUtils
+				.getPageSize(request),bean);
+		model.addAttribute("pagination",pagination);
+		model.addAttribute("pageNo",pagination.getPageNo());
+		
+		return "partyBuild/shareContent/list";
+	}
+	@RequiresPermissions("partyBuild:confirmShare")
+	@RequestMapping("/partyBuild/confirmShare.do")
+	@ResponseBody
+	public Object confirmShare(Integer[]ids,Integer type,Integer score){
+		
+		return manager.confirmShare(ids,type,score);
+	}
+	@RequiresPermissions("partyBuild:partybuild_main")
+	@RequestMapping("/partyBuild/report.do")
+	public String report(){
+		return "partyBuild/report/list";
+	}
+	@RequiresPermissions("partyBuild:partybuild_main")
+	@RequestMapping("/partyBuild/partybuild_main.do")
+	public String partybuild_main(){
+		return "partyBuild/partybuild_main";
+	}
+	
+	@RequiresPermissions("partyBuild:v_list_share")
+	@RequestMapping("/partyBuild/v_list_share.do")
+	public String v_list_share(){
+		return "partyBuild/shareContent/partybuild_main";
+	}
+	
+	@RequiresPermissions("partyBuild:v_left")
+	@RequestMapping("/partyBuild/v_left.do")
+	public String left(){
+		return "partyBuild/left";
+	}
+	
+	@RequiresPermissions("partyBuild:share_left")
+	@RequestMapping("/partyBuild/share_left.do")
+	public String share_left(){
+		return "partyBuild/shareContent/left";
+	}
+	
+	@RequiresPermissions("partyBuild:v_add")
+	@RequestMapping("/partyBuild/v_add.do")
+	public String add(ModelMap model) {
+		return "partyBuild/add";
+	}
+	@RequiresPermissions("partyBuild:v_add")
+	@RequestMapping("/partyBuild/baseScore.do")
+	public String baseScore(ModelMap model,HttpServletRequest request) {
+		CmsUser user=CmsUtils.getUser(request);
+		List<CmsDepartment>depts=deptMng.baseScore(user.getDepartment().getId());
+		model.addAttribute("list", depts);
+		return "partyBuild/baseScore";
+	}
+	@RequestMapping(value="/partyBuild/getData.do")
+	@ResponseBody
+	public Object getReportDate(HttpServletRequest request) {
+		List<RisenIntegral> list = null;
+		try {
+			list = itManager.getReportData(CmsUtils.getUser(request).getDepartment().getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+	@RequiresPermissions("partyBuild:v_edit")
+	@RequestMapping("/partyBuild/v_edit.do")
+	public String edit(Integer id, Integer pageNo, HttpServletRequest request, ModelMap model) {
+		/*WebErrors errors = validateEdit(id, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		model.addAttribute("RisenIntegralRecord", manager.findById(id));
+		model.addAttribute("pageNo",pageNo);
+		return "partyBuild/edit";*/
+		RisenIntegralRecord bean=new RisenIntegralRecord();
+		bean.setRisenirOrgid(id);
+		//CmsUser user = CmsUtils.getUser(request);
+				Pagination pagination = manager.getPage(cpn(pageNo), CookieUtils
+							.getPageSize(request),bean);
+				model.addAttribute("pagination",pagination);
+				model.addAttribute("pageNo",pagination.getPageNo());
+				
+				return "partyBuild/list";
+	}
+
+	@RequiresPermissions("partyBuild:o_save")
+	@RequestMapping("/partyBuild/o_save.do")
+	public String save(RisenIntegralRecord bean, HttpServletRequest request, ModelMap model) {
+		WebErrors errors = validateSave(bean, request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		//CmsUser user = CmsUtils.getUser(request);
+		
+		bean = manager.save(bean);
+		log.info("save partyBuild id={}", bean.getRisenirUuid());
+		return "redirect:v_list.do";
+	}
+
+	@RequiresPermissions("partyBuild:o_update")
+	@RequestMapping("/partyBuild/o_update.do")
+	public String update(RisenIntegralRecord bean, Integer pageNo, HttpServletRequest request,
+			ModelMap model) {
+		WebErrors errors = validateUpdate(bean.getRisenirUuid(), request);
+		if (errors.hasErrors()) {
+			return errors.showErrorPage(model);
+		}
+		bean = manager.update(bean);
+		log.info("update partyBuild id={}.", bean.getRisenirUuid());
+		return list(pageNo, request, model,null);
+	}
+
+	@RequiresPermissions("partyBuild:o_delete")
+	@RequestMapping("/partyBuild/o_delete.do")
+	public String delete(Integer id, Integer pageNo, HttpServletRequest request,
+			ModelMap model) {
+		
+		 manager.delete(id);
+		 
+			log.info("delete partyBuild id={}",id);
+		
+		return list(pageNo, request, model,null);
+	}
+
+	private WebErrors validateSave(RisenIntegralRecord bean, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		CmsSite site = CmsUtils.getSite(request);
+//		bean.setSite(site);
+		return errors;
+	}
+	
+	private WebErrors validateEdit(Integer id, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		CmsSite site = CmsUtils.getSite(request);
+		if (vldExist(id, site.getId(), errors)) {
+			return errors;
+		}
+		return errors;
+	}
+
+	private WebErrors validateUpdate(Integer id, HttpServletRequest request) {
+		WebErrors errors = WebErrors.create(request);
+		CmsSite site = CmsUtils.getSite(request);
+		if (vldExist(id, site.getId(), errors)) {
+			return errors;
+		}
+		return errors;
+	}
+
+	
+
+	private boolean vldExist(Integer id, Integer siteId, WebErrors errors) {
+		if (errors.ifNull(id, "id")) {
+			return true;
+		}
+		RisenIntegralRecord entity = manager.findById(id);
+		if(errors.ifNotExist(entity, RisenIntegralRecord.class, id)) {
+			return true;
+		}
+//		if (!entity.getSite().getId().equals(siteId)) {
+//			errors.notInSite(RisenIntegralRecord.class, id);
+//			return true;
+//		}
+		return false;
+	}
+	@RequiresPermissions("partyBuild:updScore")
+	@RequestMapping("/partyBuild/updScore.do")
+	public String updateBaseScore(ModelMap model,HttpServletRequest request,Integer orgId,Integer score){
+		RisenIntegral bean=itManager.findByOrgId(orgId);
+		if(!StringUtils.isEmpty(bean)){//有记录
+			itManager.updateBaseScore(orgId, score);
+		}else{//没有记录
+			bean=new RisenIntegral();
+			bean.setRisenitOrgid(orgId);
+			bean.setRisenitScore(0);
+			bean.setRisenitBase(score);
+			itManager.save(bean);
+		}
+		return baseScore(model,request);
+		
+	}
+	@RequiresPermissions("partyBuild:updScore")
+	@RequestMapping("/partyBuild/batchUpdScore.do")
+
+	public String BatchUpdBaseScore(ModelMap model,HttpServletRequest request,String ids,Integer score){
+		RisenIntegral bean=null;
+		String [] id=ids.split(",");
+		Integer[] orgids=new Integer[id.length];
+		for (int i = 0; i < id.length; i++) {
+			orgids[i]=Integer.valueOf(id[i]);
+			bean=itManager.findByOrgId(Integer.valueOf(Integer.valueOf(id[i])));
+			if(StringUtils.isEmpty(bean)){//没有记录
+				CmsDepartment dept=deptMng.findById(Integer.valueOf(id[i]));
+				bean=new RisenIntegral();
+				bean.setRisenitOrgid(Integer.valueOf(id[i]));
+				bean.setRisenitOrgname(dept.getName());
+				bean.setRisenitScore(0);
+				bean.setRisenitBase(score);
+				itManager.save(bean);
+			}
+		}
+		itManager.batchUpdBaseScore(orgids, score);
+		
+		return baseScore(model,request);
+	}
+	@Autowired
+	private IRisenIntegralRecordService manager;
+	@Autowired
+	private IRisenIntegralService itManager;
+	@Autowired
+	private CmsDepartmentMng deptMng;
+}

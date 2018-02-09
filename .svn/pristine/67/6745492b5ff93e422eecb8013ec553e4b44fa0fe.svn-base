@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+button, input, select, textarea {
+    font-size: 100%;
+    background: none;
+    border: none;
+}
+
+a {
+    color: #333;
+    text-decoration: none;
+    background: none
+}
+
+:focus {
+    outline: none;
+}
+
+.fr {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    line-height: 0;
+    content: "";
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.comment_box {
+    width: 400px;
+    padding: 20px;
+
+}
+
+.comment_box .textarea {
+    border-bottom: 1px solid #dfd8f0;
+    padding-bottom: 20px;
+}
+.comment_box .textarea textarea {
+    width: 96%;
+    min-height: 100px;
+    height: auto;
+    border: 1px solid #e6e6e6;
+    background-color: #fff;
+    padding: 2%;
+    resize: vertical;
+    line-height: 20px;
+    border-radius: 2px;
+}
+
+.comment_box .textarea button {
+    background-color: #fff;
+    color: #555;
+    display: inline-block;
+    border: 1px solid #C9C9C9;
+    height: 38px;
+    line-height: 38px;
+    padding: 0 18px;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.discuss_list_ul {
+    padding: 20px 0;
+    font-size: 14px;
+}
+
+.discuss_list_ul .list_li{
+    border-bottom: 1px dashed #dfd8f0;
+    padding: 15px 0;
+}
+.discuss_list_ul .comments_content {
+    min-height: 35px;
+    _height: 35px;
+    position: relative;
+    line-height: 1.6;
+    top: -4px;
+    margin-bottom: -4px;
+}
+
+.discuss_list_ul a {
+    color: #5d4a92;
+}
+
+.discuss_list_ul .comments_content{
+    line-height: 1.6;
+}
+.discuss_list_ul .comments_content a.nickname {
+    margin-right: 8px;
+    display: inline-block;
+    color: #5d4a92;
+}
+
+.discuss_list_ul .comments_content .comments_op {
+    color: #827e8c;
+    margin-right: 10px;
+    line-height: 18px;
+}
+.discuss_list_ul .list_li .mod_comments_sub{
+    padding-left: 45px;
+    padding-top: 10px;
+}

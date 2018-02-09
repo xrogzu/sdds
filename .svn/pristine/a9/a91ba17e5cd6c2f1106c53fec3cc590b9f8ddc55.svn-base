@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<link href="${base}/res/common/css/jquery.flot.css" rel="stylesheet" type="text/css"/>
+<!--[if lte IE 8]><![endif]-->
+<script src="${base}/res/common/js/excanvas.min.js" type="text/javascript" ></script>
+<script src="${base}/res/common/js/jquery.flot.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.time.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.categories.min.js" type="text/javascript"></script>
+<script src="${base}/thirdparty/echarts/echarts.js" type="text/javascript" ></script>
+<script class="code" type="text/javascript">
+	var dayMember=[],monthMember=[],yearsMember=[],yearMember=[];
+	<!--小时或者月pv-->
+	<#if dayMemberList??>
+	<#list dayMemberList as s>
+		dayMember.push([${s[1]}, ${s[0]!}]);
+	</#list>
+	</#if>
+	<#if yearMemberList??>
+	<#list yearMemberList as s>
+		yearMember.push([${s[1]}, ${s[0]!}]);
+	</#list>
+	</#if>
+	<#if monthMemberList??>
+	<#list monthMemberList as s>
+		monthMember.push([${s[1]}, ${s[0]!}]);
+	</#list>
+	</#if>
+	<#if yearsMemberList??>
+	<#list yearsMemberList as s>
+		yearsMember.push([${s[1]}, ${s[0]!}]);
+	</#list>
+	</#if>
+	
+	$(function() {
+		var myChart_lastYear = echarts.init(document.getElementById('tab_lastYear'));
+		option = {
+		    title : {
+		        text: '党组织构成情况分析',
+		        subtext: '${deptname}'
+		    },
+		    tooltip : {
+		        trigger: 'axis'
+		    },
+		    legend: {
+		        data:['汇总','省局','市局','县(市、区)局','基层中心所']
+		    },
+		    toolbox: {
+		        show : true,
+		        feature : {
+		            dataView : {show: true, readOnly: false},
+		            magicType : {show: true, type: ['line', 'bar']},
+		            restore : {show: false},
+		            saveAsImage : {show: true}
+		        }
+		    },
+		    calculable : true,
+		    xAxis : [
+		        {
+		            type : 'category',
+		            data : ['总数','机关党委','党总支','支部']
+		        }
+		    ],
+		    yAxis : [
+		        {
+		            type : 'value'
+		        }
+		    ],
+		    series : [
+		        {
+		            name:'汇总',
+		            type:'bar',
+		            itemStyle:{
+						normal:{
+							color:'#FF6347'
+						}
+					},
+		            data:[${tjMap.deptsum}, ${tjMap.jgdwDept}, ${tjMap.dzzDept}, ${tjMap.zbDept}]
+		        },
+		        {
+		            name:'省局',
+		            type:'bar',
+		            itemStyle:{
+						normal:{
+							color:'#1E90FF'
+						}
+					},
+		            data:[${tjMap.deptsumSe}, ${tjMap.jgdwDeptSe}, ${tjMap.dzzDeptSe}, ${tjMap.zbDeptSe}]
+		        },
+		        {
+		            name:'市局',
+		            type:'bar',
+		            itemStyle:{
+						normal:{
+							color:'#FFA500'
+						}
+					},
+		            data:[${tjMap.deptsumShi}, ${tjMap.jgdwDeptShi}, ${tjMap.dzzDeptShi}, ${tjMap.zbDeptShi}]
+		        },
+		        {
+		            name:'县(市、区)局',
+		            type:'bar',
+		            itemStyle:{
+						normal:{
+							color:'#7B68EE'
+						}
+					},
+		            data:[${tjMap.deptsumX}, ${tjMap.jgdwDeptX}, ${tjMap.dzzDeptX}, ${tjMap.zbDeptX}]
+		        },
+		        {
+		            name:'基层中心所',
+		            type:'bar',
+		            itemStyle:{
+						normal:{
+							color:'#00FF00'
+						}
+					},
+		            data:[${tjMap.deptsumJc}, ${tjMap.jgdwDeptJc}, ${tjMap.dzzDeptJc}, ${tjMap.zbDeptJc}]
+		        }
+	    	]
+		};
+		myChart_lastYear.setOption(option);
+	});	
+</script>
+<style>
+	table{border-collapse:collapse;}
+	td { width: 232px; text-align: center; font-size: 18px; display: block; float: left; height: 30px; border-bottom: 1px solid #ccc;
+	 border-right: 1px solid #ccc; line-height: 30px; border-collapse：collapse;}
+	.rightTd{ border-left: 1px solid #ccc;}
+	tr { display: block; margin-bottom: 20px;}
+	.fristTr{ border-top: 1px solid #ccc;}
+	.lastTr{margin-bottom:30px;}
+	.lastTr td{width: 209px; text-align: center; font-size: 18px; display: block; float: left; height: 30px; border-bottom: 1px solid #ccc;
+	 border-right: 1px solid #ccc; line-height: 30px; border-collapse：collapse;}
+</style>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: <@s.m "cms.function.statistic"/> >党组织构成情况分析</div>
+</div>
+<div class="statistic">
+  <div class="five" style="width:1267px;">
+  	  <table style="width:1267px;">
+  		<tr class="fristTr">
+  			<td class="rightTd" style="width: 28px; border-right: none; "></td>
+  			<td style="width: 305px; border-left: none;">单位名称</td><td>总数</td><td>机关党委</td><td>党总支</td><td>支部</td>
+  		</tr>
+  		<tr>
+  			<td class="rightTd" style="width: 30px; border-bottom: 1px solid #fff; border-right: none;"></td>
+  			<td style="width: 303px; border-left: none;">汇总</td><td>${tjMap.deptsum}</td><td>${tjMap.jgdwDept}</td><td>${tjMap.dzzDept}</td><td>${tjMap.zbDept}</td>
+  		</tr>
+  		<tr>
+  			<td class="rightTd" style="width: 29px; border-bottom: 1px solid #fff; border-top: none;"></td>
+  			<td style="width: 303px;">省局</td><td>${tjMap.deptsumSe}</td><td>${tjMap.jgdwDeptSe}</td><td>${tjMap.dzzDeptSe}</td><td>${tjMap.zbDeptSe}</td>
+  		</tr>
+  		<tr>
+  			<td class="rightTd" style="width: 29px; border-bottom:1px solid #fff; border-top: none;"></td>
+  			<td style="width: 303px;">市局</td><td>${tjMap.deptsumShi}</td><td>${tjMap.jgdwDeptShi}</td><td>${tjMap.dzzDeptShi}</td><td>${tjMap.zbDeptShi}</td>
+  		</tr>
+  		<tr>
+  			<td class="rightTd" style="width: 29px; border-bottom: 1px solid #fff; border-top: none;"></td>
+  			<td style="width: 303px;">县(市、区)局</td><td>${tjMap.deptsumX}</td><td>${tjMap.jgdwDeptX}</td><td>${tjMap.dzzDeptX}</td><td>${tjMap.zbDeptX}</td>
+  		</tr>
+  		<tr>
+  			<td class="rightTd" style="width: 29px; border-top: none;"></td>
+  			<td style="width: 303px;">基层中心所</td><td>${tjMap.deptsumJc}</td><td>${tjMap.jgdwDeptJc}</td><td>${tjMap.dzzDeptJc}</td><td>${tjMap.zbDeptJc}</td>
+  		</tr>
+  	  </table>
+  	  
+  	  <table style="margin-top: 25px;">
+  	  	<tr class="lastTr" style="border-top:1px solid #ccc;">
+  			<td style="width: 215px; border-left: 1px solid #ccc;">工作指导组</td><td>汇总</td><td>省局</td><td>市局</td><td>县(市、区)局</td><td>基层中心所</td>
+  		</tr>
+  		<tr class="lastTr">
+  			<td style="width: 215px; border-left: 1px solid #ccc;">数量</td><td>${tjMap.zdzDept}</td><td>${tjMap.zdzDeptSe}</td><td>${tjMap.zdzDeptShi}</td><td>${tjMap.zdzDeptX}</td><td>${tjMap.zdzDeptJc}</td>
+  		</tr>
+  	  </table>
+  </div>
+  <div class="sta-tab" style="width:1267px;">
+    <div class="tab-con" style="width:1267px;">
+      <div class="tab-main" style="height:445px; width:1267px;">
+        <div>
+			<div id="tab_lastYear" style="float:left; width:99%;height:444px;"></div>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

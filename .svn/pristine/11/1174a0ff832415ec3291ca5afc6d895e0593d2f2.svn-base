@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+	<script src="/res/jeecms/js/jquery-1.9.1.js"></script>
+    <link type="text/css" rel="stylesheet" href="/res/jeecms/css/duescalculator.css" />
+	<script type="text/javascript">
+	$(function(){
+		
+		/** 控制字符 begin **/
+		var moneystr;
+		$(".yrle input").blur(function(){
+			moneystr = $(this).val();
+			if(moneystr.substring(0,1) == "." && moneystr.substring(1) != ""){
+				if(moneystr.substring(1) == 0){moneystr=0;}else{
+				moneystr = "0" + moneystr;}
+			}
+			else if(moneystr == "."){
+				moneystr = "请输入金额";
+			}
+			if(moneystr.substring(moneystr.length-1,moneystr.length) == "."){
+				moneystr = moneystr.replace(".","");
+			}
+			if(moneystr == ".0"){
+				moneystr = "0";
+			}
+			$(this).val(moneystr);
+		});
+		/** 控制字符 end **/
+		
+		
+	});
+	
+		//计算党费 m_月薪制 y_年薪制
+		function reckon(){
+			var $zwgz = $("#zwgz").val();	//职务工资
+			var $jbgz = $("#jbgz").val();	//级别工资
+			var $gzxjt = $("#gzxjt").val();	//工作性津贴
+			var $shxjt = $("#shxjt").val();	//生活性津贴
+			var $gwgzjob = $("#gwgzjob").val(); //岗位工资
+			var $xjgzjob = $("#xjgzjob").val(); //薪级工资
+			var $jcjxjob = $("#jcjxjob").val(); //基础绩效
+			var $retmoney = $("#retmoney").val();	//退休金
+			var $grsds = $("#grsds").val(); //个人所得税
+			var $endowment = $("#endowment").val();	//养老保险
+			var $medicare = $("#medicare").val();	//医疗保险
+			var $sybxret = $("#sybxret").val();	//失业保险
+			var $membertype = $("#membertype").val();	//人物类型
+			var $grsds1 = $("#grsds1").val();	
+			var $endowment1 = $("#endowment1").val();	
+			var $medicare1 = $("#medicare1").val();
+
+			// 机关工人
+			var $gwgzjob_worker = $("#gwgzjob_worker").val();// 工人岗位工资
+			var $xjgzjob_worker = $("#xjgzjob_worker").val();// 工人薪级工资
+			var $jcjxjob_worker = $("#jcjxjob_worker").val();// 工人基础绩效
+			var $grsds_worker = $("#grsds_worker").val();// 工人个人所得税
+			var $endowment_worker = $("#endowment_worker").val();// 工人养老保险
+			var $medicare_worker = $("#medicare_worker").val(); // 工人医疗保险
+			var $sybxret_worker = $("#sybxret_worker").val();// 工人失业保险
+			var $money = 0;
+			var $dues = 0;
+			
+			if($zwgz==null||$zwgz==""||$zwgz=="请输入金额"){
+				$zwgz = 0;
+			}
+			if($jbgz==null||$jbgz==""||$jbgz=="请输入金额"){
+				$jbgz = 0;
+			}
+			if($gzxjt==null||$gzxjt==""||$gzxjt=="请输入金额"){
+				$gzxjt = 0;
+			}
+			if($shxjt==null||$shxjt==""||$shxjt=="请输入金额"){
+				$shxjt = 0;
+			}
+			if($grsds==null||$grsds==""||$grsds=="请输入金额"){
+				$grsds = 0;
+			}
+			if($endowment==null||$endowment==""||$endowment=="请输入金额"){
+				$endowment = 0;
+			}
+			if($medicare==null||$medicare==""||$medicare=="请输入金额"){
+				$medicare = 0;
+			}
+			if($gwgzjob==null||$gwgzjob==""||$gwgzjob=="请输入金额"){
+				$gwgzjob = 0;
+			}
+			if($xjgzjob==null||$xjgzjob==""||$xjgzjob=="请输入金额"){
+				$xjgzjob = 0;
+			}
+			if($jcjxjob==null||$jcjxjob==""||$jcjxjob=="请输入金额"){
+				$jcjxjob = 0;
+			}
+			if($retmoney==null||$retmoney==""||$retmoney=="请输入金额"){
+				$retmoney = 0;
+			}
+			if($sybxret==null||$sybxret==""||$sybxret=="请输入金额"){
+				$sybxret = 0;
+			}
+			
+			if($grsds1==null||$grsds1==""||$grsds1=="请输入金额"){
+				$grsds1 = 0;
+			}
+			if($endowment1==null||$endowment1==""||$endowment1=="请输入金额"){
+				$endowment1 = 0;
+			}
+			if($medicare1==null||$medicare1==""||$medicare1=="请输入金额"){
+				$medicare1 = 0;
+			}
+
+			// 工人的数据填空    ---start---
+			if($gwgzjob_worker==null||$gwgzjob_worker==""||$gwgzjob_worker=="请输入金额"){
+				$gwgzjob_worker = 0;
+			}
+			
+			if($xjgzjob_worker==null||$xjgzjob_worker==""||$xjgzjob_worker=="请输入金额"){
+				$xjgzjob_worker = 0;
+			}
+			if($jcjxjob_worker==null||$jcjxjob_worker==""||$jcjxjob_worker=="请输入金额"){
+				$jcjxjob_worker = 0;
+			}
+			if($grsds_worker==null||$grsds_worker==""||$grsds_worker=="请输入金额"){
+				$xjgzjob_worker = 0;
+			}
+			if($endowment_worker==null||$endowment_worker==""||$endowment_worker=="请输入金额"){
+				$endowment_worker = 0;
+			}
+			if($medicare_worker==null||$medicare_worker==""||$medicare_worker=="请输入金额"){
+				$medicare_worker = 0;
+			}
+			if($sybxret_worker==null||$sybxret_worker==""||$sybxret_worker=="请输入金额"){
+				$sybxret_worker = 0;
+			}
+			// 工人数据填空  ---end---
+			
+			
+			$zwgz = Number($zwgz);
+			$jbgz = Number($jbgz);
+			$gzxjt = Number($gzxjt);
+			$shxjt = Number($shxjt);
+			$grsds = Number($grsds);
+			$endowment = Number($endowment);
+			$medicare = Number($medicare);
+			$gwgzjob = Number($gwgzjob);
+			$xjgzjob = Number($xjgzjob);
+			$jcjxjob = Number($jcjxjob);
+			$retmoney = Number($retmoney);
+			$sybxret = Number($sybxret);
+			$grsds1 = Number($grsds1);
+			$endowment1 = Number($endowment1);
+			$medicare1 = Number($medicare1);
+
+			
+			$gwgzjob_worker = Number($gwgzjob_worker);
+			$xjgzjob_worker = Number($xjgzjob_worker);
+			$jcjxjob_worker = Number($jcjxjob_worker);
+			$grsds_worker = Number($grsds_worker);
+            $endowment_worker = Number($endowment_worker);
+            $medicare_worker = Number($medicare_worker);
+            $sybxret_worker = Number($sybxret_worker);
+
+			
+				//机关工作人员
+			if($membertype == "partymember"){
+				$money = $zwgz+$jbgz+$gzxjt+$shxjt-$grsds-$endowment-$medicare;
+				if($money <= 3000){
+					$dues = $money*0.005;
+				}
+				else if($money > 3000 && $money <= 5000){
+					$dues = $money*0.01;
+				}
+				else if($money > 5000 && $money <= 10000){
+					$dues = $money*0.015;
+				}
+				else if($money > 10000){
+					$dues = $money*0.02;
+				}
+			}
+				
+				//事业单位工作人员
+			else if($membertype == "jobing"){
+				$money = $gwgzjob+$xjgzjob+$jcjxjob-$grsds1-$endowment1-$medicare1;
+				if($money <= 3000){
+					$dues = $money*0.005;
+				}
+				else if($money > 3000 && $money <= 5000){
+					$dues = $money*0.01;
+				}
+				else if($money > 5000 && $money <= 10000){
+					$dues = $money*0.015;
+				}
+				else if($money > 10000){
+					$dues = $money*0.02;
+				}
+			}
+			
+				//机关工人
+			else if($membertype == "worker"){
+				$money = $gwgzjob_worker + $xjgzjob_worker + $jcjxjob_worker - $grsds_worker - $endowment_worker - $medicare_worker - $sybxret_worker;
+				if($money <= 3000){
+					$dues = $money*0.005;
+				}
+				else if($money > 3000 && $money <= 5000){
+					$dues = $money*0.01;
+				}
+				else if($money > 5000 && $money <= 10000){
+					$dues = $money*0.015;
+				}
+				else if($money > 10000){
+					$dues = $money*0.02;
+				}
+			}
+			
+				//离退休干部/职工
+			else if($membertype == "retired"){
+				$money = $retmoney;
+				if($money <= 5000){
+					$dues = $money*0.005;
+				}else if($money > 5000){
+					$dues = $money*0.01;
+				}
+			}
+			
+				$("#dues").val($dues);
+			
+		}	
+		
+</script>
+
+</head>
+<body>
+<div class="calculator" style="margin: 30px auto;
+    width: 200px;
+    font-size: 32px;
+    font-family: 微软雅黑;
+    ">党费计算器</div>
+<div class="kebk">
+         <div class="number">
+              <ul>
+                  <li><input type="submit" value="1" /></li>
+                  <li><input type="submit" value="2" /></li>
+                  <li><input type="submit" value="3" /></li>
+                  <li><input type="submit" value="4" /></li>
+                  <li><input type="submit" value="5" /></li>
+                  <li><input type="submit" value="6" /></li>
+                  <li><input type="submit" value="7" /></li>
+                  <li><input type="submit" value="8" /></li>
+                  <li><input type="submit" value="9" /></li>
+                  <li><input type="submit" value="0" /></li>
+                  <li><input type="submit" value="." /></li>
+                  <li id="qice"><input type="submit" value="C" /></li>
+              </ul>
+              <div class="jisn">
+                   <a onclick="javascript:reckon();">计算</a>
+              </div>
+         </div>
+         <div class="xien"></div>
+         <div class="liex">
+              <div class="shiy">
+                  <select id="membertype">
+                      <option value="partymember">机关工作人员</option>
+                      <option value="jobing">事业单位工作人员</option>
+                      <option value="worker">机关工人</option>
+                      <option value="retired">离退休干部/职工</option>
+                  </select>
+                  <span>人员类型</span>
+              </div>
+              <div class="yrle">
+                  <ul class="yer1" id="yer1">
+                      <li><input id="zwgz" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>职务工资</span></li>
+                      <li><input id="jbgz" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>级别工资</span></li>
+                      <li><input id="gzxjt" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>工作性津贴</span></li>
+                      <li><input id="shxjt" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>生活性补贴</span></li>
+                      <li><input id="grsds" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>个人所得税</span></li>
+                      <li><input id="endowment" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>养老保险</span></li>
+                      <li><input id="medicare" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>医疗保险</span></li>
+                  </ul>
+                  <ul class="yer2">
+                      <li><input id="gwgzjob" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>岗位工资</span></li>
+                      <li><input id="xjgzjob" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>薪级工资</span></li>
+                      <li><input id="jcjxjob" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>基础绩效</span></li>
+                      <li><input id="grsds1" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>个人所得税</span></li>
+                      <li><input id="endowment1" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>养老保险</span></li>
+                      <li><input id="medicare1" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>医疗保险</span></li>
+                  </ul>
+                  <ul class="yer3">
+                      <li><input id="gwgzjob_worker" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>岗位工资</span></li>
+                      <li><input id="xjgzjob_worker" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>薪级工资</span></li>
+                      <li><input id="jcjxjob_worker" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>基础绩效</span></li>
+                      <li><input id="grsds_worker" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>个人所得税</span></li>
+                      <li><input id="endowment_worker" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>养老保险</span></li>
+                      <li><input id="medicare_worker" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>医疗保险</span></li>
+                      <li><input id="sybxret_worker" onkeyup="value=value.replace(/[^\d.]/g,'')" type="text"><span>失业保险</span></li>
+                  </ul>
+                  <ul class="yer4">
+                      <li><input id="retmoney" type="text"><span>退休金/养老金</span></li>
+                  </ul>
+                  <div class="yer5"><input id="dues" disabled="disabled" type="text"><span>应交党费</span></div>
+              </div>
+         </div>
+    </div>
+    
+    <script>
+		var uid = "";
+        $(function(){
+            $(".shiy select").change(function(){
+                 var shy = $(".shiy option:selected").val();
+                 switch(shy)
+                 {
+                    case 'partymember':
+                      $(".yrle ul").hide();
+                      $(".yer1").show();
+                      break;
+                    case 'jobing':
+                      $(".yrle ul").hide();
+                      $(".yer2").show();
+                      break;
+                    case 'worker':
+                      $(".yrle ul").hide();
+                      $(".yer3").show();
+                      break;
+                    case 'retired':
+                      $(".yrle ul").hide();
+                      $(".yer4").show();
+                      break;
+                    default:
+                 };
+                 $("#dues").val("");
+            });
+            
+            $("#qice").click(function(){
+                 $(".yrle li input").val("");
+                 $("#dues").val(0.00);
+            });
+            
+            var mze = $(".yrle input");
+            for(i=0;i<mze.length;i++){
+                 $(".yrle input:eq("+i+")").addClass("idnaz"+i);
+            }
+			$(".yrle input").click(function(){
+                   uid = $(this).attr("class");
+            });
+		    $(".number input").click(function(){
+                  if(uid == ""){
+                      alert("请先选择需要输入的表框");
+                  }
+                  var value = $("." + uid).val();
+                  if(value == ""){
+                      $("." + uid).val($(this).val());
+                  }else{
+                      $("." + uid).val(value + $(this).val());
+                  };
+             
+            });
+            $(".yrle input").attr("placeholder","请输入金额")
+			$(".yrle input:last(input)").attr("placeholder","0.00")
+        });
+    </script>
+</body>
+</html>

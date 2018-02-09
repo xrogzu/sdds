@@ -1,0 +1,40 @@
+package com.risen.dao.impl;
+
+import org.hibernate.Criteria;
+import org.springframework.stereotype.Repository;
+
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.CmsFloatingDao;
+import com.risen.entity.CmsFloating;
+@Repository
+public class CmsFloatingDaoImp extends HibernateBaseDao<CmsFloating, Integer> implements CmsFloatingDao{
+	public Pagination getPage(int pageNo, int pageSize) {
+		Criteria crit = createCriteria();
+		Pagination page = findByCriteria(crit, pageNo, pageSize);
+		return page;
+	}
+
+	public CmsFloating findById(Integer sddsfiId) {
+		CmsFloating entity = get(sddsfiId);
+		return entity;
+	}
+
+	public CmsFloating save(CmsFloating bean) {
+		getSession().save(bean);
+		return bean;
+	}
+
+	public CmsFloating deleteById(Integer sddsfiId) {
+		CmsFloating entity = super.get(sddsfiId);
+		if (entity != null) {
+			getSession().delete(entity);
+		}
+		return entity;
+	}
+	
+	@Override
+	protected Class<CmsFloating> getEntityClass() {
+		return CmsFloating.class;
+	}
+}

@@ -1,0 +1,1001 @@
+<!DOCTYPE HTML>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>首页 - ${channel.title!channel.name} - ${site.name}</title>
+<meta http-equiv="keywords" content="${site.keywords!}"/>
+<meta http-equiv="description" content="${site.description!}"/>
+<metahttp-equiv="X-UA-Compatible" content="IE=8"/>
+<script src="${base}/r/cms/currency/script/jquery-1.6.3.min.js"></script>
+<script src="${base}/r/cms/currency/script/jquery.SuperSlide.2.1.1.js"></script>
+<script language="javascript" type="text/javascript" src="${base}/r/cms/currency/My97DatePicker/WdatePicker.js"></script>
+<script language="javascript" type="text/javascript" src="${base}/r/cms/print/jquery.jqprint-0.3.js"></script>
+<script language="javascript" type="text/javascript" src="${base}/r/cms/print/jquery-migrate-1.2.1.min.js"></script>
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/currency/css/css.css">
+<head>
+<!-- 滚动条样式 -->
+<style type="text/css"> 
+#gongao{width:290px;height:50px;overflow:hidden;line-height:30px;font-size:13px;font-family:'宋体';color:#0C77CF;font-weight:bold;} 
+#gongao #scroll_begin_toMonth, #gongao #scroll_end_toMonth{display:inline} 
+
+#gundong_today{width:290px;height:50px;overflow:hidden;line-height:30px;font-size:13px;font-family:'宋体';color:#0C77CF;font-weight:bold;} 
+#gundong_today #scroll_begin_toDay, #gundong_today #scroll_end_toDay{display:inline} 
+</style> 
+<!-- 滚动条样式 -->
+
+<style type="text/css">
+.content{width:1060px; margin:0 auto;}
+.shdh{position: absolute; width:1060px; margin:0 auto; height:400px; overflow:hidden;}
+.coen{width:1340px; margin:0 auto; overflow:hidden;}
+.shei{position: absolute; right:220px; top:0px; z-index: 9999;}
+.shnr{width:1060px; right:-1060px;  background:url(${base}/r/cms/www/risen/images/zh_bg.png) no-repeat; height:0px; position:absolute; top:0px; z-index:999;}
+#jens{ }
+.shelf{margin:10px 0 0 40px; float: left;}
+.sheri{width:360px; float: right; margin:50px 60px 0 0px;}
+.sheri .sh_tit{width:100%; height:60px; line-height:60px; color:#fff;   border-bottom:solid 1px #ffffff;  font-size:20px;}
+.sheri .sh_tit a{color: #fff;  font-size:24px;}
+
+.sh_tr{margin-top:10px;  text-align: center;}
+.sh_tr a{font-size:15px; width:88px; color:#fff; display: block; float: left;  margin:5px 0;  line-height:30px; height:30px; overflow:hidden;}
+/*.sh_tr a.son{background:#ff8c14;}*/
+
+.neir{width:220px; height:160px; background:#263889; position: absolute; top:150px; left:540px;  display: none;}
+.jied{width:220px; height:160px; background:#263889; position: absolute; top:150px; left:540px;  display: none;}
+.sh_dw{position: relative;}
+#gub{position:absolute; right: 1px; top: 0px; font-size:20px; color:#fff;}
+.neir .ne_sp{width:180px; margin:0 auto; height:40px; line-height:40px; border-bottom:solid 1px #fff;}
+.neir .ne_sp a{font-size:12px; color:#444; background:#fff; float: right;  height:20px; line-height:20px; margin-top:10px;}
+.neir .ne_sp span{font-size:14px; color:#fff;  float:left;}
+.ne_sr{width:180px; margin:0 auto; height:110px; overflow-y:scroll;}
+.ne_sr a{line-height:30px; height:30px; color:#fff; width:160px; display: block; overflow: hidden;}
+.jied{width:220px; height:160px; background:#263889; position: absolute; top:150px; left:540px;  display: none;}
+.jied .ne_sp{width:180px; margin:0 auto; height:40px; line-height:40px; border-bottom:solid 1px #fff;}
+.jied .ne_sp a{font-size:12px; color:#444; background:#fff; float: right;  height:20px; line-height:20px; margin-top:10px;}
+.jied .ne_sp span{font-size:14px; color:#fff;  float:left;}
+#gub1{position:absolute; right: 1px; top: 0px; font-size:20px; color:#fff;}
+.rights{width:100px;text-align:right;}
+.lefts{margin-left:10px;width:170px;}
+#alert5 table {font-size:16px;}
+#alert5 table tr{height:35px;}
+#alert5 table .btn{width:80px;height:30px;line-height:30px;}
+#data1 tr {height:40px;line-height:0px;}
+#data1 p {line-height:20px;}
+#data1 .btn{width:80px;height:35px;line-height:35px; border:none; background:#d81e06; color:#fff; font-size:16px; cursor:pointer;}
+#data1 textarea{border:none; background:#F9F9F9;resize:none;}
+#data1 .long{width:200px;}
+</style>
+
+<script type="text/javascript"> 
+//滚动条js
+var did="${channel.departId}";
+$(function(){
+	getEvent();
+});
+function inParty(){
+	var risendpName = $("[name='risendpName']").val();
+	var risendpIdnumber = $("[name='risendpIdnumber']").val();
+	var risendpBirth = $("[name='risendpBirth']").val();
+	var risendpNation = $("[name='risendpNation']").val();
+	var risendpNative = $("[name='risendpNative']").val();
+	
+	if(risendpName==""){
+		alert("请输入姓名");
+		return false;
+	}else if(risendpIdnumber==""){
+		alert("请输入身份证号码");
+		return false;
+	}else if(risendpIdnumber.length!=18){
+		alert("身份证号码长度为18位");
+		return false;
+	}else if(risendpBirth==""){
+		alert("请输入生日");
+		return false;
+	}else if(risendpNation==""){
+		alert("请输入民族");
+		return false;
+	}else if(risendpNative==""){
+		alert("请输入籍贯");
+		return false;
+	}else{
+		var url = "${base}/risenDevparty/save.jspx";
+		var risendpExpands1 = $("[name='risendpExpands1']").val();
+		var risendpExpands3 = $("[name='risendpExpands3']").val();
+		var risendpMarriage = $("[name='risendpMarriage']:checked").val();
+		var risendpSex = $("[name='risendpSex']:checked").val();
+		var risendpBranch = $("[name='risendpBranch']").val();
+		$.ajaxSetup({
+       	 contentType: "application/x-www-form-urlencoded; charset=utf-8"
+         });
+		$.post(url,{risendpMarriage:risendpMarriage,risendpSex:risendpSex,risendpBranch:risendpBranch,risendpExpands3:risendpExpands3,risendpName:risendpName,risendpIdnumber:risendpIdnumber,risendpBirth:risendpBirth,risendpNation:risendpNation,risendpNative:risendpNative,risendpExpands1:risendpExpands1},function(result){
+			if(result=="success"){
+				alert("添加成功");
+				$("#alert5").hide();
+			}else{
+				alert("添加失败,请稍候添加");
+			}
+		});
+		return true;
+	}
+}
+function ScrollImgLeft_toDay(){ 
+	var speed_toDay=50; 
+	var scroll_begin_toDay = document.getElementById("scroll_begin_toDay"); 
+	var scroll_end_toDay = document.getElementById("scroll_end_toDay"); 
+	var scroll_div_toDay = document.getElementById("scroll_div_toDay"); 
+	scroll_end_toDay.innerHTML=scroll_begin_toDay.innerHTML; 
+	function Marquee(){ 
+	if(scroll_end_toDay.offsetWidth-scroll_div_toDay.scrollLeft<=0) 
+		scroll_div_toDay.scrollLeft-=scroll_begin_toDay.offsetWidth; 
+	else 
+		scroll_div_toDay.scrollLeft++; 
+	} 
+	var MyMar_toDay=setInterval(Marquee,speed_toDay); 
+	scroll_div_toDay.onmouseover=function() {clearInterval(MyMar_toDay);} 
+	scroll_div_toDay.onmouseout=function() {MyMar_toDay=setInterval(Marquee,speed_toDay);} 
+} 
+
+function ScrollImgLeft_toMonth(){ 
+	var speed=50; 
+	var scroll_begin = document.getElementById("scroll_begin_toMonth"); 
+	var scroll_end = document.getElementById("scroll_end_toMonth"); 
+	var scroll_div = document.getElementById("scroll_div_toMonth"); 
+	scroll_end.innerHTML=scroll_begin.innerHTML; 
+	function Marquee(){ 
+	if(scroll_end.offsetWidth-scroll_div.scrollLeft<=0) 
+		scroll_div.scrollLeft-=scroll_begin.offsetWidth; 
+	else 
+		scroll_div.scrollLeft++; 
+	} 
+	var MyMar=setInterval(Marquee,speed); 
+	scroll_div.onmouseover=function() {clearInterval(MyMar);} 
+	scroll_div.onmouseout=function() {MyMar=setInterval(Marquee,speed);} 
+} 
+
+function getToday(date){
+	$("#dataInfo").html("");
+	$.post('${base}/getAll.jspx',{"date":date,"id":did},function(data){
+		var t="";
+		if(data.length<1){
+			$("#dataInfo").append("<li>暂无活动</li>");
+		}else{
+			for(var i=0;i<data.length;i++){
+				if("8"==data[i].risenlcMeetingtype){
+					var con=Format(data[i].risenlcOdate,false)+"支部【"+data[i].risenlcOrgname+"】换届，请及时处理";
+					$("#dataInfo").append("<li><a href='javascript:;' style='width:200px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis' title='"+con+"' onClick=''>"+con+"</a></li>");
+				}else{
+					var content = "";
+					t=checkType(data[i].risenlcMeetingtype);
+					if((data[i].risenlcAddress==null || data[i].risenlcAddress=="" || typeof(data[i].risenlcAddress)=="undefined") &&  
+						(data[i].risenlcHoldername==null || data[i].risenlcHoldername=="" ||  typeof(data[i].risenlcHoldername)=="undefined")){
+						content=Format(data[i].risenlcOdate,false)+":开展"+t;
+					}else if(data[i].risenlcAddress==null || data[i].risenlcAddress=="" || typeof(data[i].risenlcAddress)=="undefined"){
+						content=Format(data[i].risenlcOdate,false)+":开展由"+data[i].risenlcHoldername+"组织的"+t;
+					}else if(data[i].risenlcHoldername==null || data[i].risenlcHoldername=="" ||  typeof(data[i].risenlcHoldername)=="undefined"){
+						content=Format(data[i].risenlcOdate,false)+":在"+data[i].risenlcAddress+"开展"+t;
+					}else{
+						content=Format(data[i].risenlcOdate,false)+":在"+data[i].risenlcAddress+"开展由"+data[i].risenlcHoldername+"组织的"+t;
+					}
+					$("#dataInfo").append("<li><a href='javascript:;' style='width:200px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis' title='"+content+"' onClick='showCaInfo("+data[i].risenlcUuid+");'>"+content+"</a></li>");
+				}
+			}
+		}
+	});
+}	
+
+var dates=null;
+function getEvent(){
+	$.ajax({  
+		type : "post",  
+        url : "${base}/getEvent.jspx", 
+        data:{"id":did}, 
+        async : false,  
+        success : function(data){ 
+			dates=new Array();
+			for(var i=0;i<data.length;i++){
+				dates[i]=Format(data[i],false);
+			}
+			WdatePicker({eCont:'div1',onpicked:function(dp){
+				//alert('你选择的日期是:'+dp.cal.getDateStr());
+				hide(this,"showTitle");
+				getToday(dp.cal.getDateStr());
+			    $("#alert1").show();
+			    $(".zezo").show();
+			    getByMonthAll();
+			},
+			ychanged:function(dp){
+				var year = dp.cal.getP('y');
+				var month = dp.cal.getP('M');
+				var url = "${base}/changeStyle.jspx";
+				$.ajax({  
+					type : "post",  
+					url : url,
+					data : {departId:did,year:year,month:month},
+					dataType : "json" , 
+					success : function(data){
+						if(data.length>0){
+							for(var i = 0;i<data.length;i++){
+								var datas = data[i].split(',');
+								var day = datas[0];
+								var type = datas[1];
+								addStyle(".Wday",day,type);
+								addStyle(".Wwday",day,type);
+								addStyle(".Wselday",day,type);
+							}
+							
+						}
+					}
+				});
+			},
+			Mchanged:function(dp){
+				var year = dp.cal.getP('y');
+				var month = dp.cal.getP('M');
+				var url = "${base}/changeStyle.jspx";
+				$.ajax({  
+					type : "post",  
+					url : url,
+					data : {departId:did,year:year,month:month},
+					dataType : "json" , 
+					success : function(data){
+						if(data.length>0){
+							for(var i = 0;i<data.length;i++){
+								var datas = data[i].split(',');
+								var day = datas[0];
+								var type = datas[1];
+								addStyle(".Wday",day,type);
+								addStyle(".Wwday",day,type);
+								addStyle(".Wselday",day,type);
+							}
+							
+						}
+					}
+				});
+			}});
+			
+		}  
+	});
+	
+	setTimeout(function () { 
+       	getByMonthAll();
+    }, 2000)
+    
+}
+function addStyle(className,haveDay,type){
+	$("#wd_iframe").contents().find(className).each(function(){
+		var day = $(this).html();
+		if (day==parseInt(haveDay)) {
+			attrClass(this,type,day);
+		}
+	});
+}
+function getByMonthAll(){
+	[#if rolcByMonthList??]
+		[#list rolcByMonthList as rolcByMonth]
+			var time = '${rolcByMonth.risenlcOdate?string("yyyy-MM-dd")}';
+			var type = '${rolcByMonth.risenlcMeetingtype!}';
+			var timearr=time.replace(" ",":").replace(/\:/g,"-").split("-");
+			//alert("day:"+timearr[2]+"    type:"+type);
+			$("#wd_iframe").contents().find(".Wday").each(function(){
+				var day = $(this).html();
+				if (day==parseInt(timearr[2])) {
+					attrClass(this,type,day);
+				}
+			});
+			
+			$("#wd_iframe").contents().find(".Wwday").each(function(){
+				var day = $(this).html();
+				if (day==parseInt(timearr[2])) {
+					attrClass(this,type,day);
+				}
+			});
+			
+			$("#wd_iframe").contents().find(".Wselday").each(function(){
+				var day = $(this).html();
+				if (day==parseInt(timearr[2])) {
+					attrClass(this,type,day);
+				}else{
+					attrClass(this,'000',day);
+				}
+				
+			});
+		[/#list]
+	[/#if]
+}
+
+function show(obj,day,id,content) { 
+	var objDiv = $("#"+id+""); 
+	$("#titleInfo").html("今日开展的活动有："+content);
+	$("#toDayActivity").html("本日活动("+day+"日)")
+	$(objDiv).css("display","block"); 
+	$(objDiv).css("left", "0"); 
+	$(objDiv).css("top", "0"); 
+} 
+function hide(obj,id) { 
+	var objDiv = $("#"+id+""); 
+	$(objDiv).css("display", "none"); 
+} 
+
+//动态给my97设置选中颜色
+function attrClass(obj,type,day){
+	if (type=='1') {
+		$(obj).attr("class","Wselday_dydh");
+		$(obj).mouseout(function(){
+		  	$(obj).attr("class","Wselday_dydh");
+		  	hide(obj,"showTitle");
+		});
+		$(obj).mouseover(function(){
+			show(obj,day,"showTitle","党员大会");
+		});
+	}else if (type=='2') {
+		$(obj).attr("class","Wselday_dxzhy");
+		$(obj).mouseout(function(){
+		  	$(obj).attr("class","Wselday_dxzhy");
+		  	hide(obj,"showTitle");
+		});
+		$(obj).mouseover(function(){
+			show(obj,day,"showTitle","党小组会议");
+		});
+	}else if (type=='3') {
+		$(obj).attr("class","Wselday_dk");
+		$(obj).mouseout(function(){
+		  	$(obj).attr("class","Wselday_dk");
+		  	hide(obj,"showTitle");
+		});
+		$(obj).mouseover(function(){
+		  	show(obj,day,"showTitle","党课会议");
+		});
+	}else if (type=='4') {
+		$(obj).attr("class","Wselday_dzbwyh");
+		$(obj).mouseout(function(){
+		  	$(obj).attr("class","Wselday_dzbwyh");
+		  	hide(obj,"showTitle");
+		});
+		$(obj).mouseover(function(){
+		  	show(obj,day,"showTitle","党支部委员会");
+		});
+	}else if (type=='5') {
+		$(obj).attr("class","Wselday_dzbzzshh");
+		$(obj).mouseout(function(){
+		  	$(obj).attr("class","Wselday_dzbzzshh");
+		  	hide(obj,"showTitle");
+		});
+		$(obj).mouseover(function(){
+		  	show(obj,day,"showTitle","党支部组织生活会");
+		});
+	}else if (type=='6') {
+		$(obj).attr("class","Wselday_ztdr");
+		$(obj).mouseout(function(){
+		  	$(obj).attr("class","Wselday_ztdr");
+		  	hide(obj,"showTitle");
+		});
+		$(obj).mouseover(function(){
+		  	show(obj,day,"showTitle","主题党日活动");
+		});
+	}else if(type=='000'){
+		$(obj).attr("class","Wselday");
+		$(obj).mouseout(function(){
+		  	$(obj).attr("class","Wselday");
+		  	hide(obj,"showTitle");
+		});
+		$(obj).mouseover(function(){
+		  	show(obj,day,"showTitle","暂无活动开展");
+		});
+	}
+}
+
+function closeMe(){
+	$("#alert7").hide();
+	$(".zezo").hide();
+}
+function printMe(id){
+	window.open("${base}/print/getBaseOneData.jspx?id="+id,"_blank");
+}
+function showData(id){
+	$("#data1").html("");
+	$.post('${base}/getData.jspx',{"id":id},function(data){
+		if(data==null||data==""){
+			$("#data1").append("<tr style='text-align:center;'><td colspan='4'>暂无活动</td></tr>");
+		}else{
+			var t=checkType(data.risenlcMeetingtype);
+			var firstLine = "<tr><td class='rights'>时　　　间：</td><td class='long'>"+Format(data.risenlcOdate,false)+"</td>";
+			if (data.risenlcAddress==null || data.risenlcAddress=="" || typeof(data.risenlcAddress)=="undefined") {
+				firstLine = firstLine + "<td class='rights'>地　　　点：</td><td class='long'>"+未填写+"</td></tr>";
+			}else{
+				firstLine = firstLine + "<td class='rights'>地　　　点：</td><td class='long'>"+data.risenlcAddress+"</td></tr>";
+			}
+			$("#data1").append(firstLine);
+			var secondLine = "";
+			if (data.risenlcParticipant==null || data.risenlcParticipant=="" || typeof(data.risenlcParticipant)=="undefined") {
+				secondLine = "<tr><td class='rights'>主　持　人：</td><td class='long'>未填写</td>";
+			}else{
+				secondLine = "<tr><td class='rights'>主　持　人：</td><td class='long'>"+data.risenlcParticipant+"</td>";
+			}
+			if (data.risenlcContactor==null || data.risenlcContactor=="" || typeof(data.risenlcContactor)=="undefined") {
+				secondLine = secondLine + "<td style ='margin-left:10px;' class='rights'>记　录　人：</td><td　class='long'>未填写</td></tr>";
+			}else{
+				secondLine = secondLine + "<td style ='margin-left:10px;' class='rights'>记　录　人：</td><td class='long'>"+data.risenlcContactor+"</td></tr>";
+			}
+			$("#data1").append(secondLine);
+			if(data.risenlcContent==null || data.risenlcContent=="" || typeof(data.risenlcContent)=="undefined"){
+				var thirdLine = "<tr><td class='rights'>主&nbsp;要&nbsp;议&nbsp;题：</td><td colspan='3'><textarea rows='3' cols='60' disabled>未填写</textarea></td></tr>";
+				$("#data1").append(thirdLine);
+			}else{
+				var thirdLine = "<tr><td class='rights'>主&nbsp;要&nbsp;议&nbsp;题：</td><td colspan='3'><textarea rows='3' cols='60' disabled>"+data.risenlcContent+"</textarea></td></tr>";
+				$("#data1").append(thirdLine);
+			}
+			var fourthLine = "<tr><td class='rights'>应&nbsp;到&nbsp;人&nbsp;数：</td>";
+			if(data.risenlcYdrs==null || data.risenlcYdrs=="" || typeof(data.risenlcYdrs)=="undefined"){
+				fourthLine = "<td class='long'>未填写</td>";
+			}else{
+				fourthLine = fourthLine + "<td class='long'>"+data.risenlcYdrs+"</td>";
+			}
+			if(data.risenlcSdrs==null || data.risenlcSdrs=="" || typeof(data.risenlcSdrs)=="undefined"){
+				fourthLine = "<td class='rights' style ='margin-left:10px;' >实&nbsp;到&nbsp;人&nbsp;数：</td><td class='long'>未填写</td></tr>";
+			}else{
+				fourthLine = fourthLine + "<td class='rights' style ='margin-left:10px;'>实&nbsp;到&nbsp;人&nbsp;数：</td><td class='long'>"+data.risenlcSdrs+"</td></tr>";
+			}
+			$("#data1").append(fourthLine);
+			var fifthLine = "<tr><td class='rights'><p>党员领导干　</p><p>部参会情况：</p></td><td colspan='3'>";
+			if(!(data.risenlcLd1==null || data.risenlcLd1=="" || typeof(data.risenlcLd1)=="undefined")&&(data.risenlcYn1=="1")){
+				fifthLine = fifthLine + data.risenlcLd1;
+			}
+			if(!(data.risenlcLd2==null || data.risenlcLd2=="" || typeof(data.risenlcLd2)=="undefined")&&(data.risenlcYn2=="1")){
+				fifthLine = fifthLine + "," + data.risenlcLd2;
+			}
+			if(!(data.risenlcLd3==null || data.risenlcLd3=="" || typeof(data.risenlcLd3)=="undefined")&&(data.risenlcYn3=="1")){
+				fifthLine = fifthLine + "," + data.risenlcLd3;
+			}
+			if(!(data.risenlcLd4==null || data.risenlcLd4=="" || typeof(data.risenlcLd4)=="undefined")&&(data.risenlcYn4=="1")){
+				fifthLine = fifthLine + "," + data.risenlcLd4;
+			}
+			if(!(data.risenlcLd5==null || data.risenlcLd5=="" || typeof(data.risenlcLd5)=="undefined")&&(data.risenlcYn5=="1")){
+				fifthLine = fifthLine + "," + data.risenlcLd5 ;
+			}
+			if(!(data.risenlcLd6==null || data.risenlcLd6=="" || typeof(data.risenlcLd6)=="undefined")&&(data.risenlcYn6=="1")){
+				fifthLine = fifthLine + "," + data.risenlcLd6;
+			}
+			fifthLine = fifthLine + "</td></tr>";
+			$("#data1").append(fifthLine);
+			if(data.risenlcComment==null || data.risenlcComment=="" || typeof(data.risenlcComment)=="undefined"){
+				var sixthLine = "<tr><td class='rights'>描　　　述：</td><td colspan='3'><textarea rows='3' disabled cols='60'>未填写</textarea></td></tr>";
+				$("#data1").append(sixthLine);
+			}else{
+				var reg=new RegExp('<p>','g'); //创建正则RegExp对象  
+				var reg1=new RegExp('</p>','g'); //创建正则RegExp对象  
+				var newstr=data.risenlcComment.replace(reg,'');  
+				var content=newstr.replace(reg1,'\r\n');  
+				var sixthLine = "<tr><td class='rights'>描　　　述：</td><td colspan='3'><textarea rows='3' disabled cols='60'>"+content+"</textarea></td></tr>";
+				$("#data1").append(sixthLine);
+			}
+			var seventhLine = "<tr style='text-align:center;'><td colspan='4'><input type='button' class='btn' name='print' onClick='printMe("+id+");' value='打印'/>";
+			seventhLine = seventhLine + "<input class='btn' type='button' name='close' style='margin-left:10px;' onClick='closeMe();' value='关闭'/></td></tr>";
+			$("#data1").append(seventhLine);
+		}
+	});
+}
+
+function checkType(type){
+	var t='';
+	if(type=="1"){
+		t="支部党员大会";
+	}else if(type=="2"){
+		t="党小组会";
+	}else if(type=="3"){
+		t="党课";
+	}else if(type=="4"){
+		t="党支部委员会";
+	}else if(type=="5"){
+		t="组织生活会";
+	}else if(type=="6"){
+		t="主题党日";
+	}
+	return t;
+}
+</script> 
+<script type="text/javascript">
+function showXfph(id){
+	$("#alert4").show();
+	$("#xfphul li:not(#firstLine)").empty();
+	$.ajax({  
+		type : "post",  
+		url : "${base}/findXfpx.jspx?departid="+id,  
+		data : {},
+		dataType : "json" , 
+		success : function(data){
+			if(data.length>0){
+				for(var i=0;i<data.length;i++){
+					var datas = data[i].split(',');
+					var username = datas[0];
+					var deptName = datas[1];
+					var qtScore = datas[2];
+			        $("#xfphul").append("<li><span style='margin:0 20px;'>"+username+"</span><span style='margin:0 20px;'>"+deptName+"</span><span style='margin:0 10px;'>"+qtScore+"</span></li>");
+				}
+			}
+		}
+	});
+}
+</script>
+<body>
+	<div class="zezo"></div>
+	[#include "../include/header_zhibu_index.html"/]
+    
+	[@cms_channel_list parentId='${channel.id}' orderBy='4']
+		[#assign i="tag_list_index"/]
+		[#list tag_list as c]
+			[#if c_index==0] [#assign tpxw="${c.id}"/][#assign tpxwu="${c.url}"/][/#if]
+        	[#if c_index==1] [#assign zbdt="${c.id}"/][#assign zbdtu="${c.url}"/][/#if]
+        	[#if c_index==2] [#assign tzgg="${c.id}"/][#assign tzggu="${c.url}"/][/#if]
+        	[#if c_index==3] [#assign dfjn="${c.id}"/][#assign dfjnu="${c.url}"/][/#if] 
+        	[#if c_index==4] [#assign dwgk="${c.id}"/][#assign dwgku="${c.url}"/][/#if] 
+        	[#if c_index==5] [#assign tsgz="${c.id}"/][#assign tsgzu="${c.url}"/][/#if] 
+        	[#if c_index==6] [#assign zdjs="${c.id}"/][#assign zdjsu="${c.url}"/][/#if] 
+        [/#list]
+  	[/@cms_channel_list]
+  	
+    <div class="conter" id="container">
+         <div class="coen">
+             <div class="time1" >
+                  <div class="ti1">
+                      <div id="slideBox" class="slideBox">
+                        <div class="hd">
+                            <ul><li></li><li></li><li></li></ul>
+                        </div>
+                        <div class="bd">
+                            <ul>
+                            [@cms_content_list typeId='2,3' count='3' titLen='18' channelId='${tpxw}' orderBy='4' dateFormat='yyyy-MM-dd']
+      							[#list tag_list as a]
+                                <li><a href="${a.url!}" target="_blank"><img src="${a.typeImg!}" /></a></li>
+                                [/#list]
+      						[/@cms_content_list]
+                            </ul>
+                        </div>
+		            </div>  
+              	</div>
+				<script type="text/javascript">
+					jQuery(".slideBox").slide({mainCell:".bd ul",autoPlay:true});
+				</script>
+				<div class="ti2">
+					<span><a target="_blank" href="${zbdtu}" >支部动态</a></span>
+                    <ul>
+                    [@cms_content_list count='6' channelId='${zbdt}' orderBy='4' titLen='20' dateFormat='yyyy-MM-dd']
+				    	[#list tag_list as a]
+				        <li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+				        [/#list]
+				    [/@cms_content_list]
+                    </ul>
+                </div>
+				<div class="ti2">
+                	<span><a target="_blank" href="${tzggu}">规范化党支部</a></span>
+                	<ul>
+                    [@cms_content_list count='6' channelId='${tzgg}' orderBy='4' titLen='20' dateFormat='yyyy-MM-dd']
+				    	[#list tag_list as a] 
+				    	<li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+				    	[/#list]
+				    [/@cms_content_list]
+                    </ul>
+				</div>
+			</div>
+			<div class="time2">
+            	<div class="title"><span>党务管理</span></div>
+                <div class="ti1">
+                	<span class="soan"><a href="javascript:;">组织生活日历</a></span>
+                    <div class="y-total"  id="div1"></div>
+                    <div id="showTitle" class="titleHoverShow">
+                    	<div><a id="toDayActivity" class="titleHover-tilte">本日活动</a></div>
+                        <ul id="titleInfo">
+                        </ul>	
+                    </div>
+                    <div id="alert1" class="y-baes" style="width: 450px;z-index:1000;">
+                    	<div><a class="jrei">今日提醒</a><a id="b1" class="jrei1" href="javascript:;">×</a></div>
+                        <ul id="dataInfo" style="width: 450px;padding-left: 45px;">
+                        </ul>
+                    </div>
+                    <div id="alert7" class="y-baes" style="width: 600px;height:390px;z-index:1001;">
+                    	<div><a class="jrei">活动详情</a><a id="b7" class="jrei1" href="javascript:;">×</a></div>
+						<table id="data1" style="font-size: 16px;padding-left:10px;padding-top: 10px; ">
+						</table>
+                    </div>
+                    <div class="tuxi">
+                    	<!-- 
+                    	<div class="zhoy"><span class="zh1" ><a href="javascript:void(0);" onclick="toDayMessage()"">今日提醒：</a></span>
+                    		[#if month??]
+							<div id="gundong_today"> 
+								<div style="width:300px;height:50px;margin:0 auto;white-space: nowrap;overflow:hidden;" id="scroll_div_toDay" class="scroll_div"> 
+									<div id="scroll_begin_toDay" class="zhoy"> 
+									[#list dayList as day]
+										[#if day?? && day!='1' && day.risenlcMeetingtype=="8"]
+											${day.risenlcOdate?string("yyyy-MM-dd")},支部【${day.risenlcOrgname}】换届，请及时处理
+		                           		[#elseif day?? && day!='1' &&day.risenlcMeetingtype!="8"]
+		                            		${day.risenlcOdate?string("HH:mm")}将组织
+											[#if day.risenlcMeetingtype=='1']党员大会[/#if]
+											[#if day.risenlcMeetingtype=='2']党小组会议[/#if]
+											[#if day.risenlcMeetingtype=='4']党支部委员会[/#if]
+											[#if day.risenlcMeetingtype=='3']党课[/#if]
+											[#if day.risenlcMeetingtype=='6']主题党日活动[/#if]
+											[#if day.risenlcMeetingtype=='5']党支部组织生活会[/#if],地点${day.risenlcAddress}.<a href="javascript:;" title="点击查看明细" onClick="showInfo(${day.risenlcUuid});">【查看详细】</a>
+		                           		[#else]
+		                           	   		暂无活动
+		                           		[/#if]
+	                           		[/#list]
+									</div> 
+									<div id="scroll_end_toDay"></div> 
+								</div> 
+								<script type="text/javascript">ScrollImgLeft_toDay();</script> 
+                        	</div>
+                        	[#else]
+								暂无活动
+							[/#if]
+                        </div>
+                         -->
+						<div class="jroy"><span class="zh1">换届提醒：</span>
+							[#if month??]
+							<div id="gongao"> 
+								<div style="width:300px;height:50px;margin:0 auto;white-space: nowrap;overflow:hidden;" id="scroll_div_toMonth" class="scroll_div"> 
+								<div id="scroll_begin_toMonth" class="zhoy"> 
+								[#list month as b]
+									[#if b.risenlcMeetingtype=='8']
+										${b.risenlcOdate?string("yyyy-MM-dd HH:mm:ss")}支部-【${day.risenlcOrgname}】换届，请及时处理
+									[#else]
+										<!-- 
+										${b.risenlcOdate?string("MM-dd HH:mm")}将组织
+										[#if b.risenlcMeetingtype=='1']党员大会[/#if]
+										[#if b.risenlcMeetingtype=='2']党小组会议[/#if]
+										[#if b.risenlcMeetingtype=='4']党支部委员会[/#if]
+										[#if b.risenlcMeetingtype=='3']党课[/#if]
+										[#if b.risenlcMeetingtype=='6']主题党日活动[/#if]
+										[#if b.risenlcMeetingtype=='5']党支部组织生活会[/#if],地点${b.risenlcAddress}.<a href="javascript:;" title="点击查看明细" onClick="showInfo(${b.risenlcUuid});">【查看详细】</a>
+										 -->
+									[/#if]
+								[/#list]
+								</div> 
+								<div id="scroll_end_toMonth"></div> 
+							</div> 
+							<script type="text/javascript">ScrollImgLeft_toMonth();</script> 
+						</div> 
+                        [#else]
+							暂无活动
+						[/#if]
+						</div>
+					</div>
+				</div>
+                <div class="ti2">
+                	<span class="soan"><a target="_blank" href="${dfjnu}">党费缴纳</a></span>
+                	<ul>
+	                [@cms_content_list count='6' channelId='${dfjn}' orderBy='4' titLen='20' dateFormat='yyyy-MM-dd']
+						[#list tag_list as a]
+						<li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+						[/#list]
+					[/@cms_content_list]
+                	</ul>
+                </div>
+                <div class="ti3">
+                	<span class="soan"><a target="_blank" href="${dwgku}">党务公开</a></span>
+               		<ul>
+                    [@cms_content_list count='6' channelId='${dwgk}' orderBy='4' titLen='20' dateFormat='yyyy-MM-dd']
+						[#list tag_list as a]
+						<li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+						[/#list]
+					[/@cms_content_list]
+                    </ul>            
+				</div>
+				<div class="fantp">
+					<a href="javascript:;" onclick="$('#alert5').show();"><img src="${base}/r/cms/currency/images/12.png" alt=""><span>我要入党</span></a>
+                   	<a href="javascript:;" onclick="showXfph(${channel.depart.id!})"><img src="${base}/r/cms/currency/images/13.png" alt=""><span>先锋指数</span></a> 
+                    <a href="javascript:;" onclick="$('#alert3').show();"><img src="${base}/r/cms/currency/images/14.png" alt=""><span>党费计算器</span></a>
+                    <a href="${base}/admin/login.do" target="_blank"><img src="${base}/r/cms/currency/images/15.png" alt=""><span>组织信息</span></a>
+                    <a href="${base}/admin/login.do" target="_blank"><img src="${base}/r/cms/currency/images/27.png" alt=""><span>党员信息</span></a>
+               	</div>
+             	<div id="alert3" class="y-baes" style="width: 900px;height: 900px;">
+                	<div><a class="jrei">党费计算器</a><a id="b1" class="jrei1" href="javascript:;" onclick="$('#alert3').hide()">×</a></div>
+                	<iframe style="width: 100%;height: 100%;overflow: hidden;margin-right: 200px;" src="/thirdparty/dfjs/duescalculator.html"></iframe>
+             	</div>
+            </div>
+            <div id="alert4" class="y-baes" style="width: 450px;">
+				<div><a class="jrei">先锋排行</a><a id="b2" class="jrei1" href="javascript:;" onclick="$('#alert4').hide()">×</a></div>
+				<ul id="xfphul" style="font-size:38px;padding-top: 10px; ">
+					<li id="firstLine"><span style="margin:0 20px;">党员姓名</span><span style="margin:0 70px;">部门名称</span><span style="margin:0 20px;">指标总分</span></li>
+				</ul>
+			</div>
+			<div id="alert5" class="y-baes" style="width:560px;" >
+             	<div><a class="jrei">人员信息</a><a id="b3" class="jrei1" href="javascript:;" onclick="$('#alert5').hide()">×</a></div>
+                	<table>
+                		<tr>
+                			<td class="rights">姓	名:</td>
+                			<td class="lefts"><input type="text"  name="risendpName" /></td>
+                			<td class="rights">身份证号码:</td>
+                			<td class="lefts"><input type="text"  name="risendpIdnumber" /></td>
+                		</tr>
+                		<tr>
+                			<td class="rights">性	别:</td>
+                			<td class="lefts">
+                				<input type="radio" name="risendpSex" value="1" checked/>男
+                				<input type="radio" name="risendpSex" value="0"/>女
+                			</td>
+                			<td class="rights">出生日期:</td>
+                			<td class="lefts"><input type="text"  name="risendpBirth" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /></td>
+                		</tr>
+                		<tr>
+                			<td class="rights">所在党支部:</td>
+                			<td class="lefts"><label>${channel.depart.name!''}</label>
+                			<input type="hidden"  name="risendpBranch" readonly value="${channel.depart.name!''}" /></td>
+                			<td class="rights">民	族:</td>
+                			<td class="lefts"><input type="text"  name="risendpNation" /></td>
+                		</tr>
+                		<tr>
+                			<td class="rights">籍	贯:</td>
+                			<td class="lefts"><input type="text"  name="risendpNative" /></td>
+                			<td class="rights">婚姻状况:</td>
+                			<td class="lefts">
+                				<input type="radio" name="risendpMarriage" value="1" checked/>未婚
+                				<input type="radio" name="risendpMarriage" value="0"/>已婚
+                			</td>
+                		</tr>
+                		<tr>
+                			<td colspan="4" style="text-align:center;">
+                				<input name="risendpExpands1" type="hidden" value="1"/>
+                				<input name="risendpExpands3" type="hidden" value="${channel.depart.id!''}"/>
+                				<input type="button" class="btn" value="提交" onclick="inParty();" />
+                			</td>
+                		</tr>
+                	</table>
+            </div>
+            <div class="time3">
+            	<div class="title"><span>支部风采</span><a><img src="${base}/r/cms/currency/images/6.png" alt=""></a></div>
+            	<div class="ti1">
+                	<span class="soan"><a target="_blank" href="${tsgzu}">特色工作</a></span>
+                	<div class="neis">
+                		<ul>
+                        [@cms_content_list count='7' channelId='${tsgz}' orderBy='4' titLen='20' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                <li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+			             	[/#list]
+			          	[/@cms_content_list]
+                       </ul> 
+                   </div>
+				</div>  
+                <div class="ti2">
+                	<span class="soan"><a target="_blank" href="${zdjsu}">制度建设</a></span>
+                	<div class="neis">
+                    	<ul>
+                        [@cms_content_list count='7' channelId='${zdjs}' orderBy='4' titLen='20' dateFormat='yyyy-MM-dd']
+			           		[#list tag_list as a]
+			                <li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+			               	[/#list]
+			          	[/@cms_content_list]
+                       </ul>
+                   </div>
+				</div>   
+			</div>
+             
+            <div class="time4">
+            	<div class="title"><span>网上党校</span><a><img src="${base}/r/cms/currency/images/6.png" alt=""></a></div>
+                <div class="ti1">
+                	<span class="soan"><a target="_blank" href="${base}/index/dgdz/index.jhtml">党规党章</a></span>
+                    <div class="neis">
+                    	<ul>
+                        [@cms_content_list count='7' channelId='635' orderBy='4' titLen='20' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                <li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+			               	[/#list]
+			          	[/@cms_content_list]
+                        </ul>  
+                    </div>
+                </div>
+                <div class="ti1">
+                	<span class="soan"><a target="_blank" href="${base}/index/dwzb/index.jhtml">党务指南</a></span>
+                    <div class="neis">
+                    	<ul>
+                        [@cms_content_list count='7' channelId='636' orderBy='4' titLen='20' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                <li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+			               	[/#list]
+			          	[/@cms_content_list]
+                        </ul>  
+					</div>
+				</div>
+                <div class="ti1">
+                	<span class="soan"><a target="_blank" href="${base}/index/dbyl/index.jhtml">党报要论</a></span>
+                    <div class="neis">
+                    	<ul>
+                        [@cms_content_list count='7' channelId='638' orderBy='4' titLen='20' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                <li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+			               	[/#list]
+			          	[/@cms_content_list]
+                        </ul>  
+					</div>
+				</div>
+                 <div class="ti1">
+                     <span class="soan"><a target="_blank" href="${base}/index/dkhc/index.jhtml">党课荟萃</a></span>
+                     <div class="neis">
+                         <ul>
+                         [@cms_content_list count='7' channelId='3574' orderBy='4' titLen='20' dateFormat='yyyy-MM-dd']
+			               	[#list tag_list as a]
+			                <li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+			               	[/#list]
+			          	[/@cms_content_list]
+                         </ul>  
+                     </div>
+                </div>
+                <div class="ti1">
+                	<span class="soan"><a target="_blank" href="${base}/index/gxjd/index.jhtml">国学经典</a></span>
+                    <div class="neis">
+                        <ul>
+                        [@cms_content_list count='7' channelId='645' orderBy='4' titLen='20' dateFormat='yyyy-MM-dd']
+			            	[#list tag_list as a]
+			                <li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a></li>
+			               	[/#list]
+			          	[/@cms_content_list]
+                        </ul>  
+                    </div>
+                </div>
+                <div class="ti2">
+              		<div class="neis">
+                    	<a href="[@cms_content_list count='1' channelId='34750' orderBy='4'][#list tag_list as a]${a.url!}[/#list][/@cms_content_list]" target="_blank"><img src="${base}/r/cms/www/risen/images/83.png" alt=""></a>
+                        <a href="[@cms_content_list count='1' channelId='34752' orderBy='4'][#list tag_list as a]${a.url!}[/#list][/@cms_content_list]" target="_blank"><img src="${base}/r/cms/www/risen/images/84.png" alt=""></a>
+                        <a href="[@cms_content_list count='1' channelId='34748' orderBy='4'][#list tag_list as a]${a.url!}[/#list][/@cms_content_list]" target="_blank"><img src="${base}/r/cms/www/risen/images/85.png" alt=""></a>
+               		</div>
+              	</div>
+			</div>
+            
+            <div class="time5">
+           		<div class="title"><span>文化生活</span><a><img src="${base}/r/cms/currency/images/6.png" alt=""></a></div>
+                <div id="xiae">
+                	<div class="xito" id="zder">
+                    	<ul>
+                        	<li class="dcn">书画作品</li>
+                            <li>文学园地</li>
+                            <li>摄影天地</li>
+                            <li>健康养生</li>
+                        </ul>
+                    </div>
+                    <div class="xibt" id="sfds">
+                    	<div class="din">
+                       		<ul class="ske">
+                            [@cms_content_list count='7' channelId='647' orderBy='4' titLen='16' dateFormat='yyyy-MM-dd']
+						    	[#list tag_list as a]
+						    	<li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a><span>${a.date?string(dateFormat)}</span></li>
+						       	[/#list]
+						    [/@cms_content_list]
+                            </ul>
+                            <ul>
+                            [@cms_content_list count='7' channelId='647' orderBy='5' titLen='16' dateFormat='yyyy-MM-dd']
+						    	[#list tag_list as a]
+						        <li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a><span>${a.date?string(dateFormat)}</span></li>
+						    	[/#list]
+						    [/@cms_content_list]
+                            </ul>
+						</div>
+						<div>
+		                    <ul class="ske">
+		                    [@cms_content_list count='7' channelId='648' orderBy='4' titLen='16' dateFormat='yyyy-MM-dd']
+								[#list tag_list as a]
+								<li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a><span>${a.date?string(dateFormat)}</span></li>
+								[/#list]
+							[/@cms_content_list]
+		                    </ul>
+		                    <ul>
+		                    [@cms_content_list count='7' channelId='648' orderBy='5' titLen='16' dateFormat='yyyy-MM-dd']
+								[#list tag_list as a]
+								<li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a><span>${a.date?string(dateFormat)}</span></li>
+								[/#list]
+							[/@cms_content_list]
+		                    </ul> 
+						</div>
+                        <div>
+                        	<ul class="ske">
+                            [@cms_content_list count='7' channelId='651' orderBy='4' titLen='16' dateFormat='yyyy-MM-dd']
+						    	[#list tag_list as a]
+						        <li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a><span>${a.date?string(dateFormat)}</span></li>
+						     	[/#list]
+						    [/@cms_content_list]
+                        	</ul>
+                            <ul>
+                            [@cms_content_list count='7' channelId='651' orderBy='5' titLen='16' dateFormat='yyyy-MM-dd']
+						     	[#list tag_list as a]
+						    	<li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a><span>${a.date?string(dateFormat)}</span></li>
+						    	[/#list]
+						    [/@cms_content_list]
+                            </ul>
+						</div>
+                        <div>
+                        	<ul class="ske">
+                            [@cms_content_list count='7' channelId='649' orderBy='4' titLen='16' dateFormat='yyyy-MM-dd']
+						    	[#list tag_list as a]
+						    	<li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a><span>${a.date?string(dateFormat)}</span></li>
+						    	[/#list]
+							[/@cms_content_list]
+                        	</ul>
+                            <ul>
+                            [@cms_content_list count='7' channelId='649' orderBy='5' titLen='16' dateFormat='yyyy-MM-dd']
+						    	[#list tag_list as a]
+						     	<li><a href="${a.url!}" target="_blank">[@text_cut s=a.title len=titLen append='...' /]</a><span>${a.date?string(dateFormat)}</span></li>
+						    	[/#list]
+						    [/@cms_content_list]
+							</ul>
+						</div>
+					</div>
+	             </div>
+             </div>
+         </div>
+    </div>
+    [#include "../include/footer_zhibu.html"/]
+ <script>
+/* WdatePicker({eCont:'div1', specialDates:dates,onpicked:function(dp){
+	//alert('你选择的日期是:'+dp.cal.getDateStr());
+	getToday(dp.cal.getDateStr());
+    $("#alert1").show();
+    $(".zezo").show();
+}}) */
+</script> 
+<script>
+	window.onload = function(){
+		var zto = document.getElementById("zder");
+		var zrc = zto.getElementsByTagName("li");
+		var sef = document.getElementById("sfds");
+		var zsr = sef.getElementsByTagName("div")
+		for(var i=0; i<zrc.length; i++){
+			zrc[i].sade = i;
+			zrc[i].onclick = function(){	
+			    for(var i=0; i<zrc.length; i++){
+				   zrc[i].className = "";
+				   zsr[i].className = ""; 
+				}
+				this.className = "dcn";
+				zsr[this.sade].className = "din";
+			};
+		};
+	};
+</script>
+<script>
+function showInfo(id){
+	showData(id);
+	$("#alert7").show();
+    $(".zezo").show();
+}
+
+function showCaInfo(id){
+	showData(id);
+	$("#alert7").show();
+    $(".zezo").show();
+}
+
+$(function(){
+	$("#b1").click(function(){
+		$("#alert1").hide();
+		$(".zezo").hide();
+	});
+	$("#b2").click(function(){
+		$("#alert2").hide();
+		$(".zezo").hide();
+	});
+	$("#b7").click(function(){
+		$("#alert7").hide();
+		$(".zezo").hide();
+	});
+});
+
+//格式化日期
+function Format(str,flag){  
+	var oDate = new Date(str),  
+	oYear = oDate.getFullYear(),  
+	oMonth = oDate.getMonth()+1,  
+	oDay = oDate.getDate(),  
+	oHour = oDate.getHours(),  
+	oMin = oDate.getMinutes(),  
+	oSen = oDate.getSeconds(),  
+	oTime = oYear +'-'+ getzf(oMonth) +'-'+ getzf(oDay) +' '+ getzf(oHour) +':'+ getzf(oMin) +':'+getzf(oSen);//最后拼接时间 
+	if(!flag){
+		oTime = oYear +'-'+ getzf(oMonth) +'-'+ getzf(oDay);
+	}
+	return oTime;  
+}
+
+//补0操作  
+function getzf(num){  
+	if(parseInt(num) < 10){  
+		num = '0'+num;  
+	}  
+	return num;  
+}  
+</script>
+</body>

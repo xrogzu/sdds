@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+});
+</script>
+
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: E票通 - 在线投票 - <@s.m "global.edit"/></div>
+</div>
+<div class="box-positon">
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_update.do?ballotId=${ballotId!}">
+<@p.text label="候选项" colspan="1" width="100" readonly="readonly" name="item" value="${ballotItem.item!''}" required="0" class="required" maxlength="100"/><@p.tr/>
+<@p.textarea label="描述" id="describtion" rows="6" cols="100" name="describtion" value="${ballotItem.describtion!''}"></@p.textarea><@p.tr/>
+<@p.td><@p.hidden  name="itemId" value="${ballotItem.itemId!}"/>
+<@p.hidden  name="picture" value="${ballotItem.picture!}"/>
+<@p.hidden  name="itemUrl" value="${ballotItem.itemUrl!}"/>
+<@p.hidden  name="voteCount" value="${ballotItem.voteCount!}"/>
+<@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+</@p.form>
+</div>
+</body>
+</html>

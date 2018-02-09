@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+	<#include "/jeecms_sys/head.html"/>
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+    <script type="text/javascript">
+     $(function(){
+   	$("#jvForm").validate();
+   	$("#jvForm").submit(function(){
+		var zzxs=/^\d+$/;
+		var passingscore = $("[name='passingscore']").val();
+		var excellentscore = $("[name='excellentscore']").val();
+		if(!zzxs.test(passingscore)){
+			alert("合格分数：请填写正确的正整数！");
+			return false;
+		}else if(!zzxs.test(excellentscore)){
+			alert("优秀分数：请填写正确的正整数！");
+			return false;
+		}else{
+			return true;
+		}
+   	});
+  });
+  </script>
+  <body>
+	<div class="page-positon ove">
+	  <div class="position-div"><@s.m "global.position"/>: 绩效评估 > 修改评估规则</div>
+	</div>
+	<div class="box-positon ck">
+		<form class="ropt">
+			<input class="return-button" type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='../partyBuild/jxjfassess.do';"/>
+		</form>
+		<div class="clear"></div>
+	</div>
+    <div class="body-box">
+    <@p.form id="jvForm" action="jxpgupdate.do">
+		<!-- ######edit html fields start###### -->
+		<@p.text label="栏目名称" colspan="2" readonly="readonly" width="50" name="channelname" value=risenJxjfAssess.channelname required="true" class="required" maxlength="100"/><@p.tr/>
+		<@p.text label="合格分数界点" colspan="1" width="70" name="passingscore" value=risenJxjfAssess.passingscore required="true" class="required" maxlength="100"/><@p.tr/>
+		<@p.text label="优秀分数界点" colspan="1" width="70" name="excellentscore" value=risenJxjfAssess.excellentscore required="true" class="required" maxlength="100"/><@p.tr/>
+		<@p.text label="合格评估" colspan="2" width="50" name="passingevaluate" value=risenJxjfAssess.passingevaluate required="true" class="required" maxlength="100" style="width:90%;"/><@p.tr/>
+		<@p.text label="优秀评估" colspan="2" width="50" name="excellentevaluate" value=risenJxjfAssess.excellentevaluate required="true" class="required" maxlength="100" style="width:90%;"/><@p.tr/>
+		<@p.text label="不合格评估" colspan="2" width="50" name="disqualificationevalua" value=risenJxjfAssess.disqualificationevalua required="true" class="required" maxlength="100" style="width:90%;"/><@p.tr/>
+		<@p.hidden  name="id" value=risenJxjfAssess.id/><@p.tr/>
+		<@p.hidden  name="departid" value=risenJxjfAssess.departid/><@p.tr/>
+		<!-- ######edit html fields end###### -->
+		<@p.td><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+	</@p.form>
+    </div>
+  </body>
+</html>
