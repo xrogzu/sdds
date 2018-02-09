@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>${channel.title!channel.name} - ${site.name}</title>
+    <link rel="stylesheet" href="${base}/r/cms/www/risen/css/wsrysnew.css">
+    <link rel="stylesheet" href="${base}/r/cms/www/risen/css/wsrysrest.css">
+</head>
+<body>
+<!-- banner -->
+<div class="banner-warpper">
+    <img class="banner" src="${base}/r/cms/www/risen/images/banner.jpg" alt="banner">
+    <img class="line" src="${base}/r/cms/www/risen/images/red-line.png" alt="line">
+</div>
+    <!-- 内容 -->
+<div class="content">
+ [@cms_content_page count='9' orderBy='2' channelId=channel.id dateFormat='yyyy-MM-dd' currPageClass="currPageClass" norPageClass="norPageClass"]
+    <div class="main">
+        <!-- title -->
+        <div class="title clearfix">
+            <div class="left-text">荣誉表彰</div>
+            
+        </div>
+        <!-- piclist -->
+        <div class="piclist">
+            <ul class="clearfix">
+              [#list tag_pagination.list as a]
+                <li>  
+                    <div class="pic">
+                        <a href="${a.url!}" target="_blank"  title="${a.title!}"><img src="${a.typeImg!site.defImg}" alt="" style="width:236px; hight:136px;"></a><span title="${a.title!}"><a href="${a.url!}" target="_blank"  title="${a.title!}"  style="color:#000000;">[@text_cut s=a.title len=15 append=append/]...</a></span>
+                    </div>
+                </li>
+              [/#list]
+            </ul>
+              <div class="page" style="font-size: 14px; font-family: 微软雅黑; width:800px; height: 50px; line-height: 50px; margin-left: 15px;">
+              [@cms_pagination sysPage='1'/]
+              [/@cms_content_page]
+              </div>
+            <!-- 阴影 -->
+            <div class="shadow"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

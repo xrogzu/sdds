@@ -1,0 +1,68 @@
+package com.risen.service.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DaoSupport;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.jeecms.core.entity.CmsDepartment;
+import com.risen.dao.IRisenChangeremindrecordDao;
+import com.risen.entity.RisenChangeremindrecord;
+import com.risen.service.IRisenChangeremindrecordService;
+
+@Service
+@Transactional
+public class RisenChangeremindrecordServiceImpl implements IRisenChangeremindrecordService {
+
+	@Override
+	public RisenChangeremindrecord save(String sddsccOrgname, Integer sddsccOrgid,
+			String sddsccOsecretaryname, Integer sddsccOsecretaryid,
+			String sddsccOsecretaryidc, String sddsccNsecretaryname,
+			Integer sddsccNsecretaryid, String sddsccNsecretaryidc,
+			String sddsccRemark,String sddsccFile) {
+		// TODO Auto-generated method stub
+		RisenChangeremindrecord model = new RisenChangeremindrecord();
+		model.setSddsccOrgname(sddsccOrgname);
+		model.setSddsccOrgid(sddsccOrgid);
+//		model.setSddsccOsecretaryname(sddsccOsecretaryname);
+//		model.setSddsccOsecretaryidc(sddsccOsecretaryidc);
+//		model.setSddsccOsecretaryid(sddsccOsecretaryid);
+//		model.setSddsccNsecretaryid(sddsccNsecretaryid);
+//		model.setSddsccNsecretaryidc(sddsccNsecretaryidc);
+//		model.setSddsccNsecretaryname(sddsccNsecretaryname);
+		model.setSddsccRecoddate(new Date());
+		model.setSddsccRemark(sddsccRemark);
+		model.setSddsccFile(sddsccFile);
+		try {
+			model=	risenChangeremindrecordDao.save(model);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return model;
+	}
+	@Override
+	public String getFilePath(Integer orgid){
+		RisenChangeremindrecord model = risenChangeremindrecordDao.getByOrgid(orgid);
+		String path = "";
+		if(!StringUtils.isBlank(model.getSddsccFile())){
+			path = model.getSddsccFile();
+		}
+		return path;
+	}
+	@Autowired
+	private IRisenChangeremindrecordDao risenChangeremindrecordDao;
+	@Override
+	public void delete(Integer id) {
+		// TODO Auto-generated method stub
+		risenChangeremindrecordDao.delete(id);
+	}
+	@Override
+	public String getOrgNameById(Integer id) {
+		// TODO Auto-generated method stub
+		return risenChangeremindrecordDao.getOrgNameById(id);
+	}
+}

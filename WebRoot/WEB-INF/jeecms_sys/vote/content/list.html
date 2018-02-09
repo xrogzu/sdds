@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		alert("<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	if(!confirm("<@s.m 'global.confirm.delete'/>")) {
+		return;
+	}
+	var f = getTableForm();
+	f.action="delte.do";
+	f.submit();
+}
+
+</script>
+
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 网上投票 - 投票详细</div>
+	<form class="ropt">
+	   <input type="hidden" value="${ques.vote.id!}" name="voteId"/>
+	   <input type="hidden" value="${pageNoQues!}" name="pageNo"/>
+	   <input type="submit" class="return-button" value="返回列表" onclick="this.form.action='${base}/admin/vote/ques/list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="" style="text-align:center;font-size:14px;margin-top:10px;height:20px;">投票标题：${ques.quesTitle!}</div>
+
+<div class="body-box">
+<form id="tableForm" method="post">
+<@p.table value=pagination;cont,i,has_next><#rt/>
+    <input type="hidden" value="${pageNo!}" name="pageNo"/>
+    <input type="hidden" name="quesId" value="${ques.id!}"/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+		<input type='checkbox' name='ids' value='${cont.id!}'/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center">${cont.id!}<input type="hidden" value="${cont.id!}" name="sortIds"/></@p.column><#t/>
+	<@p.column title="回复内容" align="center">${cont.quesContent!}</@p.column><#t/>
+	
+</@p.table>
+<div></div>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function(){
+    var ok1 = false;  
+	$("#jvForm").validate();
+	
+	// 增加了验证数据库中是否存在该身份证号的方法
+	$('#risenActiveCardId').change(function(){
+	    var cardId = $('#risenActiveCardId').val();
+	    $.ajax({
+	        type:"post",
+	        url:"../submitpartyapplication/checkIdentityId.do?cardId="+cardId,
+	        dateType:"json",
+	        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+	        success:function(data){
+	            var rlt = data.result;//true 状态是说明数据库中有这个身份证号
+	            if(rlt){
+	                ok1 = true; 	                
+	            }else{
+	                $('#showInfo').val('该身份证号不存在');
+	            } 
+	        },
+	        error:function(data){
+	            alert('获取失败');
+	        }
+	    })    
+	})
+	 $('#tosubmit').click(function(){  
+         if(ok1){  
+             $('#jvForm').submit();  
+         }else{
+             alert('请确保数据输入正确');  
+             return false;  
+         }  
+     });  
+	 //初始化 ueditor 自定义需要的按钮
+	  var ue = UE.getEditor('editor', {
+	  	    toolbars: [['undo', 
+				  	    'redo', 
+				  	    'bold', 
+				  	    'italic', 
+				  	    'underline', 
+				  	    'strikethrough', 
+				  	    'cleardoc', 
+				  	    'fontfamily', 
+				  	    'fontsize', 
+				  	    'emotion', 
+				  	    'searchreplace', 
+				  	    'justifyleft', 
+				        'justifyright', 
+				        'justifycenter', 
+				        'justifyjustify', 
+				        'forecolor', 
+				        'backcolor', 
+				        'touppercase', 
+       					 'tolowercase', ]],
+       					 autoWidthEnabled: false,
+	  	        autoHeightEnabled: true,    
+	  	        autoFloatEnabled: true});
+});
+</script>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos">规范化党支部: 发展党员 - 党组织派人谈话</div>
+	<form class="ropt">
+		
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="saveActivePro.do" labelWidth="10">
+	
+	<@p.text width="50" colspan="1" label="入党人" name="risenActiveName"/>
+	<@p.text width="50" id="risenActiveCardId" colspan="1" label="入党人身份证号" name="risenActiveCardId"/>
+	<@p.text id="showInfo" label="*"/>
+	<@p.tr/>
+	<@p.text width="50" colspan="1" label="入党人出生日期" name="risenActiveBirth" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+	<@p.radio width="50" colspan="1" label="入党人性别" name="risenActiveSex" list={"1":"男","2":"女"}/><@p.tr/>
+	
+	<@p.text width="50" colspan="1" label="确立日期" name="risenActiveTime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/><@p.td></@p.td><@p.tr/>
+	
+	
+	<@p.td colspan="3" label="备注" ><script id="editor" type="text/plain" style="width:60%;margin:0 auto;"></script></@p.td><@p.tr/>
+	
+	<@p.td colspan="3"><@p.submit id="tosubmit" code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+</@p.form>
+</div>
+</body>
+</html>

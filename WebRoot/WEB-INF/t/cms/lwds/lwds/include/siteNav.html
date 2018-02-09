@@ -1,0 +1,243 @@
+<script>
+    	function sitesnav2(pid){
+			$("#sr_dj").html("");
+    		$.ajax({  
+		         type : "post",  
+		          url : "${base}/getChannelPaths.jspx?departId="+pid,
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			        $("#go2").attr("href","#");
+			        if(data!=null && data!=""){
+			        	$("#go2").attr("href","${base}/${site.accessPath!}/"+data+"/index.jhtml");
+			        	$("#go2").attr("target","_blank");
+			        }else{
+			        	$("#go2").attr("href","#");
+			        }
+			        $.ajax({  
+				         type : "post",  
+				          url : "${base}/getSites.jspx?pid="+pid,  
+				          data : {},
+				          dataType : "json" , 
+				          success : function(data){
+					        if(data.length>0){
+					        	for(var i=0;i<data.length;i++){
+					        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+					          			$("#sr_dj").append("<a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+					          		}else{
+					          			$("#sr_dj").append("<a href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+					          		}
+					        	}
+					        }
+				          }
+				     });
+				  }
+		     });
+    	}
+    	
+    	function findJgdw(pid){
+    		$("#jgdw").html("");
+    		 $.ajax({  
+		         type : "post",  
+		          url : "${base}/getSites.jspx?pid="+pid,  
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			        $(".sh_tr").css({"text-align":"left","overflow-y":"scroll","height":"370px"});
+			        if(data.length>0){
+				        	for(var i=0;i<data.length;i++){
+				        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+				          			$("#jgdw").append("<a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+				          			$("#gfhdzb_list").append("<li><a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"<font color='#00AA00'>【点击进入】</font></a></li>");
+				          		}else{
+				          			$("#jgdw").append("<a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+				          			$("#gfhdzb_list").append("<li><a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"<font color='#DDDDDD'>【点击进入】</font></a></li>");
+				          		}
+				        	}
+			        }
+		          }
+		     });
+    	}
+    	$(function(){
+    		$("#jgdw").html("");
+    		$.ajax({  
+		         type : "post",  
+		          url : "${base}/getSites.jspx?pid=1286",  
+		          data : {},
+		          dataType : "json" , 
+		          success : function(data){
+			        $(".sh_tr").css({"text-align":"left","overflow-y":"scroll","height":"400px"});
+			        var jgdwHtml = $("#jgdw").html();
+			        if(jgdwHtml=="" || (jgdw==null)){
+			        	
+			        if(data.length>0){
+			        	for(var i=0;i<data.length;i++){
+			        		if(data[i].channelPath!=null && data[i].channelPath!=""){
+			          			$("#jgdw").append("<a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"</a>");
+			          			$("#gfhdzb_list").append("<li><a target='_blank' href='${base}/${site.accessPath!}/"+data[i].channelPath+"/index.jhtml' title='"+data[i].name+"'>"+data[i].name+"<font color='#00AA00'>【点击进入】</font></a></li>");
+			          		}else{
+			          			$("#jgdw").append("<a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"</a>");
+			          			$("#gfhdzb_list").append("<li><a target='_blank' href='#' title='"+data[i].name+"'>"+data[i].name+"<font color='#DDDDDD'>【点击进入】</font></a></li>");
+			          		}
+			        	}
+			        	}
+			        }
+		          }
+		     });
+    	});
+    </script>
+</head>
+<body>
+[#include "../include/header_shengju.html"/]
+<div class="coen" id="container">
+<div class="content">
+     <div class="shdh">
+          <a href="javascript:;" class="shei"><img src="${base}/r/cms/www/risen/images/zh_dh.png" alt=""></a>
+          <div class="shnr" style="display:block;background:url(${base}/r/cms/www/risen/images/lwds/zh_bg.png)">
+			  <div class="shelf">
+				<img id="jens" src="${base}/r/cms/www/risen/images/lwds/1.png" width="450" height="600" usemap="#Map">
+				  <map name="Map">
+				  <area shape="poly" coords="241,47,301,68,318,66,358,135,382,166,398,196,414,225,410,244,383,247,359,228,334,255,319,289,294,317,276,338,281,375,289,398,261,392,230,381,203,369,194,358,143,372,149,327,168,317,151,311,124,241,82,132,83,114,111,123,172,82" onfocus="blur(this);" class="mac" title="莱城区"  href="javascript:sitesnav2(1317)">
+				  <area shape="poly" coords="441,243,439,280,417,288,406,295,402,310,403,329,406,342,413,360,421,376,422,390,421,408,429,436,418,429,394,420,356,429,341,428,323,430,320,432,317,416,306,408,297,397,296,379,296,355,291,345,301,330,310,306,323,294,341,274,354,252" onfocus="blur(this);" class="mac" title="钢城区"  href="javascript:sitesnav2(1306)">
+				  </map>
+			  </div>
+		
+      <div class="neir">
+           <div class="sh_dw">
+               <a href="javascript:;" id="gub">×</a>
+               <div class="ne_sp"><span></span><a href="javascript:;" id="go2">点击进入</a></div>
+               <div class="ne_sr" id="sr_dj">                
+               </div>
+           </div>
+      </div>
+     
+          <div class="sheri">
+               <div class="sh_tit"><a id="xitong" href="javascript:;">系统</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a id="jiguan" href="###">机关</a></div>
+               <div class="sh_tr">
+                  <a target="_blank" href="${base}/${site.accessPath!}/lcfj/index.jhtml" style="width:209px;margin-left:2px;">莱芜市局莱城分局</a>
+                  <a target="_blank" href="${base}/${site.accessPath!}/gcfj/index.jhtml" style="width:160px;">莱芜市局钢城分局</a>
+             	  <a target="_blank" href="${base}/${site.accessPath!}/gxqfj/index.jhtml" style="width:225px;">莱芜市局高新技术产业开发区分局</a>
+             	  <a target="_blank" href="${base}/${site.accessPath!}/lwdsxylyqfjzhdjpt/index.jhtml" style="width:195px;margin-left:0px;">莱芜市局雪野旅游区分局</a>
+             	  <a target="_blank" href="${base}/${site.accessPath!}/lwdsjjkfqfjzhdjpt/index.jhtml" style="width:180px;">莱芜市局经济开发区分局</a>            
+               </div>
+               <div class="sh_tr" style="display:none;" id="jgdw"  style="overflow-y:auto; overflow-x:hidden;">
+               </div>  
+      	</div> 
+      	
+      	 <div class="seli">
+           <div class="dropdown"> 
+                <input class="input_select" type="text" value="国家税务总局网站"/> 
+                <ul> 
+                <li><a href="http://130.9.1.168" rel="3" target="_blank">国家税务总局</a></li>  <li><a href="http://130.9.1.22:8080/" rel="3" target="_blank">廉政之窗</a></li>  <li><a href="http://130.9.1.168/dangjian" rel="3" target="_blank">税务党建网</a></li> 
+                </ul> 
+           </div> 
+           <div class="dropdown"> 
+                <input class="input_select" type="text" value="政府、部门网站"/> 
+                <ul> 
+                <li><a href="http://www.shandong.gov.cn" target="_blank" rel="3">山东省政务专网</a></li> 
+                <li><a href="http://15.32.5.5" rel="4" target="_blank">省科技厅</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0002" rel="5" target="_blank">省财政厅</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0008" rel="5" target="_blank">省统计局</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0008" rel="5" target="_blank">省工商局</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0003" rel="5" target="_blank">省国税局</a></li> 
+                <li><a href="http://15.32.76.19" rel="5" target="_blank">省防总</a></li> 
+                <li><a href="http://15.32.39.12/default1.php?uni_code=0006" rel="5" target="_blank">人行济南分行</a></li> 
+                <li><a href="http://www.ta.sd.gov.cn" rel="5" target="_blank">泰安政务信息网</a></li> 
+                <li><a href="http://www/lc.sd.gov.cn" rel="5" target="_blank">聊城电子政务系统</a></li> 
+                <li><a href="http://www/wh.sd.gov.cn" rel="5" target="_blank">威海市政务网</a></li> 
+                <li><a href="http://www.rz.sd.gov.cn" rel="5" target="_blank">日照政务网</a></li> 
+                <li><a href="http://www/lw.sd.gov.cn" rel="5" target="_blank">莱芜政务专网</a></li> 
+                </ul> 
+           </div> 
+           <div class="dropdown" style="width:190px"> 
+                <input class="input_select" style="width:170px" type="text" value="省局内网网站"/> 
+                <ul style="width:180px">  
+                    <li><a href="http://140.16.16.16" rel="4" target="_blank">山东省地方税务局内网</a></li> 
+                    <li><a href="http://140.12.96.100" rel="4" target="_blank">山东地税智慧党建平台 </a></li> 
+                    <li><a href="http://140.16.16.15" rel="4" target="_blank">山东地税廉政文化教育基地 </a></li> 
+                    <li><a href="http://140.12.96.104/wsds/" rel="4" target="_blank">山东地税网上党校</a></li>       
+                    <li><a href="http://140.12.96.51/lxsd/index.jsp" rel="4" target="_blank">山东地税网络教育学院</a></li>               
+                </ul> 
+           </div> 
+           <div class="dropdown"> 
+                <input class="input_select" type="text" value="其他"/> 
+                <ul> 
+                <li><a href="http://140.16.16.16/col/col22472/index.html" rel="3" target="_blank">中国税务报</a></li> 
+                <li><a href="http://140.16.16.16/col/col22716/index.html" rel="4" target="_blank">齐鲁晚报</a></li> 
+                <li><a href="http://140.16.16.16/col/col22796/index.html" rel="5" target="_blank">生活日报</a></li> 
+                <li><a href="http://140.16.16.16/col/col91/index.html" rel="5" target="_blank">山东地税时空</a></li> 
+                <li><a href="http://140.16.16.16/col/col13150/index.html" rel="5" target="_blank">《山东地税》杂志</a></li> 
+                </ul> 
+           </div>
+      </div>
+    
+   </div>
+</div>
+     <script>
+        $(function(){
+        	$(".dropdown .input_select").click(function(){ 
+				var ul = $(this).next('ul'); 
+				if(ul.css("display")=="none"){ 
+				ul.slideDown("fast"); 
+				}else{ 
+				ul.slideUp("fast"); 
+				} 
+				}); 
+				$(".dropdown ul li a").click(function(){ 
+				var txt = $(this).text(); 
+				$(this).parents('ul').prev('.input_select').val(txt); 
+				var value = $(this).attr("rel"); 
+				$(this).parents('ul').hide(); 
+			});
+        
+            $(".sh_tit a").click(function(){
+                var index = $(".sh_tit a").index(this);
+                $(".sh_tr").hide();
+                $(".sh_tr").eq(index).show(0);
+            });                   
+            $(".shei").click(function(){
+                 var hei = $(".shnr").height();
+                 if(hei == 0){
+                    $(".shnr").animate({height:'510px',right:'10px'});
+                 }else{
+                    $(".shnr").animate({height:'0px',right:'-1270px'});
+                 };                 
+            });
+            var shr = $(".sh_tr a");
+            for(var i=0; i<shr.length; i++){
+                $(".sh_tr a:eq("+i+")").addClass("son"+i);
+            };
+            $("#gub").click(function(){
+                $(".neir").hide();
+            });
+            $("#gub1").click(function(){
+                $(".jied").hide();
+            });
+            $("#sr_dj a").click(function(){
+                 $(".neir").stop(true,true).fadeOut();
+                 $(".jied").stop(true,true).fadeIn();
+            });
+            $(".mac").click(function(){
+                var tle = $(this).attr("title");
+                var csa = $(".sh_tr a").attr("title");
+                $(".neir").stop(true,true).fadeOut();
+                $(".neir").stop(true,true).fadeIn();
+                $(".jied").stop(true,true).fadeOut();
+                $(".neir .ne_sp span").text(tle)
+                switch(tle)
+                    {
+                    case '莱城区':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/lwds/2.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son0").addClass("son");
+                      break;
+                    case '钢城区':
+                      $('#jens').attr('src','${base}/r/cms/www/risen/images/lwds/3.png');
+                      $(".sh_tr a").removeClass("son");
+                      $(".son1").addClass("son");
+                      break;
+                    default:
+                    }
+            });
+        });
+     </script>

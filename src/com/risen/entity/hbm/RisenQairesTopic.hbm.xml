@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenQairesTopic" table="rs_qaires_topic">
+		 <id name="id" type="integer" column="rs_id">
+			<generator class="sequence"><param name="sequence">RISEN_QAIRES_TOPIC_SD</param></generator>
+		</id>
+		<many-to-one name="qaires" column="rs_qaires_id" class="RisenQaires" />
+		<property name="title" column="rs_title" type="string" not-null="true" length="255"/>
+		<property name="description" column="rs_description" type="string" not-null="false" length="255"/>
+		<property name="multiSelect" column="rs_multi_select" type="integer" not-null="false" />
+		<property name="totalCount" column="rs_total_count" type="integer" not-null="false" />
+		<property name="answer" column="rs_answer" type="string" not-null="false" length="20"/>
+		<property name="type" column="rs_type" type="integer" not-null="false" />
+		<property name="score" column="rs_score" type="integer" not-null="false" />
+		<property name="torderBy" column="rs_t_orderby" type="integer" not-null="false" />
+		<set name="items" inverse="true" cascade="delete-orphan" sort="com.jeecms.common.hibernate4.PriorityComparator">
+			<cache usage="read-write"/>
+			<key column="rs_topic_id"/>
+			<one-to-many class="RisenQairesItem"/>
+		</set>
+	</class>
+</hibernate-mapping> 

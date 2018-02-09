@@ -1,0 +1,382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<style type="text/css">
+ #searchresult
+ {
+  width: 141px;
+  position: absolute;
+  z-index: 1;
+  overflow: hidden;
+  left: 750px;
+  top: 71px;
+  background: #F7F7F7;
+  border-top: none;
+ }
+ .line
+ {
+  font-size: 12px;
+  background: #F7F7F7;
+  width: 141px;
+  
+ }
+ .hover
+ {
+  background: #D5D5D5;
+  width: 141px;
+  color: #fff;
+ }
+ .std
+ {
+  width: 141px;
+ }
+</style>
+<script type="text/javascript"><!--
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var f = getTableForm();
+	f.action="o_delete.do";
+	f.submit();
+}
+function optCheck(){
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doCheck,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.check'/>");
+}
+$(function(){
+	$("#dialog-edit-form").dialog({
+		autoOpen: false,
+		height: 360,
+		width: 430,
+		modal: true,
+		buttons: {
+			"<@s.m code='global.submit'/>": function() {
+				com();
+				var errorlength=$(".error").length;
+				if(errorlength<=0){
+					 $( this ).dialog( "close" );
+				}
+			},
+			"<@s.m code='global.reset'/>": function() {
+				$("#risendsRemark").val("");
+				$("#risendsYear").val("");
+			//	$("#addForm")[0].reset();
+			}
+		}
+	});
+});
+	function  com(){
+		var risendsYear = $("[name='risendsYear']").val();
+		if((risendsYear==null) || (risendsYear=="")){
+			alert("请选择评议年份");
+			$("[name='risendsYear']").focus();
+		}else{
+			$("#loading").show();
+			var url = "${base}/admin/risenDiscussion/save.do";
+			var risendsUserid = $("[name='risendsUserid']").val();
+			var risendsScore = $("[name='risendsScore']:checked").val();
+			var risendsRemark = $("[name='risendsRemark']").val();
+			$.post(url,{risendsUserid:risendsUserid,risendsYear:risendsYear,risendsScore:risendsScore,risendsRemark:risendsRemark},
+					function(data){
+				if(data=="success"){
+					$("#loading").css("display","none");
+					alert("评议成功");
+					location.reload(); 
+				}else if(data=="exists"){
+					$("#loading").css("display","none");
+			 		alert("已添加该人在"+risendsYear+"年的评议");
+				}else{
+					$("#loading").css("display","none");
+			 		alert("评议失败");
+				}
+			},"text");
+			/*
+			$.ajax({
+				type : "post",  
+				url : "",  
+				data : $('#addForm').serialize(),
+				dataType : "text" , 
+				 error: function(){
+						$("#loading").css("display","none");
+				 		alert("评议失败");
+				 		},
+				success : function(data){
+						$("#loading").css("display","none");
+						alert(data);
+						location.reload(); 
+	 			}
+			});
+			*/
+		}
+	}
+	function showdialog(userid){
+		$("#loading").show();
+		$.ajax({
+			type : "post",  
+			url : "../member/getAssessData.do?userid="+userid,  
+			data : {},
+			dataType : "json" , 
+			success : function(data){
+				$("#loading").css("display","none");
+				var userdata = data.split(",");
+				$("#username").val(userdata[0]);
+				$("#risendsUserid").val(userdata[1]);
+ 			}
+		});
+		$( "#dialog-edit-form" ).dialog("open");
+	}
+</script>
+<script type="text/javascript">
+  $(function () {
+  	$("#txt_search").dblclick(function(){
+  		queryResult("y");
+  	});
+   $("#txt_search").keyup(function (evt) {
+    	queryResult(evt);
+   });
+   $("#searchresult").bind("mouseleave", function () {
+    $("#searchresult").empty();
+    $("#searchresult").css("display", "none");
+   });
+  });
+  //智能提示
+  function queryResult(evt){
+  	ChangeCoords(); //控制查询结果div坐标
+    var k = window.event ? evt.keyCode : evt.which;
+    //输入框的id为txt_search，这里监听输入框的keyup事件
+    //不为空 && 不为上箭头或下箭头或回车
+    if ($("#txt_search").val() != "" && k != 38 && k != 40 && k != 13 && k==32||evt=="y") {
+     $.ajax({
+      type: 'Post',
+      async: false, //同步执行，不然会有问题
+      dataType: "json",
+      url: "../department/getData.do", //提交的页面/方法名
+      data: {"userName": $("#txt_search").val().trim()},    //参数（如果没有参数：null）
+     
+      error: function (msg) {//请求失败处理函数
+       alert("数据加载失败");
+      },
+      success: function (data) { //请求成功后处理函数。
+     //debugger;
+       if (data.length > 0) {
+        var layer = "";
+        layer = "<table id='aa'>";
+        for(var i=0;i<data.length;i++){
+        	//sddspoSecretaryidc sddspoSecretaryid
+      	  layer += "<tr class='line' id='"+data[i].id+"'><td id='"+data[i].idc+"' class='std'>" + data[i].name + "</td></tr>";
+        }
+        layer += "</table>";
+        //将结果添加到div中
+        $("#searchresult").empty();
+        $("#searchresult").append(layer);
+        $(".line:first").addClass("hover");
+        $("#searchresult").css("display", "");
+        //鼠标移动事件
+        $(".line").hover(function () {
+         $(".line").removeClass("hover");
+         $(this).addClass("hover");
+        }, function () {
+         $(this).removeClass("hover");
+         //$("#searchresult").css("display", "none");
+        });
+        //鼠标点击事件
+        $(".line").click(function () {
+     
+         $("#txt_search").val($(this).text());
+          var i=$(this).attr("id");
+          var idc=$(this).children().attr("id");
+         
+         $("#nsecretaryid").val(i);
+         $("#nsecretaryidc").val(idc);
+        
+         $("#searchresult").css("display", "none");
+        });
+       } else {
+        $("#searchresult").empty();
+        $("#searchresult").css("display", "none");
+       }
+      }
+     });
+    }
+    else if (k == 38) {//上箭头
+     $('#aa tr.hover').prev().addClass("hover");
+     $('#aa tr.hover').next().removeClass("hover");
+     $('#txt_search').val($('#aa tr.hover').text());
+    } else if (k == 40) {//下箭头
+     $('#aa tr.hover').next().addClass("hover");
+     $('#aa tr.hover').prev().removeClass("hover");
+     $('#txt_search').val($('#aa tr.hover').text());
+    }
+    else if (k == 13) {//回车
+     $('#txt_search').val($('#aa tr.hover').text());
+     $("#searchresult").empty();
+     $("#searchresult").css("display", "none");
+    }
+    else {
+     $("#searchresult").empty();
+     $("#searchresult").css("display", "none");
+    }
+  }
+  //设置查询结果div坐标
+  function ChangeCoords() {
+   // var left = $("#txt_search")[0].offsetLeft; //获取距离最左端的距离，像素，整型
+   // var top = $("#txt_search")[0].offsetTop + 26; //获取距离最顶端的距离，像素，整型（20为搜索输入框的高度）
+   var left = $("#txt_search").position().left; //获取距离最左端的距离，像素，整型
+   var top = $("#txt_search").position().top + 20; ; //获取距离最顶端的距离，像素，整型（20为搜索输入框的高度）
+   $("#searchresult").css("left", left + "px"); //重新定义CSS属性
+   $("#searchresult").css("top", top + "px"); //同上
+  }
+  	/*
+	function c1(e){
+		if(e==1){//优秀
+			$("#sddscpExcellentcause").show();
+			$("#sddscpExcellentcause1").show();
+			$("#sddscpUnqualifiedcause").hide();
+			$("#sddscpUnqualifiedcause1").hide();
+		}else if(e==2){//不合格
+			$("#sddscpExcellentcause").show();
+			$("#sddscpExcellentcause1").show();
+			$("#sddscpUnqualifiedcause").hide();
+			$("#sddscpUnqualifiedcause1").hide();
+		}else{
+			$("#sddscpExcellentcause").hide();
+			$("#sddscpExcellentcause1").hide();
+			$("#sddscpUnqualifiedcause").hide();
+			$("#sddscpUnqualifiedcause1").hide();
+		}
+	}
+  	*/
+</script>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+	<div class="position-div"><@s.m "global.position"/>: 组织生活会 - 年度评议</div>
+</div>
+<div class="body-box">
+<form action="assess.do" method="post">
+<div style="padding-bottom:10px; text-indent:6px;">
+党员姓名: <input type="text" name="username" value="${user.username!}" style="width:100px; margin-right:10px;"/>
+身份证号: <input type="text" name="sddscpIdnumber" value="${user.sddscpIdnumber!}" style="width:180px; margin-right:10px;"/>
+<input class="query" type="submit" value="<@s.m "global.query"/>"/>
+</div>
+</form>
+<div id="loading" style="width:100px;height:100px;position:absolute;top:50%;left:50%;margin-left:-50px;margin-top:-50px;display:none;"><img src="${base}/r/cms/www/risen/images/ajax-loader.gif" /></div>
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<@p.table value=pagination listAction="../member/assess.do?departId=${departId!}";cmsUser,i,has_next><#rt/>
+	<@p.column code="姓名" style="width:10%;" align="center">${cmsUser.username}</@p.column><#t/>
+	<@p.column code="联系方式" style="width:20%;" align="center">
+		<#if (cmsUser.phone??) && (cmsUser.mobile??) >
+			座机:${cmsUser.phone!}<br/>
+		<#elseif (cmsUser.phone??) && (cmsUser.sddscpOtherphone??)>
+			座机:${cmsUser.phone!}<br/>
+		<#elseif cmsUser.phone??>
+			座机:${cmsUser.phone!}
+		<#else>
+		</#if>
+		<#if (cmsUser.mobile??) && (cmsUser.sddscpOtherphone??)>
+			手机: ${cmsUser.mobile!}<br/>
+		<#elseif cmsUser.mobile??>
+			手机: ${cmsUser.mobile!}
+		<#else>
+		</#if>
+		<#if cmsUser.sddscpOtherphone??>
+			其他: ${cmsUser.sddscpOtherphone!}
+		<#else>
+		</#if>
+	</@p.column><#t/>
+	<@p.column code="学历" style="width:15%;" align="center">
+		<#if cmsUser.sddscpEducation??>
+			<#if cmsUser.sddscpEducation=="1">
+				研究生
+			<#elseif cmsUser.sddscpEducation=="2">
+				大学本科
+			<#elseif cmsUser.sddscpEducation=="3">
+				大学专科
+			<#elseif cmsUser.sddscpEducation=="4">
+				专科以下
+			<#else>
+				无
+			</#if>
+		<#else>
+		</#if>
+	</@p.column><#t/>
+	<@p.column code="所在组织" align="center">
+	<#if (cmsUser.sddscpJgdwname??) &&(cmsUser.sddscpDzzname??)>
+			${cmsUser.sddscpJgdwname!}<br/>
+		<#elseif (cmsUser.sddscpJgdwname??) &&(cmsUser.sddscpZbname??)>
+			${cmsUser.sddscpJgdwname!}<br/>
+		<#elseif cmsUser.sddscpJgdwname??>
+			${cmsUser.sddscpJgdwname!}
+		<#else>
+		</#if>
+		<#if (cmsUser.sddscpDzzname??) && (cmsUser.sddscpZbname??)>
+			${cmsUser.sddscpDzzname!}<br/>
+		<#elseif cmsUser.sddscpDzzname??>
+			${cmsUser.sddscpDzzname!}
+		<#else>
+		</#if>
+		<#if cmsUser.sddscpZbname??>
+			${cmsUser.sddscpZbname!}
+		<#else>
+		</#if>
+	</@p.column><#t/>
+	<@p.column code="操作" align="center">
+		<a href="javascript:showdialog(${cmsUser.id})" class="pn-opt">评议</a> | <#rt/>
+		<a href="../risenDiscussion/mylist.do?userId=${cmsUser.id}" class="pn-opt">我的评议</a>
+	</@p.column><#t/>
+</@p.table>
+</form>
+<div id="dialog-edit-form" title="评议">
+	<@p.form id="addForm" action="" >
+	<tr>
+		<td>姓名：</td>
+		<td>
+			<input id="username" name="username" disabled="true" type="text">
+			<input id="risendsUserid" name="risendsUserid"  type="hidden">
+		</td>
+	</tr>
+	<tr>
+		<td>评议：</td>
+		<td>
+			<input id="sddscpAssess1" type="radio" name="risendsScore" value="1">优秀
+			<input id="sddscpAssess3" type="radio" name="risendsScore" value="2" checked>合格
+			<input id="sddscpAssess4" type="radio" name="risendsScore" value="3">基本合格
+			<input id="sddscpAssess2" type="radio" name="risendsScore" value="4">不合格
+		</td>
+	</tr>
+	<tr>
+		<td>年度：</td>
+		<td>
+			<input id="risendsYear" name="risendsYear" type="text" onclick="WdatePicker({dateFmt:'yyyy'})" name="risendsYear" value="">默认显示当前年度
+		</td>
+	</tr>
+	<tr>
+		<td>备注：</td>
+		<td>
+			<textarea id="risendsRemark" name="risendsRemark" rows="5" cols="40"></textarea>
+		</td>
+	</tr>
+	</@p.form>
+</div>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

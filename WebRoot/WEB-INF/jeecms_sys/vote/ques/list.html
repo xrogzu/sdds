@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		alert("<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	if(!confirm("<@s.m 'global.confirm.delete'/>")) {
+		return;
+	}
+	var f = getTableForm();
+	f.action="delete.do";
+	f.submit();
+}
+function sort(){
+	var f = getTableForm();
+	f.action="sort.do";
+	f.submit();
+}
+function copy(){
+    if(Pn.checkedCount('ids')<=0) {
+		alert("<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	var f = getTableForm();
+	f.action="copy.do";
+	f.submit();
+}
+</script>
+
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 投票题目 - 列表</div>
+	<form class="ropt">
+	   <input type="submit" class="return-button" value="返回投票" onclick="this.form.action='${base}/admin/vote/v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="" style="text-align:center;font-size:14px;margin-top:10px;height:20px;">投票标题：${vote.voteTitle!}</div>
+<div class="" style="margin-right:5px;height:30px;">
+     <form class="ropt">
+	    <input type="hidden" value="${voteId!}" name="voteId"/>
+		<input class="add" type="submit" value="<@s.m "global.add"/>" onclick="this.form.action='add.do';"/>
+        <input class="del-button" style="line-height:24px;" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/>
+        <input class="reset" style="line-height:24px;" type="button" value="排序" onclick="sort();"/>
+        <input class="generate-static" style="line-height:24px;" type="button" value="类似创建" onclick="copy();"/>
+        <input class="reset" type="submit" value="导出" onclick="this.form.action='${base}/admin/vote/item/excelMb23.do';"/>
+    </form>
+</div>
+<div class="body-box">
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<input type="hidden" name="voteId" value="${vote.id!}"/>
+<@p.table value=pagination;ques,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+		<input type='checkbox' name='ids' value='${ques.id!}'/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center">${ques.id!}<input type="hidden" value="${ques.id!}" name="sortIds"/></@p.column><#t/>
+	<@p.column title="排序" align="center"><input type="text" name="sorts" style="width:50px;" value="${ques.quesSort!0}"/></@p.column><#t/>
+	<@p.column code="标题" align="center">${ques.quesTitle!}</@p.column><#t/>
+	<@p.column code="类型" align="center"><#if ques.quesType??><#if ques.quesType==1>单选题<#elseif ques.quesType==2>多选题<#elseif ques.quesType==3>问答题</#if></#if></@p.column><#t/>
+	<@p.column code="global.operate" align="center">
+	    <#if ques.quesType==3><a class="pn-opt" href="${base}/admin/vote/item/itemContDetail.do?quesId=${ques.id!}&pageNo=${pageNo!}">投票详细</a>
+	    <#else><a class="pn-opt" href="${base}/admin/vote/item/itemDetail.do?quesId=${ques.id!}&pageNo=${pageNo!}">投票详细</a>
+	    </#if>|<#rt/>
+		<a href="edit.do?id=${ques.id!}&pageNo=${pageNo!}&voteId=${voteId!}" class="pn-opt"><@s.m "global.edit"/></a> | <#rt/>
+		<a href="delete.do?ids=${ques.id!}&pageNo=${pageNo!}&voteId=${voteId!}" onclick="if(!confirm('<@s.m "global.confirm.delete"/>')) {return false;}" class="pn-opt"><@s.m "global.delete"/></a><#t/>
+	</@p.column><#t/>
+	
+</@p.table>
+<div></div>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

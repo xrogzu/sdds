@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#jvForm").validate();
+	
+	 //初始化 ueditor 自定义需要的按钮
+	  var ue = UE.getEditor('editor', {
+	  	    toolbars: [['undo', 
+				  	    'redo', 
+				  	    'bold', 
+				  	    'italic', 
+				  	    'underline', 
+				  	    'strikethrough', 
+				  	    'cleardoc', 
+				  	    'fontfamily', 
+				  	    'fontsize', 
+				  	    'emotion', 
+				  	    'searchreplace', 
+				  	    'justifyleft', 
+				        'justifyright', 
+				        'justifycenter', 
+				        'justifyjustify', 
+				        'forecolor', 
+				        'backcolor', 
+				        'touppercase', 
+       					 'tolowercase', ]],
+	  	        autoHeightEnabled: true,    
+	  	        autoFloatEnabled: true});
+});
+</script>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos">规范化党支部: 发展党员 - 递交入党申请书</div>
+	<form class="ropt">
+		
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="save.do" labelWidth="12">
+<@p.text colspan="1" width="50" label="标题" name="risenpaName" />
+<@p.text width="50" colspan="1" label="申请人姓名" name="risenpaSubmitpername"/><@p.tr/>
+<@p.radio width="50" colspan="1" label="申请人性别" name="sddscpSex" list={"1":"男","2":"女"}/>
+<@p.text width="50" colspan="1" label="申请人出生日期" name="sddscpBirthday" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/><@p.tr/>
+
+<@p.text width="50" colspan="1" label="申请日期" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="risenpaSubmitdate"/>
+<@p.td/>
+<@p.tr/>
+
+	<!--  <@p.td colspan="2" label="谈话内容" ><script id="editor" type="text/plain" style="width:60%;margin:0 auto;"></script></@p.td><@p.tr/>-->
+
+<@p.td colspan="2" label="备注"><script id="editor" type="text/plain" style="width:80%;margin:0 auto;"></script></@p.td><@p.td/><@p.tr/>
+<@p.td colspan="2"><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+</@p.form>
+</div>
+</body>
+</html>

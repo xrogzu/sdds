@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var f = getTableForm();
+	f.action="delete.do";
+	f.submit();
+}
+</script>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 网上投票 - 列表</div>
+	<form class="ropt">
+		<input class="add" type="submit" style="float:left;" value="<@s.m "global.add"/>" onclick="this.form.action='v_add.do';"/>
+		<input class="del-button" style="float:left;" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<form action="v_list.do" method="post" style="padding-top:5px;">
+	日期：<input type="text" class="Wdate" value="${startDate!}" id="startDate" name="startDate" style="width:150px" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/> -
+	<input type="text" class="Wdate" value="${endDate!}" id="endDate" name="endDate" style="width:150px" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+	<input class="query" type="submit" value="<@s.m "global.query"/>"/>
+</form>
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<input type="hidden" name="startDate" value="${startDate!}"/>
+<input type="hidden" name="endDate" value="${endDate!}"/>
+<@p.table value=pagination;vote,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="25" align="center">
+		<input type='checkbox' name='ids' value='${vote.id!}'/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center" style="width:3%">${vote.id!}</@p.column><#t/>
+	<@p.column code="标题" align="center" style="width:32%"><a href="${base}/vote/index.jspx?id=${vote.id!}" target="_blank">${vote.voteTitle!}</a></@p.column><#t/>
+	<@p.column code="开始时间" align="center" style="width:15%">${(vote.startTime?string('yyyy-MM-dd HH:mm:ss'))!'无限制'}</@p.column><#t/>
+	<@p.column code="结束时间" align="center" style="width:15%">${(vote.endTime?string('yyyy-MM-dd HH:mm:ss'))!'无限制'}</@p.column><#t/>
+	<@p.column code="模板" align="center" style="width:5%"> 
+	     <#if vote.voteType==1>模板1
+	     <#elseif vote.voteType==2>模板2
+	     <#elseif vote.voteType==3>模板3
+	</#if></@p.column><#t/>
+	<@p.column code="状态" align="center" style="width:7%"> <#if vote.status??><#if vote.status>启用
+	     <#else><span style="color:red;">禁用</span></#if></#if></@p.column><#t/>
+	<@p.column code="global.operate" align="center">
+		<#if vote.status??><#if vote.status><a href="disabled.do?id=${vote.id!}&pageNo=${pageNo!}&startDate=${startDate!}&endDate=${endDate!}&status=0" class="pn-opt">禁用</a><#else><a href="disabled.do?&id=${vote.id!}&pageNo=${pageNo!}&startDate=${startDate!}&endDate=${endDate!}&status=1" class="pn-opt">	启用</a></#if> | <#rt/></#if>
+		<a href="edit.do?id=${vote.id!}&pageNo=${pageNo!}&startDate=${startDate!}&endDate=${endDate!}" class="pn-opt"><@s.m "global.edit"/></a> |<#rt/>
+		<#if vote.voteType==1><a href="item/list.do?voteId=${vote.id!}" class="pn-opt">选项列表</a>
+		<#else><a href="ques/list.do?voteId=${vote.id!}" class="pn-opt">题目列表</a></#if> | <#rt/>
+		<#if vote.voteType==3><a href="record/v_list.do?voteId=${vote.id!}" class="pn-opt">投票记录</a> | <#rt/></#if>
+		<a href="delete.do?ids=${vote.id!}&pageNo=${pageNo!}&startDate=${startDate!}&endDate=${endDate!}" onclick="if(!confirm('<@s.m "global.confirm.delete"/>')) {return false;}" class="pn-opt"/><@s.m "global.delete"/></a><#t/>
+	</@p.column><#t/>	
+</@p.table>
+<div style="background:url(${base}/res/common/img/theme/boxTitleBG.jpg) repeat-x; height:20px; overflow:hidden;">
+<input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/ style="float:left; border-right:1px solid #ffffff;">
+<input class="check" type="button" value="<@s.m "global.check"/>" onclick="optCheck();"/ style="float:left; border-right:1px solid #ffffff;">
+</div>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="keywords" content="${site.keywords!}"/>
+	<meta http-equiv="description" content="${site.description!}"/>
+	<head>
+		<meta charset="UTF-8">
+		<title>打印页面</title>
+		<style>
+			*{margin:0 auto;padding:0px;font-size: 14px;}
+			#content{ width:730px;}
+			#content #bottom{width:96%;}
+			#content #bottom #head{width:100%;height:260px;}
+			#content #bottom #top{width:100%;height:30px;text-align:center;}
+			.btn{width:60px;height:30px;line-height:30px;}
+			#bottom table tr{height:50px;line-height:50px;}
+			.blod{font-weight: bold;font-size: 18px;height:30px;}
+			.rights{text-align: right; width:100px !important;}
+			.long{width: 140px;text-indent:5px;}
+			.short{text-indent:5px;}
+			p{line-height:20px;height:20px;}
+			#content table{border:1px solid #000;padding-left:10px;margin-top:20px;}
+			#content table thead{height:100px;}
+			#content table textarea{border:none;padding-top:5px;background:#F9F9F9;}
+		</style>
+		<script src="${base}/r/cms/currency/script/jquery1.42.min.js"></script>
+		<script language="javascript" type="text/javascript" src="${base}/r/cms/print/jquery.jqprint-0.3.js"></script>
+		<script language="javascript" type="text/javascript" src="${base}/r/cms/print/jquery-migrate-1.2.1.min.js"></script>
+		<script>
+			function print(){
+				$("#top").hide();
+				$("#bottom").jqprint();
+			}
+			function closeMe(){
+				window.opener=null;
+				window.open('','_self');
+				window.close();
+			}
+			$(function(){
+				//将textarea中的换行符<br>，转换为textarea中的\n  SSSS
+				var os = document.getElementsByTagName("textarea");
+				for(var i=0;i<os.length;i++){
+					os[i].value = os[i].value.replace(/<br>/g,"\r\n");
+				}
+				//将textarea中的换行符<br>，转换为textarea中的\n  EEEEE
+			});
+		</script>
+	</head>
+	<body>
+		<div id="content">
+			<div id="bottom">
+				<div id="head"></div>
+				<div id="top">
+					<input type="button" class="btn" value="打印" name="print" onclick="print();"/>
+					<input type="button" class="btn" style="margin-left:10px;" value="关闭" name="close" onclick="closeMe();"/>
+				</div>
+				<div>
+				<table border="1px" cellspacing="0px" style="border-collapse:collapse">
+					<thead>
+						<tr style='text-align:center;'>
+							<th colspan='4' class="blod">活动详情</th>
+						</tr>
+					</thead>
+					<tbody>
+						<#if RisenOrgLifeCalendar??>
+						<tr><td class='rights'>时　　　间：</td><td class="long">${RisenOrgLifeCalendar.risenlcOdate!}</td><td class='rights'>地　　　点：</td><td class="long">${RisenOrgLifeCalendar.risenlcAddress!'未填写'}</td></tr>
+						<tr><td class='rights'>主　持　人：</td><td class="long">${RisenOrgLifeCalendar.risenlcParticipant!'未填写'}</td><td class='rights'>记　录　人：</td><td class="long">${RisenOrgLifeCalendar.risenlcContactor!'未填写'}</td></tr>
+						<tr><td class='rights' style="letter-spacing:0.2rem;">主要议题：</td><td colspan='3' class="short" ><textarea rows='6' disabled cols='70'>${RisenOrgLifeCalendar.risenlcContent!'未填写'}</textarea></td></tr>
+						<tr><td class='rights' style="letter-spacing:0.2rem;">应到人数：</td><td class="long">${RisenOrgLifeCalendar.risenlcYdrs!'未填写'}</td><td class='rights' style="letter-spacing:0.2rem;">实到人数：</td><td class="long">${RisenOrgLifeCalendar.risenlcSdrs!'未填写'}</td></tr>
+						<tr>
+							<td class='rights'><p style="margin-right:13px;">党员领导干 </p><p>部参会情况：</p></td>
+							<td colspan='3' class="short">
+									<#if (RisenOrgLifeCalendar.risenlcLd1??) && (RisenOrgLifeCalendar.risenlcYn1=='1')>
+										${RisenOrgLifeCalendar.risenlcLd1!''}
+									</#if>
+									<#if (RisenOrgLifeCalendar.risenlcLd2??) && (RisenOrgLifeCalendar.risenlcYn2=='1')>
+										,${RisenOrgLifeCalendar.risenlcLd2!''}
+									</#if>
+									<#if (RisenOrgLifeCalendar.risenlcLd3??) && (RisenOrgLifeCalendar.risenlcYn3=='1')>
+										,${RisenOrgLifeCalendar.risenlcLd3!''}
+									</#if>
+									<#if (RisenOrgLifeCalendar.risenlcLd4??) && (RisenOrgLifeCalendar.risenlcYn4=='1')>
+										,${RisenOrgLifeCalendar.risenlcLd4!''}
+									</#if>
+									<#if (RisenOrgLifeCalendar.risenlcLd5??) && (RisenOrgLifeCalendar.risenlcYn5=='1')>
+										,${RisenOrgLifeCalendar.risenlcLd5!''}
+									</#if>
+									<#if (RisenOrgLifeCalendar.risenlcLd6??) && (RisenOrgLifeCalendar.risenlcYn6=='1')>
+										,${RisenOrgLifeCalendar.risenlcLd6!''}
+									</#if>
+							</td>
+						</tr>
+						<tr>
+							<td class='rights'>描　　　述：</td>
+							<td colspan='3' class="short">
+								<textarea rows='6' disabled cols='70'>${Content!}</textarea>
+							</td>
+						</tr>
+						</#if>
+					</tbody>
+				</table>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

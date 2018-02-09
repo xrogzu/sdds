@@ -1,0 +1,28 @@
+<#if isRoot>
+[{
+	"text": "${dept.name}",
+	"classes": "folder"
+	<#if list?size gt 0>,
+	"expanded": true,
+	"children": [
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<a href='v_list.do?risenirOrgid=${depart.id}&pageNo=1' target='departmentRightFrame'>${depart.name}</a>",
+		"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>"
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+	</#if>
+}]
+<#else>
+	[
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<a href='v_list.do?risenirOrgid=${depart.id}&pageNo=1' target='departmentRightFrame'>${depart.name}</a>",
+		"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>"
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+</#if>

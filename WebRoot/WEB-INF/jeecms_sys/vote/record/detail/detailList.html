@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		alert("<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	if(!confirm("<@s.m 'global.confirm.delete'/>")) {
+		return;
+	}
+	var f = getTableForm();
+	f.action="delteRecord.do";
+	f.submit();
+}
+</script>
+
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 投票详细 - 列表</div>
+	<form class="ropt">
+	    <input type="hidden" value="${record.vote.id!}" name="voteId"/>
+		<input type="submit" class="return-button" value="返回列表" onclick="this.form.action='${base}/admin/vote/record/v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div>--投票记录信息--
+  <ul>
+     <li style="height:20px;line-height:20px;">投票ip：${record.recordIp!}</li>
+     <li style="height:20px;line-height:20px;">投票时间：${(record.recordTime?string('yyyy-MM-dd HH:mm:ss'))!}</li>
+     <li style="height:20px;line-height:20px;">手机号码：${record.recordPhone!}</li>
+
+  </ul>
+</div>
+--投票详细信息--
+<div class="body-box">
+
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<input type="hidden" name="id" value="${record.id!}"/>
+<@p.table value=pagination;detail,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+		<input type='checkbox' name='ids' value='${detail.id!}'/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center">${detail.id!}</@p.column><#t/>
+	<@p.column code="单位名称" align="center">${detail.itemTitle!}</@p.column><#t/>
+	<@p.column code="选择选项" align="center">${detail.recordAnswer!}</@p.column><#t/>
+	<@p.column code="意见建议" align="center">${detail.itemYjjy!}</@p.column><#t/>
+</@p.table>
+<div></div>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

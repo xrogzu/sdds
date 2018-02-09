@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/layer/skin/default/layer.css" />
+<script src="${base}/r/cms/layer/layer.js"></script>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function closeMe(){
+	layer.closeAll();
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var f = getTableForm();
+	f.action="o_delete.do";
+	f.submit();
+}
+function showReason(reason){
+	$("[name='reason']").text(reason);
+	layer.open({
+        type: 1, //Page层类型,
+        area: ['420px', '220px'],
+        title: '驳回原因',
+        maxmin: false, //允许全屏最小化
+        content: $("#showReason").html()
+    });
+}
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 党建绩效 > 被驳回文章</div>
+</div>
+<div class="body-box">
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<#if pagination??>
+<@p.table value=pagination;RisenReject,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+		<input type='checkbox' name='ids' value='${RisenReject.id!''}'/><#t/>
+	</@p.column><#t/>
+	<@p.column code="文章标题" align="center">${RisenReject.risenrjContentId.title!''}</@p.column><#t/>
+	<@p.column code="驳回时间" align="center"><#if RisenReject.risenrjCdate??>${RisenReject.risenrjCdate?date}<#else></#if></@p.column><#t/>
+	<@p.column code="状态" align="center"><#if (RisenReject.risenrjStatus)?? && (RisenReject.risenrjStatus)==1>驳回
+	<#elseif  (RisenReject.risenrjStatus)?? && (RisenReject.risenrjStatus)==0>已采纳
+	<#else></#if></@p.column><#t/>
+	<#if status?? && status=="2">
+	<#else>
+		<@p.column code="global.operate" align="center">
+			<#if (RisenReject.risenrjStatus)?? && (RisenReject.risenrjStatus)==1>
+				<a href="../content/v_share_edit.do?contentId=${RisenReject.risenrjContentId.id!}&listtype=share&addr=gxEdit"><@s.m "global.edit"/></a>
+				<a onclick="showReason('${RisenReject.risenrjReason!''}')" class="pn-opt">查看原因</a><#t/>
+			</#if>
+		</@p.column><#t/>
+	</#if>
+</@p.table>
+</#if>
+</form>
+</div>
+<div id="showReason" style="width:420px;height:180px;display:none;">
+	<textarea readonly="readonly" rows="8" name="reason" cols="60" style="margin-top:10px;margin-left:5px;"></textarea>
+	<br/>
+	<input type="button" class="query" value="关闭" onclick="closeMe();" style="margin-top:10px;margin-left:150px;"/>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>首页 - ${site.name}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" ></meta>
+    <script type="text/javascript" src="${base}/r/cms/www/risen/script/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="${base}/r/cms/www/risen/script/jquery.nicescroll.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+    <style>
+    	*{margin:0px;padding:0px;}
+    	#contentLists{ width:98%;}
+    	#contentLists tr {height:30px;line-height:30px;width:100%;font-size:16px;}
+    	#contentLists tr .line{border-bottom:1px dashed #BB976D;}
+    	.lastLine{ text-align:center;}
+    	.lastLine button{ width:100px;height:30px;line-height:30px;}
+    	#prevPage,#nextPage,#lastPage,#showNow{margin-left:10px;}
+    </style>
+    <script>
+    	$(function(){
+    		var nowPage = '${pageNo!}';
+    		var lastPage = '${totalPage!}';
+    		var searchKey = '${wantSearch!}';
+    		$("#firstPage").click(function(){
+    			window.location.href="search.jspx?searchKey="+searchKey+"&pageNo=1";
+    		});
+    		$("#prevPage").click(function(){
+    			var prevIndex = parseInt(nowPage)-1;
+    			if(prevIndex<1){
+    				alert("已经到达首页!");
+    			}else{
+    				window.location.href="search.jspx?searchKey="+searchKey+"&pageNo="+prevIndex;
+    			}
+    		});
+    		$("#nextPage").click(function(){
+    			var nextIndex = parseInt(nowPage)+1;
+    			if(nextIndex>lastPage){
+    				alert("已经到达尾页!");
+    			}else{
+    				window.location.href="search.jspx?searchKey="+searchKey+"&pageNo="+nextIndex;
+    			}
+    		});
+    		$("#lastPage").click(function(){
+    			window.location.href="search.jspx?searchKey="+searchKey+"&pageNo="+lastPage;
+    		});
+    	});
+    </script>
+   [#include "../include/header_shengju.html"/]
+<body>
+<div class="coen" id="container">
+<div class="content">
+     <div class="slideTxtBox" id="conter">
+     <div class="" id="ji_list">
+        <div class="list_ym">
+      		<div class="ym_top"><span>搜索到带“${wantSearch!''}”的有:</span></div>
+	     	<div class="article">
+	     		<table id="contentLists">
+	     			<tbody>
+        			[#if contents??]
+        				[#list contents as c]
+            				<tr>
+                				<td class="line"><a href="${c.url!}" target="_blank" title="${c.contentExt.title!}">[@text_cut s=c.contentExt.title len=50 append='...'/]</a></td>
+            				</tr>
+            			[/#list]
+            			<tr class="lastLine">
+            				<td>
+            					<button id="firstPage">首页</button>
+            					<button id="prevPage">上一页</button>
+            					<button id="nextPage">下一页</button>
+            					<button id="lastPage">尾页</button>
+            					<span id="showNow">当前${pageNo!}/${totalPage!}页</span>
+            				</td>
+            			</tr>
+            		[#else]
+            			<tr style="text-align:center;">
+            				<td>暂时未找到存在此关键字的文章!</td>
+            			</tr>
+            		[/#if]
+        			</tbody>
+    			</table>
+	     	</div>
+		</div>
+	</div>
+	</div>
+	</div>
+	</div>
+</div>
+</div>
+[#include "../include/footer.html"/]
+</body>
+</html>

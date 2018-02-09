@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		alert("<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	if(!confirm("<@s.m 'global.confirm.delete'/>")) {
+		return;
+	}
+	var f = getTableForm();
+	f.action="delete.do";
+	f.submit();
+}
+function sort(){
+	var f = getTableForm();
+	f.action="sort.do";
+	f.submit();
+}
+</script>
+
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 投票选项 - 列表</div>
+	<form class="ropt">
+		<input type="submit" class="return-button" value="返回投票" onclick="this.form.action='${base}/admin/vote/v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+
+<div class="" style="text-align:center;font-size:14px;margin-top:10px;height:20px;">投票标题：${vote.voteTitle!}</div>
+<div class="" style="margin-right:5px;height:30px;">
+     <form class="ropt">
+	    <input type="hidden" value="${voteId!}" name="voteId"/>
+		<input class="add" type="submit" value="<@s.m "global.add"/>" onclick="this.form.action='add.do';"/>
+        <input class="del-button" style="line-height:24px;" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/>
+        <input class="reset" style="line-height:24px;" type="button" value="排序" onclick="sort();"/>
+        <input class="reset" type="submit" value="统计" onclick="this.form.action='itemPic.do';"/>
+        <input class="reset" type="submit" value="导出" onclick="this.form.action='excelMb1.do';"/>
+    </form>
+</div>
+<div class="body-box">
+
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<input type="hidden" name="voteId" value="${voteId!}"/>
+<@p.table value=pagination;item,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+		<input type='checkbox' name='ids' value='${item.id!}'/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center">${item.id!}<input type="hidden" name="itemids" value="${item.id!}"/></@p.column><#t/>
+	<@p.column title="排序" align="center"><input type="text" name="sorts" style="width:50px;" value="${item.itemState!0}"/></@p.column><#t/>
+	<@p.column code="标题" align="center"><a href="###" target="_blank">${item.itemTitle!}</a></@p.column><#t/>
+	<!-- <@p.column code="图片" align="center"><img src="${item.itemImg!}" width="100" height="100"></@p.column><#t/> -->
+	<@p.column code="摘要" align="center"><@text_cut s=item.itemDes len='50' append='...'/></@p.column><#t/>
+	<@p.column code="票数" align="center">${item.itemCount!0}</@p.column><#t/>
+	<@p.column code="global.operate" align="center">
+		<a href="edit.do?id=${item.id!}&pageNo=${pageNo!}" class="pn-opt"><@s.m "global.edit"/></a> | <#rt/>
+		<a href="delete.do?ids=${item.id!}&pageNo=${pageNo!}&voteId=${voteId!}" onclick="if(!confirm('<@s.m "global.confirm.delete"/>')) {return false;}" class="pn-opt"><@s.m "global.delete"/></a><#t/>
+	</@p.column><#t/>
+</@p.table>
+<div></div>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

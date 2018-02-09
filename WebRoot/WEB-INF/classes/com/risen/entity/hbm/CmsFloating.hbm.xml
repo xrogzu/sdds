@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="CmsFloating" table="JC_FLOATING">
+		<meta attribute="sync-DAO">false</meta>
+		<cache usage="read-write"/>
+		<id name="sddsfiId" type="integer" column="SDDSFI_ID">
+			<generator class="sequence"><param name="sequence">JC_FLOATING_SEQUENCE</param></generator>
+		</id>
+		<property name="sddsfiUserid" column="SDDSFI_USERID" type="integer" not-null="true"/>
+		<property name="sddsfiOrgid" column="SDDSFI_ORGID" type="integer" not-null="false"/>
+		<property name="sddsfiUsername" column="SDDSFI_USERNAME" type="string" not-null="false" length="50"/>
+		<property name="sddsfiOrgname" column="SDDSFI_ORGNAME" type="string" not-null="false" length="255"/>
+		<property name="sddsfiInprovince" column="SDDSFI_INPROVINCE" type="string" length="10"/>
+		<property name="sddsfiIncity" column="SDDSFI_INCITY" type="string"  length="10"/>
+		<property name="sddsfiIncounty" column="SDDSFI_INCOUNTY" type="string"  length="10"/>
+		<property name="sddsfiOutprovince" column="SDDSFI_OUTPROVINCE" type="string" length="10"/>
+		<property name="sddsfiOutcity" column="SDDSFI_OUTCITY" type="string"  length="10"/>
+		<property name="sddsfiOutcounty" column="SDDSFI_OUTCOUNTY" type="string"  length="10"/>
+		<property name="sddsfiYear" column="SDDSFI_YEAR" type="string" not-null="false" length="50"/>
+		<property name="sddsfiMonth" column="SDDSFI_MONTH" type="string" not-null="false" length="50"/>
+		<property name="sddsfiDay" column="SDDSFI_DAY" type="string" not-null="false" length="50"/>
+	</class>
+</hibernate-mapping>

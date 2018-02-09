@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!-- 这个 不知道叫什么栏目名字好，当一个栏目被分成多个且显示如下链接的时候用此栏目
+127.0.0.1/index/dwzn/index.jhtml
+ -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>${channel.title!channel.name} - ${site.name}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" ></meta>
+    <script src="${base}/r/cms/layer/jquery-1.12.1.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.SuperSlide.2.1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+</head>
+<style type="text/css">
+	.span_{margin-left: 40px;}
+	.list_ym_{width:1187px; float: left; height:700px;  margin:10px; margin-left:44px;   overflow: hidden; margin-right:20px; margin-top:8px;   }
+	.list_ym_ .ym_top{width:100%;height:40px; border-bottom:solid 1px #d8d8d8; line-height:40px; height:41px;  }
+	.list_ym_ .ym_top span{font-size:18px;/*  font-weight: bold; */ color:#bb976d; float: left; }
+	.list_ym_ .ym_top a{/* float: right; */ /* margin-top:8px; */ }
+	.list_ym_ .ym_tu ul{margin-top:15px; }
+	.list_ym_ .ym_tu li{line-height:34px;height: 36px;overflow: hi dden;border-bottom:solid 1px #ccc;}
+	.list_ym_ .ym_tu li a{font-size:14px; padding-left:10px; line-height:34px; height:234px; background:url(../images/16.png) no-repeat 0 16px; /*  width:810px; */  overflow: hidden;}
+	.list_ym_ .ym_tu li span{float: right;}
+	.list_ym_ .on{font-weight: bold;}
+</style>
+<body>
+[#include "../include/header.html"/]
+<div class="coen" id="container">
+<div class="content">
+    
+     
+         <div class="slideTxtBox" id="conter">
+              <div class="" id="ji_list">
+                   <div class="list_ym_">
+                        <!--  <div class="ym_top"><span>${channel.name!}</span><a href=""><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div> -->
+                        
+                        <div class="ym_top">
+                        [@cms_channel_list parentId=channel.id]
+                        	[#list tag_list as chnl]
+                        	[#if chnl_index == 0]
+                        	<a class="on"> <span>${chnl.name}</span></a>
+                        	[#else]
+                        	 <a><span class="span_" >${chnl.name}</span></a> 
+                        	[/#if]
+                        	[/#list]
+						[/@cms_channel_list]
+                        </div>
+                        [@cms_channel_list parentId=channel.id]
+                        [#list tag_list as chnl]
+                        [#if chnl_index == 0]
+	                        <div class="tue">
+		                        [@cms_content_page count='15' orderBy='4' channelId=chnl.id channelOption='0' dateFormat='yyyy-MM-dd' ]
+		                        <div class="ym_tu">
+		                             <ul>
+		        					 [#list tag_pagination.list as a]
+		                             		<li><a href="${a.url!}" target="_blank" title="${a.title!}">${a.title!}</a><span>${a.date?string(dateFormat)}</span></li>
+		                             [/#list]
+		                             </ul>
+		                        </div>
+		                        <div style="font-size: 14px; font-family: 微软雅黑; width:800px; height: 50px; line-height: 50px; margin-left: 5px;">
+		                        [@cms_pagination sysPage='1'/]
+		                        [/@cms_content_page]
+		                    
+	                        	</div>
+	                        </div>
+	                        [#else]
+	                        <div class="tue" style="display:none;">
+	                        [@cms_content_page count='15' orderBy='4' channelId=chnl.id dateFormat='yyyy-MM-dd' currPageClass="currPageClass" norPageClass="norPageClass"]
+	                        <div class="ym_tu">
+	                             <ul>
+	        					 [#list tag_pagination.list as a]
+	                             		<li><a href="${a.url!}" target="_blank" title="${a.title!}">${a.title!}</a><span>${a.date?string(dateFormat)}</span></li>
+	                             [/#list]
+	                             </ul>
+	                        </div>
+	                        <div style="font-size: 14px; font-family: 微软雅黑; width:800px; height: 50px; line-height: 50px; margin-left: 5px;">
+	                        [@cms_pagination sysPage='1'/]
+	                        [/@cms_content_page]
+	                        </div>
+	                        </div>
+	                    [/#if]
+                        [/#list]
+                        [/@cms_channel_list]
+                     
+                         
+                        <script type="text/javascript"> 
+                             $(".ym_top a").mousemove(function(){
+                                 $(".ym_top a").removeClass("on");
+                                 $(this).addClass("on");
+                                 var index = $(".ym_top a").index(this);
+                                 $(".tue").hide();
+                                 $(".tue").eq(index).show(0);
+                             });
+                        </script>
+                   </div>
+                   
+                  
+              </div>
+         </div>
+	 </div>
+</div>
+</div>
+[#include "../include/footer.html"/]
+</body>
+</html>

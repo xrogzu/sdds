@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenQairesContent" table="rs_qaires_content">
+	<id name="id" type="integer" column="rs_id">
+			<generator class="sequence"><param name="sequence">RISEN_QAIRES_CONTENT_SD</param></generator>
+		</id>
+		<many-to-one name="user" column="rs_user_id" class="com.jeecms.core.entity.CmsUser" />
+		<many-to-one name="topic" column="rs_topic_id" class="RisenQairesTopic" />
+		<many-to-one name="record" column="rs_record_id" class="RisenQairesRecord" />
+		<property name="content" column="rs_content" type="string" not-null="false" length="500"/>
+	</class>
+</hibernate-mapping> 

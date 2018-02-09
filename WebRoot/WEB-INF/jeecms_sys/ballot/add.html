@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "../head.html"/>
+ <script src="${base}/thirdparty/ueditor/ueditor.config.js"></script>
+ <script src="${base}/thirdparty/ueditor/ueditor.all.js"></script>
+ <link href="${base}/thirdparty/ueditor/themes/default/css/ueditor.css"/>
+<script type="text/javascript">
+	$(function() {
+
+	var endResult = false;
+	$("#jvForm").validate();
+	$("#jvForm").submit(function(){
+		var number = $("#multiSelect").val();
+		var reg =/^\d+$/;
+		if(!reg.test(number)){
+			alert("最大投票数为数字！");
+			return false;
+		}
+		if(endResult){
+			$(".submit").hide();
+			return true;
+		}else{
+			alert("此项目已添加过!");
+			return false;
+		}
+	});
+	
+	$("[name='title']").change(function(){
+		var title = $("[name='title']").val();
+		var url = "existBallot.do";
+		$.post(url,{title:title},function(result){
+			if(result=="noexist"){
+				endResult = true;
+			}
+		});
+	});
+});
+
+</script>
+
+</head>
+<body>
+<#include "wenku_upload.html"/>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: E票通 - 在线投票 - 添加</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';" class="return-button"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_save.do">
+<@p.text label="标题" colspan="1" width="200" name="title" required="0" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="开始时间" id="startTime" readonly="readonly" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:$dp.$('endTime').value})" colspan="1" width="100" name="startTime" required="0" class="required" /><@p.tr/>
+<@p.text label="结束时间" id="endTime" readonly="readonly" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:$dp.$('startTime').value})" colspan="1" width="100" name="endTime" required="0" class="required" /><@p.tr/>
+<@p.text label="最多投票数" id="multiSelect" colspan="1" width="100" name="multiSelect" required="0" class="required" /><@p.tr/>
+<@p.radio label="限制用户" name="isRestrictmember" value="false" list={"true":"global.true","false":"global.false"} help="cmsVoteTopic.restrictMember.help"/>
+<@p.radio label="限制IP" name="isRestrictip" value="false" list={"true":"global.true","false":"global.false"}/>
+<@p.radio label="限制COOKIE" name="isRestrictcookie" value="false" list={"true":"global.true","false":"global.false"}/>
+<@p.radio label="是否使用" name="isDisabled" value="true" list={"true":"global.true","false":"global.false"}/>
+ <!-- <@p.textarea label="描述" id="description" rows="7" cols="100" name="description"></@p.textarea> -->
+ <#if loginUser?? && loginUser=="省局机关党委">
+ <tr>
+ 	<td>标题图</td>
+ 	<td class="pn-flabel pn-flabel-h">
+ 		<div>
+			<input type="text" id="docPath" name="backgroundImg" readonly="readonly" required="0" class="required" style="width:265px"/>
+		</div>
+		<div style="margin-top: 5px;">
+			<span id="mfc" style="position:relative;display:block;width:300px;*width:300px;">
+			<input type="text" id="docFileText"/>  
+			<input class="browse" type='button' value='<@s.m "global.browse"/>'/>
+			<input onchange="$('#docFileText').val(this.value)" size="19" type="file" name="docFile" id="docFile" style="height:24px;opacity:0;filter:alpha(opacity=0);position:absolute;right:79px;top:2px;"/>
+			<input type="button" value="<@s.m "imageupload.upload"/>" onclick="uploadDoc();" class="upload-button"/>
+			<label style="color:red;float:left;">建议使用1200*170的图片</label>
+			</span>
+		</div>
+ 	</td>
+ </tr>
+ </#if>
+<@p.editor name="introduction"  label="导语">只支持文字描述！</@p.editor>
+<@p.td colspan="2"><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td><@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

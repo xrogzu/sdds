@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>全文检索 - ${site.name}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" ></meta>
+    <script src="${base}/r/cms/layer/jquery-1.12.1.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.SuperSlide.2.1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+    <link href="${base}/r/cms/front.css" rel="stylesheet" type="text/css"/>
+	<link href="${base}/r/cms/jqueryUI/jquery.ui.css" rel="stylesheet" type="text/css"/>
+	<link href="${base}/r/cms/www/default/css/index.css" rel="stylesheet" type="text/css"/>
+</head>	
+<body>
+[#include "../include/header_shengju.html"/]
+<div class="coen">
+	<div class="content">
+		<div class="slideTxtBox" id="conter">
+			<div class="" id="ji_list">
+				<div class="list_ym" style="margin-left: 15%">
+					<section class="content_w850">
+					[#if q??]
+						[@cms_lucene_page q=q channelId=channelId startDate=startDate endDate=endDate siteId=site.id descLen='170' append='...' count='10' ]
+						<div class="ym_top" align="center">
+							<span></span>您搜索的“<B><font color="red">${input!}</font></B>”， 共有<B><font color="red">${tag_pagination.totalCount!}</font></B>个结果
+						</div>
+						<div class="ym_tu">
+							<ul>
+							[#list tag_list as s]
+								<li class="search_li"><a href="${s.url!}" title="${s.title!}" target="_blank">${s.title?replace('${q!}',"${q!}")}</a></li>
+							[/#list]
+							[#include "../include/page.html"/] [/@cms_lucene_page]
+							</ul>
+						</div>
+					[/#if]
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+[#include "../include/footer_shengju.html"/]
+
+</body>
+</html>

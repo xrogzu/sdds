@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var f = getTableForm();
+	f.action="o_delete.do";
+	f.submit();
+}
+
+function optPriority() {
+	getTableForm().action="o_priority.do";
+}
+function updScore(orgid){
+	var vorgId = $("#"+orgid+"orgId").val();
+	var vscore = $("#"+orgid+"score").val();
+	$.post("${base}/admin/partyBuild/updScore.do?orgId="+vorgId+"&score="+vscore,{},function(data){
+		if (data == "success") alert("保存成功！");
+	});
+	
+}
+function batchUpd(){
+	var ids='';
+	var checkeds=$("input[name='ids']:checked");
+	
+	
+	for(var i=0;i<checkeds.length;i++){
+		ids+=$(checkeds[i]).val()+","; 
+	}
+	if(ids==null||ids==""){
+		$.alert("提示","请选择要修改分数的部门信息");
+	}else{
+		ids=ids.substring(0, ids.length-1);
+		window.location.href="batchUpdScore.do?ids="+ids+"&score="+$("#batchScore").val();
+	}
+}
+function getOtherYearInfo(){
+	var year = new Date().getFullYear();
+	window.location.href="../risenIntegral/getOtherRule.do?year="+year;
+}
+function batchAdd(){
+	$( "#dialog-edit-form").dialog("open");
+}
+function check(){
+	var year = $("#risenitYear").val();
+	var baseScore = $("#risenitBase").val();
+	var desc = $("#risenitDesc").val();
+	if(year==null || year==""){
+		alert("请选择年份");
+		$("[name='risenitYear']").focus();
+	}else if(baseScore==null || (baseScore=="")){
+		alert("请设置基数");
+		$("[name='risenitBase']").focus();
+	}else{
+		var url = "${base}/admin/risenIntegral/batchSave.do?year="+year;
+		$.post(url,{desc:desc,base:baseScore},function(result){
+			if(result=="success"){
+				alert("保存成功！");
+				location.reload(); 
+			}else{
+				alert("添加失败，请稍后再试！");
+			}
+		});
+	}
+}
+$(function(){
+	$("#dialog-edit-form").dialog({
+		autoOpen: false,
+		height: 360,
+		width: 430,
+		modal: true,
+		buttons: {
+			"<@s.m code='global.submit'/>": function() {
+				check();
+				var errorlength=$(".error").length;
+				if(errorlength<=0){
+					 $( this ).dialog( "close" );
+				}
+			},
+			"<@s.m code='global.reset'/>": function() {
+				$("#risenitYear").val("");
+				$("#risenitDesc").val("");
+			}
+		}
+	});
+});
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 设置绩效规则 > <@s.m "global.list"/></div>
+</div>
+<div style="height: 50px; margin-top: 10px; margin-left: 20px;">
+	<a href="../partyBuild/baseScore.do?type=xt" style="width: 120px; height: 40px; background:#ddd; text-align: center; line-height: 40px; font-size: 16px; display: block; float: left;">系统</a>
+	<a href="../partyBuild/baseScore.do?type=jiguan" style="width: 120px; height: 40px; background: #ddd; text-align: center; line-height: 40px; font-size: 16px; display: block; float: left; margin-left: 20px;">机关</a>
+</div>
+<div class="body-box"><#if "${issave!''}" != "true">
+<div style="margin-bottom: 10px;">
+基数：<input type="number" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  id="batchScore" min="1" value="1" style="width: 50px; " />
+<input class="query" type="button" onclick="batchUpd()" value="批量修改加分基数" style="width: 120px; " />
+<input type="button" class="query" onclick="batchAdd()" value="设置绩效规则" style="width:90px;" />
+<input type="button" class="query" onclick="getOtherYearInfo();" value="查看历年绩效规则" style="width:120px;"/>
+</div></#if>
+<@p.table value=list;depart,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="25" align="center">
+		<input type='checkbox' name='ids' value='${depart.risenitOrgid!}' onclick="Pn.selectCheckBox('${depart.risenitUuid}',this.checked)"/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center">${depart.risenitOrgid!}<input type="hidden" name="wids" value="${depart.risenitOrgid}"/></@p.column><#t/>
+	<@p.column code="组织名称" align="center">${depart.risenitOrgname!}</@p.column><#t/>
+	<@p.column code="人数" align="center">1</@p.column><#t/>
+	<@p.column code="加分基数" align="center">${depart.risenitBase!'1'}
+		<!-- 
+		<input type="number" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" id="${depart.risenitOrgid}score" name="score"  style="width: 30px;" min="1" value="${depart.risenitBase!'1'}"/>
+		<input type="hidden" id="${depart.risenitOrgid}orgId" name="orgId" value="${depart.risenitOrgid!}"/>
+		<#if "${issave!''}" != "true"><a href="javascript:void(0);" onclick="updScore(${depart.risenitOrgid!});">保存</a></#if>
+		 -->
+	</@p.column><#t/>
+</@p.table>
+<!-- <div style="margin-top:20px;">
+	<input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/ style="float:left; margin-right:6px;">
+	<input class="bcplxx-button" type="submit" value="<@s.m "global.saveOrder"/>" onclick="optPriority();"/ style="float:left;">
+</div> -->
+</div>
+<div id="dialog-edit-form" title="添加" style="display:none;">
+	<@p.form id="addForm" action="" >
+		<tr>
+			<td>年份：</td>
+			<td>
+				<input id="risenitYear" name="risenitYear" type="text" onclick="WdatePicker({dateFmt:'yyyy'})" value="">默认显示当前年度
+			</td>
+		</tr>
+		<tr>
+			<td>基数：</td>
+			<td>
+				<input id="risenitBase" name="risenitBase" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  type="number" min="1" value="1">
+			</td>
+		</tr>
+		<tr>
+			<td>说明：</td>
+			<td>
+				<textarea id="risenitDesc" name="risenitDesc" rows="5" cols="40"></textarea>
+			</td>
+		</tr>
+	</@p.form>
+</div>
+<div id="descDialog" title="规则说明" style="display:none;">
+	<tr>
+		<td>说明：</td>
+		<td>
+			<textarea id="ruleDesc" name="ruleDesc" rows="5" cols="40"></textarea>
+		</td>
+	</tr>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

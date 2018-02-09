@@ -1,0 +1,21 @@
+<#if isRoot>
+[{
+					"text": "<a href='v_list.do?root=${parentdepart.id!}' target='departmentRightFrame'>${parentdepart.name!}</a>",
+					"classes": "file",
+					"expanded": false,
+					"children": [
+						
+						]
+					}]
+<#else>
+	[
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<a href='<#if depart.child?size gt 0>v_list.do?root=${depart.id}&iszb=1<#else>v_edit.do?id=${depart.id}</#if>' target='departmentRightFrame'>${depart.name}</a>",
+		"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+		"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+</#if>

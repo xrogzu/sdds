@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>jeecms-left</title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("li").each(function(i){
+		$(this).removeClass("leftCurr");
+		if(i==0){
+			$(this).addClass("leftCurr");
+		}else{
+			$(this).addClass("leftNol");
+		}
+		$(this).click( function () {
+			$("li").each(function(){
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$(".h3").each(function(){
+				$(this).next().hide();
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$(this).removeClass("leftNol");
+			$(this).addClass("leftCurr");
+		});
+	});
+	$(".h3").each(function(){
+		$(this).next().hide();
+		$(this).addClass("leftNol");
+		$(this).click( function () {
+			$(".h3").each(function(){
+				$(this).next().hide();
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$("li").each(function(){
+				$(this).removeClass("leftCurr");
+				$(this).addClass("leftNol");
+			});
+			$(this).removeClass("leftNol");
+			$(this).addClass("leftCurr");
+		    $(this).next().show(); 
+		});
+	});
+	$(".h3-child div").each(function(i){
+		$(this).click( function () {
+			$(".h3-child div").each(function(){
+				$(this).removeClass();
+				$(this).addClass("leftmenuBG");
+			});
+			$(this).removeClass();
+			$(this).addClass("leftmenuBGCurr");
+		});
+	});
+});
+</script>
+</head>
+<body>
+<div class="w230 f_l ove">
+	<div class="fresh" style="font-size:12px; text-indent:36px;">
+       <#include "/jeecms_sys/date.html"/>
+	</div>
+     <div class="w229">
+    	<ol>
+         <@cms_perm url="/statistic/member/v_list.do">
+	      <li class="leftCurr"><a href="../statistic/member/v_list.do?queryModel=thisYearAdd" target="rightFrame">党员变化情况分析</a></li>
+         </@cms_perm>
+         <@cms_perm url="/statistic/member/basicInfo_list.do">
+	      <li class="leftCurr"><a href="../statistic/member/basicInfo_list.do?queryModel=ALL" target="rightFrame">党员基本情况分析</a></li>
+	     </@cms_perm>
+	     <@cms_perm url="/statistic/member/partyTime_list.do">
+	      <li class="leftCurr"><a href="../statistic/member/partyTime_list.do?queryModel=ALL" target="rightFrame">入党时间情况分析</a></li>
+	     </@cms_perm>
+	     <@cms_perm url="/statistic/member/educationAnalysis_list.do">
+	      <li class="leftCurr"><a href="../statistic/member/educationAnalysis_list.do?queryModel=ALL" target="rightFrame">党员学历情况分析</a></li>
+	     </@cms_perm>
+	     <#if user?? && (user=='省局机关党委' || user == 'admin')>
+	      <@cms_perm url="/statistic/member/memberYearChange_list.do">
+	      <li class="leftCurr"><a href="../statistic/member/memberYearChange_list.do" target="rightFrame">党员年度变化情况分析</a></li>
+	     </@cms_perm>
+	     </#if>
+	     <@cms_perm url="/statistic/member/orgChange_list.do">
+	      <li class="leftCurr"><a href="../statistic/member/orgChange_list.do" target="rightFrame">党组织构成情况分析</a></li>
+	     </@cms_perm> 
+	     <@cms_perm url="/statistic/member/general_HuanJieInfoList.do">
+	      <li class="leftCurr"><a href="../statistic/member/general_HuanJieInfoList.do" target="rightFrame">党组织换届情况统计</a></li>
+         </@cms_perm>
+      
+         <@cms_perm url="/statistic/member/duties_list.do">
+	      <li class="leftCurr"><a href="../statistic/member/duties_list.do" target="rightFrame">党务干部情况分析</a></li>
+         </@cms_perm>
+         <#if user?? && (user=='省局机关党委' || user == 'admin')>
+         <@cms_perm url="/statistic/score/yearintegralanalyze.do">
+	      <li class="leftCurr"><a href="../statistic/score/yearintegralanalyze.do" target="rightFrame">积分年度变化情况分析</a></li>
+         </@cms_perm>
+         </#if>
+    </div>
+</div>
+</body>
+</html>

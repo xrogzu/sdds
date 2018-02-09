@@ -1,0 +1,121 @@
+<script src="${base}/thirdparty/echarts/echarts.js"></script>
+<script type="text/javascript">
+    $(function(){
+		var names=[];
+		var scores=[];
+     		var urltj = "${base}/getjxtj.jspx?deptId=${(channel.depart.id)!}&root=1";
+    		$.ajax({  
+		         type : "post",  
+		          url : urltj,  
+		          async : false,  
+		          success : function(result){ 
+					for(var i=0;i<result.length;i++){
+					names[i]=result[i].risenitOrgname;
+					scores[i]=result[i].risenitScore;
+					}
+					
+		          }
+			});
+    		 var myChart = echarts.init(document.getElementById('jxtj1'));
+    		 // 指定图表的配置项和数据
+		    var option = {
+			    title: {
+			        x: 'center',
+			        text: '党建绩效积分月度统计'
+			       
+			    },
+			    tooltip: {
+			        trigger: 'item'
+			    },
+			    toolbox: {
+			        show: true,
+			        feature: {
+			            dataView: {show: true, readOnly: true},
+			            restore: {show: false},
+			            saveAsImage: {show: true}
+			        }
+			    },
+			    calculable: true,
+			    grid: {
+			        borderWidth: 0,
+			        y: 80,
+			        y2: 60
+			    },
+			    grid:{bottom:150},
+			    xAxis: [
+			        {
+			            type: 'category',
+			           
+			            data:names,
+			             
+			            axisLabel:{
+			              interval:0,  //类目全显
+			              formatter:function(val){
+			              //debugger;
+			              	var s=val.substring(0,val.length/2);
+			              	var s1=val.substring(val.length/2,val.length);
+						    return s+"\n"+s1;
+						    },
+			              rotate:-45   //顺时针旋转45度
+			            }
+			        }
+			    ],
+			    yAxis: [
+			        {
+			            type: 'value'
+			        }
+			    ],
+			    series: [
+			        {
+			            name: '党建绩效积分月度统计',
+			            type: 'bar',
+			            itemStyle: {
+			                normal: {
+			                    color: function(params) {
+			                        // build a color map as your need.
+			                        var colorList = [
+			                          '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
+			                           '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
+			                           '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+			                        ];
+			                        return colorList[params.dataIndex]
+			                    },
+			                    label: {
+			                        show: true,
+			                        position: 'top'
+			                    }
+			                }
+			            },
+			            data: scores,
+			            markPoint: {
+			                tooltip: {
+			                    trigger: 'item'
+			                },
+			                 data : [
+			                    {type : 'max', name: '最高积分'},
+			                    {type : 'min', name: '最低积分'}
+			                ]
+			            }
+			        }
+			    ]
+		    };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);   
+              $(".zuze5").click(function(){
+                 $(".dwlis2").show();
+                 $(".zhezc2").show();
+             });
+             $(".dwlis2 .dw_tit2 a").click(function(){
+                 $(".dwlis2").hide();
+                 $(".zhezc2").hide();
+             });
+    });
+</script>
+
+					           <div class="dwlis2">
+					                <div class="dw_tit2"><span>党建绩效</span><a href="javascript:;">×</a></div>
+					                <div style="width:158px;font-size:16px;line-height:40px;height:40px; text-align:center;margin-left:400px;margin: 20px 10px;border: solid 1px #e5e5e5;cursor:pointer;"><a href="${base}/getDetail.jspx?departId=${(channel.depart.id)!''}&status=1&root=1" target="_blank">查询更多</a></div>
+					                <div class="dw_lis2" id="jxtj1" style="float:left; width:700px;height:500px;">
+					                </div>
+					           </div>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>jxjfassess.html</title>
+	<#include "/jeecms_sys/head.html"/>
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  <script type="text/javascript">
+  function batchUpd(){
+  	var url="../partyBuild/jxpgadd.do"
+  	location=url;
+  };
+  </script>
+  <body>
+  <div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 设置绩效评估规则 > <@s.m "global.list"/></div>
+</div>
+	<div>
+		<input class="query" type="button" onclick="batchUpd()" value="添加" style="width: 70px; " />
+	</div>
+   <div class="body-box">
+   <@p.table value=list;depart,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="25" align="center">
+		<input type='checkbox' name='ids' value='${depart.id!''}' onclick="Pn.selectCheckBox('${depart.id!''}',this.checked)"/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center">${depart.id!''}<input type="hidden" name="wids" value="${depart.id!''}"/></@p.column><#t/>
+	<@p.column code="栏目名称" align="center">${depart.channelname!''}</@p.column><#t/>
+	<@p.column code="合格分数界点" align="center">${depart.passingscore!''}</@p.column><#t/>
+	<@p.column code="合格评语" align="center">${depart.passingevaluate!'1'}</@p.column><#t/>
+	<@p.column code="优秀分数界点" align="center">${depart.excellentscore!''}</@p.column><#t/>
+	<@p.column code="优秀评语" align="center">${depart.excellentevaluate!'1'}</@p.column><#t/>
+	<@p.column code="不合格评语" align="center">${depart.disqualificationevalua!''}</@p.column><#t/>
+	<@p.column align="center" code="操作">
+			<a href="../partyBuild/jxpgeitd.do?id=${depart.id!''}"><@s.m "global.edit"/></a>
+	</@p.column><#t/>
+   </@p.table>
+   </div>
+  </body>
+</html>

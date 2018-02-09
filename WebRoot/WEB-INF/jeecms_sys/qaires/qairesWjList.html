@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		alert("<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	if(!confirm("<@s.m 'global.confirm.delete'/>")) {
+		return;
+	}
+	var f = getTableForm();
+	f.action="deleteQaires.do";
+	f.submit();
+}
+</script>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 问卷调查 - 列表</div>
+	<form class="ropt">
+		<input class="add" type="submit" style="float:left;" value="<@s.m "global.add"/>" onclick="this.form.action='addQairesWj.do';"/>
+		<input class="del-button" style="float:left;" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<form action="v_list.do" method="post" style="padding-top:5px;">
+    <input name="status" value="1" type="hidden"/>
+	日期：<input type="text" class="Wdate" value="${startDate!}" id="startDate" name="startDate" style="width:140px" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/> -
+	<input type="text" class="Wdate" value="${endDate!}" id="endDate" name="endDate" style="width:140px" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+	<input class="query" type="submit" value="<@s.m "global.query"/>"/>
+</form>
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<input type="hidden" name="startDate" value="${startDate!}"/>
+<input type="hidden" name="endDate" value="${endDate!}"/>
+<input name="status" value="1" type="hidden"/>
+<@p.table value=pagination;qaires,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="10" align="center">
+		<input type='checkbox' name='ids' value='${qaires.id!}'/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center" width="3%">${qaires.id!}</@p.column><#t/>
+	<@p.column code="标题" align="center" width="35%"><a href="${base}/qaires/startWjdc.jspx?qairesId=${qaires.id!}" target="_blank">${qaires.title!}</a></@p.column><#t/>
+	<@p.column code="开始时间" align="center" width="15%">${(qaires.startTime?string('yyyy-MM-dd HH:mm:ss'))!'无限制'}</@p.column><#t/>
+	<@p.column code="结束时间" align="center" width="15%">${(qaires.endTime?string('yyyy-MM-dd HH:mm:ss'))!'无限制'}</@p.column><#t/>
+	<@p.column code="状态" align="center" width="7%"> <#if qaires.disabled??><#if qaires.disabled>启用
+	       <span style="color:red;">(<#if qaires.start==0>未开始<#elseif qaires.start==1>进行中<#else>已结束</#if>)</span>
+	     <#else><span style="color:red;">禁用</span></#if></#if></@p.column><#t/>
+	<@p.column code="global.operate" align="center">
+	    <#if qaires.disabled??><#if qaires.disabled><a href="disabled.do?disable=0&id=${qaires.id!}&pageNo=${pageNo!}&startDate=${startDate!}&endDate=${endDate!}" class="pn-opt">禁用</a><#else><a href="disabled.do?disable=1&id=${qaires.id!}&pageNo=${pageNo!}&startDate=${startDate!}&endDate=${endDate!}" class="pn-opt">	启用</a></#if> | <#rt/></#if>
+		<a href="editQaires.do?id=${qaires.id!}&pageNo=${pageNo!}&startDate=${startDate!}&endDate=${endDate!}" class="pn-opt"><@s.m "global.edit"/></a> | <#rt/>
+		<a href="${base}/admin/qairesTopic/v_list.do?qairesId=${qaires.id!}" class="pn-opt">试题</a> | <#rt/>
+		<a href="qairesRecord/v_list.do?qairesId=${qaires.id!}" class="pn-opt">问卷记录</a> | <#rt/>
+		<a href="deleteQaires.do?ids=${qaires.id!}&pageNo=${pageNo!}&startDate=${startDate!}&endDate=${endDate!}&status=${status!}" onclick="if(!confirm('<@s.m "global.confirm.delete"/>')) {return false;}" class="pn-opt"><@s.m "global.delete"/></a><#t/>
+	</@p.column><#t/>
+</@p.table>
+<div></div>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

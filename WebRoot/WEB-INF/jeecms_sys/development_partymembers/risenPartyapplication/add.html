@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="/thirdparty/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(function() {
+	initUeditors();
+	$("#jvForm").validate();
+});
+/**
+*初始化富文本编辑器
+*/
+
+function initUeditors(){
+	//初始化 ueditor 自定义需要的按钮
+	  var ac = UE.getEditor('risenpaApplicationcontent', {
+	  	    toolbars: [['undo', 
+				  	    'redo', 
+				  	    'bold', 
+				  	    'italic', 
+				  	    'underline', 
+				  	    'strikethrough', 
+				  	    'cleardoc', 
+				  	    'fontfamily', 
+				  	    'fontsize', 
+				  	    'emotion', 
+				  	    'searchreplace', 
+				  	    'justifyleft', 
+				        'justifyright', 
+				        'justifycenter', 
+				        'justifyjustify', 
+				        'forecolor', 
+				        'backcolor', 
+				        'touppercase', 
+       					 'tolowercase', ]],
+       					 autoWidthEnabled: false,
+	  	        autoHeightEnabled: true,    
+	  	        autoFloatEnabled: true});
+
+//初始化 ueditor 自定义需要的按钮
+	  var ec = UE.getEditor('risenpaExaminecontent', {
+	  	    toolbars: [['undo', 
+				  	    'redo', 
+				  	    'bold', 
+				  	    'italic', 
+				  	    'underline', 
+				  	    'strikethrough', 
+				  	    'cleardoc', 
+				  	    'fontfamily', 
+				  	    'fontsize', 
+				  	    'emotion', 
+				  	    'searchreplace', 
+				  	    'justifyleft', 
+				        'justifyright', 
+				        'justifycenter', 
+				        'justifyjustify', 
+				        'forecolor', 
+				        'backcolor', 
+				        'touppercase', 
+       					 'tolowercase', ]],
+       					 autoWidthEnabled: false,
+	  	        autoHeightEnabled: true,    
+	  	        autoFloatEnabled: true});
+
+}
+
+</script>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: <@s.m "risenPartyapplication.function"/> - <@s.m "global.add"/></div>
+	<form class="ropt">
+		<input class="return-button" type="button" value="<@s.m "global.backToList"/>" onclick="window.location.href='../development_partymembers/development_main.do'"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_save.do">
+<!-- ######add html fields start###### -->
+<@p.text label="risenPartyapplication.risenpaSubmitcardid" colspan="1" width="50" name="risenpaSubmitcardid" required="true" class="required" maxlength="100"/>
+
+<!-- <@p.td label="risenPartyapplication.risenpaSubmitsex" colspan="1" >
+男<input type="radio" checked="checked" name="risenpaSubmitsex" value="1"/>
+女<input type="radio"  name="risenpaSubmitsex" value="0"/>
+</@p.td><@p.tr/> -->
+
+<!-- <@p.text label="risenPartyapplication.risenpaSubmitbirthday" class="required" colspan="1" width="50" name="risenpaSubmitbirthday"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+ -->
+<@p.text label="材料名称" colspan="1" width="50" name="risenpaName" required="true" class="required" maxlength="100"/><@p.tr/>
+
+<!-- <@p.text label="risenPartyapplication.risenpaSubmitperid" colspan="1" width="50" name="risenpaSubmitperid" required="true" class="required" maxlength="100"/>
+ -->
+<@p.text label="risenPartyapplication.risenpaSubmitpername" colspan="1" width="50" name="risenpaSubmitpername" required="true" class="required" maxlength="100"/>
+
+<!-- <@p.text label="risenPartyapplication.risenpaExamineperid" colspan="1" width="50" name="risenpaExamineperid" required="true" class="required" maxlength="100"/>
+ -->
+
+<@p.text label="审核人姓名" colspan="1" width="50" name="risenpaExaminepername" required="true" class="required" maxlength="100"/><@p.tr/>
+
+<!-- <@p.text label="risenPartyapplication.risenpaExamineorgid" colspan="1" width="50" name="risenpaExamineorgid" required="true" class="required" maxlength="100"/>
+ -->
+<@p.text label="risenPartyapplication.risenpaExamineorgname" colspan="1" width="50" name="risenpaExamineorgname" required="true" class="required" maxlength="100"/>
+
+<@p.text label="risenPartyapplication.risenpaSubmitdate" class="required" colspan="1" width="50" name="risenpaSubmitdate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/><@p.tr/>
+
+<@p.text label="risenPartyapplication.risenpaExaminedate" class="required" colspan="1" width="50" name="risenpaExaminedate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+
+<@p.td width="50" colspan="2" label="risenPartyapplication.risenpaResult"  >
+通过<input type="radio" checked="checked" name="risenpaResult" value="1"/>
+不通过<input type="radio"  name="risenpaResult" value="0"/>
+</@p.td><@p.tr/>
+
+
+<!-- <@p.text label="risenPartyapplication.risenpaApplicationcontent" colspan="1" width="50" name="risenpaApplicationcontent" required="true" class="required" maxlength="100"/> -->
+<@p.td colspan="2" label="材料内容" ><script id="risenpaApplicationcontent"  name="risenpaApplicationcontent" type="text/plain" style="width:60%;margin:0 auto;"></script></@p.td><@p.tr/>
+<@p.td colspan="2" label="risenPartyapplication.risenpaExaminecontent" ><script id="risenpaExaminecontent"  name="risenpaExaminecontent" type="text/plain" style="width:60%;margin:0 auto;"></script></@p.td><@p.tr/>
+
+<!-- <@p.text label="risenPartyapplication.risenpaExaminecontent" colspan="1" width="50" name="risenpaExaminecontent" required="true" class="required" maxlength="100"/><@p.tr/>
+ --><!-- ######add html fields end###### -->
+<@p.td  colspan="2"><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td><@p.tr/>
+</@p.form>
+</div>
+</body>
+</html>

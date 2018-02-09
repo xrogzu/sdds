@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title></title>
+<#include "../head.html"/>
+<script type="text/javascript">
+var responseText1="";
+var isPass = ""; //所有的结果
+var zhibiao = "";
+$.ajaxSetup({  
+    async : false //取消异步  
+}); 
+$(function() {
+	var type =$("#Type").val();
+	if(type==null || type==""){
+		$("#jvForm").css("display","none");
+		alert("设置基础分或附加分规则才可添加分数");
+	}else{
+		$("#jvForm").css("display","block");
+	}
+
+//	var md="";
+	var result = true;
+	$("#jvForm").submit(function(){
+//		var risenScScore = $("[name='risenScScore']").val();
+		var risenScScore = document.getElementsByName("risenScScore");
+		/*
+		for(var i=0;i<risenScScore.length;i++){
+		  if(risenScScore[i].value!=""||risenScScore[i].value!= null ){
+			if(md==""){
+			md=risenScScore[i].value;
+			}else{
+			md+=","+risenScScore[i].value;
+			}
+		  }	
+		}
+		if(md==""){
+			alert("请至少输入一项指标的成绩!");
+			return false;
+		}
+		*/
+		if(isPass.indexOf("hx")!=-1 || isPass.indexOf("Have")!=-1){
+			alert("请不要给已添加的指标  "+zhibiao+"  添加分数");
+			return false;
+		}else{
+			return true;
+		}
+	});
+	$("#jvForm").validate();
+});
+function checkIsNumber(id){
+	var risenScScore = $("#risenScScore"+id).val();
+	var risenMaxScore = $("#maxScore"+id).val();
+	var quotaId = $("#quotaId"+id).val();
+	var quotaName = $("#quotaName"+id).val();
+	var userId = $("[name='userId']").val();
+	var risenqtYear = $("[name='risenqtYear']").val();
+	var reg =/^\d+$/;
+	if(risenScScore!=""){
+		if(!reg.test(risenScScore)){
+			alert("评分得分为数字！");
+			result = false;
+		}else{
+			if(parseInt(risenScScore)>parseInt(risenMaxScore)){
+				alert("评分应小于该指标的总分！");
+				isPass = "hx";//hx = haveMax   有超过最大分数
+			}else{
+				var url = "existScore.do?quotaId="+quotaId+"&userId="+userId+"&risenqtYear="+risenqtYear;
+				$.post(url,function(responseText){
+					responseText1=responseText;
+					if(responseText=="exists"){	
+						isPass = isPass + "Have";//存在某条记录
+						zhibiao = zhibiao + quotaName +" ";
+						result = false;
+					}
+				});
+			}
+		}
+	}
+}
+</script>
+
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 先锋指分 - 党员评分 - 添加</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input type="submit" value="<@s.m "global.backToList"/>" onclick="javascript:history.go(-1);" class="return-button"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="../risenScore/o_save.do">
+	<#if quotas??>
+		<tr>
+			<td style="width:100px;">党员姓名：</td>
+			<td style="width:100px;">
+				<span>${username!''}</span>
+			</td>
+			<td style="width:70px;">评分年度：</td>
+		 	<td>
+		 		<input type="text" name="risenqtYear"  class="required" id="risenqtYear" value="${year!''}" onclick="WdatePicker({dateFmt:'yyyy'})" />
+		 	</td>
+		</tr>
+		<#list quotas as quota>
+		<input type="hidden" id="Type" value="${quota!''}"/><!--取值查看有没有记录，若没有则影藏表单  -->
+			<#if quota.risenqtAddType??>
+			<#if quota.risenqtAddType==2>
+			<tr>
+				<td colspan="4" style="color:red;">减分项目</td>
+			</tr>
+			<tr>
+				<td>${quota.risenqtName!''}的分数</td>
+				<td>
+					<input type="text" id="risenScScore${quota.id!''}" name="risenScScore" onChange="checkIsNumber(${quota.id!''});"/>
+					<input type="hidden" id="quotaId${quota.id!''}" name="quotaId" value="${quota.id!''}">
+					<input type="hidden" id="quotaName${quota.id!''}" value="${quota.risenqtName!''}">
+					<input type="hidden" id="maxScore${quota.id!''}" value="${quota.risenqtScore!''}">
+				</td>
+			</tr>
+			</#if>
+			</#if>
+			<#if quota.risenqtType==1 >
+			<tr>
+				<td>基础分：</td>
+				<td colspan="2">
+					<span>${quota.risenqtName!''}</span>
+				</td>
+				<td>
+					<input type="text" placeholder="请输入分值"    id="risenScScore${quota.id!''}" name="risenScScore" onChange="checkIsNumber(${quota.id!''});"/>
+					<input type="hidden" id="quotaId${quota.id!''}" name="quotaId" value="${quota.id!''}">
+					<input type="hidden" id="quotaName${quota.id!''}" value="${quota.risenqtName!''}">
+					<input type="hidden" id="maxScore${quota.id!''}" value="${quota.risenqtScore!''}">
+					<span style="line-height:30px; display:inline-block;">分值：${quota.risenqtScore!''}</span>
+				</td>
+			</tr>
+			<#elseif quota.risenqtType==2 >
+			<tr>
+				<td>附加分：</td>
+				<td colspan="2">
+					<span>${quota.risenqtName!''}</span>
+				</td>
+				<td>
+					<input type="text" placeholder="请输入分值"   id="risenScScore${quota.id!''}" name="risenScScore" onChange="checkIsNumber(${quota.id!''});"/>
+					<input style="float:right" type="hidden" id="quotaId${quota.id!''}" name="quotaId" value="${quota.id!''}">
+					<input type="hidden" id="quotaName${quota.id!''}" value="${quota.risenqtName!''}">
+					<input style="float:right" type="hidden" id="maxScore${quota.id!''}" value="${quota.risenqtScore!''}">
+					<span style="line-height:30px; display:inline-block;">分值：${quota.risenqtScore!''}</span>
+				</td>
+			</tr>
+			<#else>
+			</#if>
+		</#list>
+	<#else>
+		暂时还不能评分!
+	</#if>
+	<tr id="risenDescribtion">
+		<td>备注：</td>
+		<td>
+			<textarea cols="60" rows="5"  name="risenScDescribtion"></textarea>
+		</td>
+	</tr>
+<@p.td colspan="1" ><input type="hidden" name="userId" value="${userId!}"/><@p.submit id ="user" code="global.submit"/><@p.reset id="users" code="global.reset"/></@p.td><@p.tr/>
+</@p.form>
+</div>
+
+<style>
+.pn-fbutton input{float:left;}
+</style>
+</body>
+</html>

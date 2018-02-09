@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+});
+function changeLj(i){
+   if(i==1){
+      $("#quesConJj").css("display","none");
+      $("#quesContentL").css("display","");
+   }else if(i==2){
+      $("#quesConJj").css("display","");
+      $("#quesContentL").css("display","none");
+   }
+}
+</script>
+<style type="text/css">
+.items{padding-top:1px;}
+</style>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 投票题目 - <@s.m "global.add"/></div>
+	<form class="ropt">
+	    <input type="hidden" value="${voteId!}" name="voteId"/>
+		<input type="submit" class="return-button" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="save.do">
+<input type="hidden" value="${voteId!}" name="voteId"/>
+<#if vote.voteType==3>
+<tr>
+<td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>标题:</td><td width="80%" colspan="3" class="pn-fcontent"><input type="text" maxlength="255" name="quesTitle" class="required" style="width:400px"/></td>
+</td>
+</tr>
+<#elseif vote.voteType==2>
+<@p.editor value="" colspan="2" help="" helpPosition="" label="标题" name="quesTitle"/>
+</#if>
+<#if vote.voteType==3>
+<tr>
+<td width="20%" class="pn-flabel pn-flabel-h">部门类别:</td><td width="80%" colspan="3" class="pn-fcontent">
+<!-- <select name="quesNature" style="width:200px">
+ <option value="1">社会服务相对较多的部门</option>
+ <option value="2">社会服务相对较少的部门</option>
+ <option value="3">纪委、两院、四办和党群部门</option>
+ <option value="4">产业平台</option>
+ <option value="5">垂直单位、企业</option>
+</select>
+ -->
+<select name="quesNature" style="width:200px">
+ <option value="1">窗口单位</option>
+ <option value="2">非窗口单位</option>
+ <option value="3">评议单位</option>
+ <option value="4">产业平台</option>
+</select>
+</td>
+</tr>
+<tr>
+<td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>链接/简介:</td><td width="80%" colspan="3" class="pn-fcontent">
+<input type="radio" name="quesStatus" checked="checked" onclick="changeLj(1)" value="1"/>链接<input type="radio" name="quesStatus" onclick="changeLj(2)" value="2"/>简介
+<input type="text" name="quesContentLink" style="width:300px;" id="quesContentL" />
+<div id="quesConJj" style="display:none;">
+<textarea id="quesContentJj" name="quesContentJj" style="visibility: hidden; display: none;"></textarea>
+<script type="text/javascript">
+$(function() {
+   	CKEDITOR.replace( 'quesContentJj' ,
+   			{
+		   		filebrowserUploadUrl : '${base}/jeeadmin/jeecms/fck/upload.do',  
+		   		filebrowserImageUploadUrl : '${base}/jeeadmin/jeecms/fck/upload.do?Type=Image',  
+		   		filebrowserFlashUploadUrl : '${base}/jeeadmin/jeecms/fck/upload.do?Type=Flash',
+		   		filebrowserMediaUploadURL : '${base}/jeeadmin/jeecms/fck/upload.do?Type=Media'
+   		     }
+   	);  
+ });
+</script>
+
+</div>
+</td>
+</tr>
+</#if>
+<tr>
+<td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>类型:</td><td width="30%" class="pn-fcontent">
+<input type="radio" name="quesType" class="required"  checked="checked" onclick="selectType(1);"  value="1"/>单选题
+</td>
+<td width="20%" class="pn-flabel pn-flabel-h"><span class="pn-frequired">*</span>排序:</td><td width="30%" class="pn-fcontent">
+<input type="text" name="quesSort" style="width:100px" value="1" class="required" />
+</td>
+</tr>
+
+<tr id="quesItem"><td colspan="4" class="pn-fbutton">
+<div class="items">
+	题目选项
+&nbsp; <input type="button" value="增加一行" onclick="addLines();"/>
+</div>
+<div id="itemsContainer">
+<#list 0..3 as i>
+<div class="items">
+标题: <input type="text" name="itemTitle" style="width:300px"/>
+&nbsp; 排序: <input type="text" name="itemState" value="${i+1}" style="width:30px"/>
+<input type="hidden" name="itemCount" value="0" />
+&nbsp; <input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="$(this).parent().remove();"/>
+</div>
+</#list>	
+</div>
+</td></tr>
+<tr><td colspan="4" class="pn-fbutton">
+<input type="submit" value="提交" class="submit"/> &nbsp; <input type="reset" value="重置" class="reset"/></td>
+</tr>
+</@p.form>
+</div>
+
+<textarea id="itemTpl" style="display:none;">
+<div class="items">
+<input type="hidden" name="itemCount" value="0" />	
+标题: <input type="text" name="itemTitle" style="width:300px"/>
+&nbsp; 排序: <input type="text" name="itemState" value="{0}" style="width:30px"/>
+&nbsp; <input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="$(this).parent().remove();"/>
+</div>
+</textarea>
+
+<script type="text/javascript">
+var tpl = $.format($("#itemTpl").val());
+var index = 5;
+function addLines() {
+	$("#itemsContainer").append(tpl(index++));
+}
+function selectType(value){
+   if(value==3){
+     $("#quesItem").css('display','none');
+   }	
+   else
+     $("#quesItem").css('display','');
+}
+</script>
+
+</body>
+</html>

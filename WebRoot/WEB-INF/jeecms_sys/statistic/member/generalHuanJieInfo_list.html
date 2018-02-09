@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<link href="${base}/res/common/css/jquery.flot.css" rel="stylesheet" type="text/css"/>
+<!--[if lte IE 8]><![endif]-->
+<script src="${base}/res/common/js/excanvas.min.js" type="text/javascript" ></script>
+<script src="${base}/res/common/js/jquery.flot.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.time.min.js" type="text/javascript"></script>
+<script src="${base}/res/common/js/jquery.flot.categories.min.js" type="text/javascript"></script>
+<script src="${base}/thirdparty/echarts/echarts.js" type="text/javascript" ></script>
+<script class="code" type="text/javascript">
+	
+	$(function() {
+		var myChart_lastYear = echarts.init(document.getElementById('tab_lastYear'));
+		option = {
+		    title : {
+		        text: '基层党组织换届情况',
+		        subtext: '${deptname}'
+		    },
+		    tooltip : {
+		        trigger: 'axis'
+		    },
+		    legend: {
+		        data:['未按期换届数量','按期换届数量']
+		    },
+		    toolbox: {
+		        show : true,
+		        feature : {
+		            dataView : {show: true, readOnly: false},
+		            magicType : {show: true, type: ['line', 'bar']},
+		            restore : {show: false},
+		            saveAsImage : {show: true}
+		        }
+		    },
+		    calculable : true,
+		    xAxis : [
+		        {
+		            type : 'category',
+		            data : ['总数','机关党委','党总支','党支部']
+		        }
+		    ],
+		    yAxis : [
+		        {
+		            type : 'value'
+		        }
+		    ],
+		    series : [
+		        {
+		            name:'未按期换届数量',
+		            type:'bar',
+		            itemStyle:{
+						normal:{
+							color:'#FF6347'
+						}
+					},
+		            data:[${tjMap.deptYqhjSum}, ${tjMap.jgdwYqhjDept}, ${tjMap.dzzYqhjDept}, ${tjMap.zbYqhjDept}]
+		        },
+		        {
+		            name:'按期换届数量',
+		            type:'bar',
+					itemStyle:{
+						normal:{
+							color:'#1E90FF'
+						}
+					},
+		            data:[${tjMap.deptAqhjSum!'0'}, ${tjMap.jgdwAhjDept!'0'}, ${tjMap.dzzAqhjDept!'0'}, ${tjMap.zbAqhjDept!'0'}]
+		        }
+	    	]
+		};
+		
+		
+		myChart_lastYear.setOption(option);
+	});	
+</script>
+<style>
+	table{border-collapse:collapse;}
+	td { width: 186px; text-align: center; font-size: 18px; display: block; float: left; height: 30px; border-bottom: 1px solid #ccc;
+	 border-right: 1px solid #ccc; line-height: 30px; border-collapse：collapse;}
+	.rightTd{ border-left: 1px solid #ccc;}
+	tr { display: block; margin-bottom: 20px;}
+	.fristTr{ border-top: 1px solid #ccc;}
+	.province{float:left;width:60px;height:30px;font-size:16px;border:1px solid #DCF0FF;margin-left:5px;text-align:center;line-height:30px;}
+</style>	
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: <@s.m "cms.function.statistic"/> > 基层党组织换届情况统计</div>
+</div>
+<#if isTop=="Yes">
+	<div style="float:left;margin-left:35px;margin-top:10px;margin-bottom:10px;">
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=68">济南</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=567">青岛</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=2424">淄博</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=1845">枣庄</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=1821">东营</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=2201">烟台</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=1601">潍坊</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=1042">济宁</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=1406">泰安</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=1081">威海</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=2759">日照</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=1286">莱芜</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=1776">临沂</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=1467">德州</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=1353">聊城</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=1022">滨州</a></div>
+		<div class="province"><a href="general_HuanJieInfoList.do?deptId=2143">菏泽</a></div>
+	</div>
+</#if>
+<div class="statistic">
+  <div class="five" style="width:1267px;">
+  	<table>
+  		<tr class="fristTr">
+  			<td class="rightTd" style="width: 28px; border-right: none;"></td>
+  			<td style="width: 302px; border-left: none;">项目</td><td>总数</td><td>机关党委</td><td>党总支</td><td>党支部</td>
+  		</tr>
+  		<tr>
+  			<td class="rightTd" style="width: 30px; border-bottom: 1px solid #fff;  border-right: none;"></td>
+  			<td style="width: 300px; border-left: none;">党组织数</td><td>${tjMap.deptsum}</td><!-- <td>${tjMap.zdzDept}</td> --><td>${tjMap.jgdwDept}</td><td>${tjMap.dzzDept}</td><td>${tjMap.zbDept}</td>
+  		</tr>
+  		<tr>
+  			<td class="rightTd" style="width: 29px; border-bottom: 1px solid #fff;  border-top: none;"></td>
+  			<td style="width: 300px;">未按期换届数量</td><td>${tjMap.deptYqhjSum!'0'}</td><td>${tjMap.jgdwYqhjDept!'0'}</td><td>${tjMap.dzzYqhjDept!'0'}</td><td>${tjMap.zbYqhjDept!'0'}</td>
+  		</tr>
+  		<tr>
+  			<td class="rightTd" style="width: 29px; border-top: none;"></td>
+  			<td style="width: 300px;">按期换届数量</td><td>${tjMap.deptAqhjSum!'0'}</td><td>${tjMap.jgdwAqhjDept!'0'}</td><td>${tjMap.dzzAqhjDept!'0'}</td><td>${tjMap.zbAqhjDept!'0'}</td>
+  		</tr>
+  	</table>
+  </div>
+  <div class="sta-tab" style="width:1267px;">
+    <div class="tab-con" style="width:1267px;">
+      <div class="tab-main" style="height:445px; width:1267px;">
+        <div>
+			<div id="tab_lastYear" style="float:left; width:99%;height:444px;"></div>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var f = getTableForm();
+	f.action="o_delete.do";
+	f.submit();
+}
+
+function optPriority() {
+	getTableForm().action="o_priority.do";
+}
+function updScore(orgid){
+	$("#"+orgid+"form").submit();
+}
+function batchUpd(){
+	var ids='';
+	var checkeds=$("input[name='ids']:checked");
+	
+	
+	for(var i=0;i<checkeds.length;i++){
+		ids+=$(checkeds[i]).val()+","; 
+	}
+	if(ids==null||ids==""){
+		$.alert("提示","请选择要修改分数的部门信息");
+	}else{
+		ids=ids.substring(0, ids.length-1);
+		window.location.href="batchUpdScore.do?ids="+ids+"&score="+$("#batchScore").val();
+	}
+	
+	
+}
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 设置绩效规则 > <@s.m "global.list"/></div>
+</div>
+
+<div class="body-box">
+<div style="margin-bottom: 10px;">
+分数：<input type="number" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  id="batchScore" min="1" value="1" style="width: 50px; " />
+<input class="query" type="button" onclick="batchUpd()" value="批量修改" style="width: 70px; " />
+</div>
+<@p.table value=list;depart,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="25" align="center">
+		<input type='checkbox' name='ids' value='${depart.id}' onclick="Pn.selectCheckBox('${depart.id}',this.checked)"/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center">${depart.id}<input type="hidden" name="wids" value="${depart.id}"/></@p.column><#t/>
+	<@p.column code="组织名称" align="center">${depart.name}</@p.column><#t/>
+	<@p.column code="人数" align="center">${depart.meberCount}</@p.column><#t/>
+	<@p.column code="加分基数" align="center">${depart.score!''}
+	<!-- 
+	<form action="updScore.do" id="${depart.id}form" method="post">
+		<input type="number" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" name="score"  style="width: 30px;" min="1" value="${depart.score}"/>
+		<input type="hidden" name="orgId" value="${depart.id}"/>
+		<a href="javascript:0" onclick="updScore(${depart.id});">保存</a>
+	</form>
+	 -->
+	</@p.column><#t/>
+</@p.table>
+<div style="margin-top:20px;">
+	<input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/ style="float:left; margin-right:6px;">
+	<input class="bcplxx-button" type="submit" value="<@s.m "global.saveOrder"/>" onclick="optPriority();"/ style="float:left;">
+</div>
+<input name="parentId" type="hidden" value="${parentId!}"/>
+
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

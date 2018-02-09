@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	//var ids=document.getElementsByName("ids");
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var f = getTableForm();
+	f.action="o_delete.do";
+	f.submit();
+}
+function toPage(date){
+	$("#risenlcOdate").val(date);
+	$("#tform").submit();
+	//window.location.href="../risenOrgLifeCalendar/v_list.do?risenlcOdate="+date+"&pageNo=${pageNo}";
+}
+$(function(){
+	$("#tableForm").submit(function(){
+		var type = '${type!}';
+		var date = $("#risenlcOdate").val();
+		$("#tableForm").attr("action","../risenOrgLifeCalendar/v_list.do?risenlcOdate="+date+"&type="+type);
+		return true;
+	});
+});
+</script>
+</head>
+<body>
+<#assign name="党员大会">
+<#if type??&& type!="1">
+	<#if type=="2">
+	<#assign name="党小组会议">
+	</#if>
+	<#if type=="3">
+	<#assign name="党课会议">
+	</#if>
+	<#if type=="4">
+	<#assign name="党支部委员会">
+	</#if>
+	<#if type=="5">
+	<#assign name="党支部组织生活会">
+	</#if>
+	<#if type=="6">
+	<#assign name="主题党日活动">
+	</#if>
+</#if>
+<div class="box-positon ove">
+	<div class="position-div"><@s.m "global.position"/>: 组织生活日历 - ${name}<@s.m "global.list"/></div>
+</div>
+<div class="box-positon">
+	<form class="ropt">
+		<input type="hidden" name="type" value="${type!}"/>
+		<input class="add" type="submit" value="<@s.m "global.add"/>" onclick="this.form.action='v_add.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<form id="tableForm" method="post">
+
+举办时间：<input type="text" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="risenlcOdate" name="risenlcOdate" value="${(risenOrgLifeCalendar.risenlcOdate?string('yyyy-MM-dd'))!''}"/>
+<!-- 提醒时间：<input type="text" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="risenlcReminddate" name="risenlcReminddate" value="${(risenOrgLifeCalendar.risenlcReminddate?string('yyyy-MM-dd'))!''}"/>
+ --><input class="query" type="submit" value="查询"/>
+
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<@p.table value=pagination listAction="../risenOrgLifeCalendar/v_list.do?type=${type!'1'}";risenOrgLifeCalendar,i,has_next><#rt/>
+	<@p.column align="center" title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+			<input type='checkbox' name='ids' value='${risenOrgLifeCalendar.risenlcUuid!}' onclick="Pn.selectCheckBox('${risenOrgLifeCalendar.risenlcUuid}',this.checked)"/><#t/>
+	</@p.column><#t/>
+	<@p.column align="center" title="ID">${risenOrgLifeCalendar.risenlcUuid!''}</@p.column><#t/>
+	
+	<@p.column align="center" code="risenOrgLifeCalendar.risenlcOrgName">${risenOrgLifeCalendar.risenlcOrgname!''}</@p.column><#t/>
+	<@p.column align="center" code="risenOrgLifeCalendar.risenlcMeetingType">
+	<#if risenOrgLifeCalendar.risenlcMeetingtype=='1'>支部党员大会</#if>
+	<#if risenOrgLifeCalendar.risenlcMeetingtype=='2'>党小组会</#if>
+	<#if risenOrgLifeCalendar.risenlcMeetingtype=='3'>党课</#if>
+	<#if risenOrgLifeCalendar.risenlcMeetingtype=='4'>支部委员会</#if>
+	<#if risenOrgLifeCalendar.risenlcMeetingtype=='5'>党支部组织生活会</#if>
+	<#if risenOrgLifeCalendar.risenlcMeetingtype=='6'>主题党日活动</#if>
+	<!-- ${risenOrgLifeCalendar.risenlcMeetingtype} --></@p.column><#t/>
+	
+	<@p.column align="center" code="主持人">${risenOrgLifeCalendar.risenlcParticipant!''}</@p.column><#t/>
+	
+	<@p.column align="center" code="内容">
+		<#if risenOrgLifeCalendar.risenlcContent??>
+			<#if risenOrgLifeCalendar.risenlcContent?length gt 30>
+				${risenOrgLifeCalendar.risenlcContent?substring(0,30)}...
+			<#else>${risenOrgLifeCalendar.risenlcContent!}</#if>
+		<#else></#if>
+	</@p.column><#t/>
+	<@p.column align="center" code="risenOrgLifeCalendar.risenlcOdate">${(risenOrgLifeCalendar.risenlcOdate?string("yyyy-MM-dd"))!''}</@p.column><#t/>
+	
+	<@p.column code="global.operate" align="center">
+		<a href="v_edit.do?id=${risenOrgLifeCalendar.risenlcUuid}&pageNo=${pageNo!}&type=${type!}" class="pn-opt"><@s.m "global.edit"/></a> | <#rt/>
+		<a href="o_delete.do?id=${risenOrgLifeCalendar.risenlcUuid}&pageNo=${pageNo!}&type=${type!}" onclick="if(!$.confirmToUrl(this.href)) {return false;}" class="pn-opt"><@s.m "global.delete"/></a><#t/>
+	</@p.column><#t/>
+</@p.table>
+<!-- 
+<div><input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/></div>
+ -->
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

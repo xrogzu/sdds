@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenVoteReply" table="RISEN_VOTEREPLY">
+        <id name="risenUuid" type="integer" column="risen_uuid">
+			<generator class="sequence"><param name="sequence">RISEN_VOTEREPLY_CONTENT</param></generator>
+		</id>
+		<property name="risenIp" column="risen_ip" type="string" not-null="true"/>
+		<property name="risenContent" column="risen_content" type="string" not-null="false"/>
+		<property name="risenCdate" column="risen_cdate" type="date" not-null="false" />
+		<property name="risenReplyId" column="risen_replyid" type="integer" not-null="false" length="255"/>
+		<many-to-one name="cmsVoteTopic" column="RISEN_VOTEID" class="com.jeecms.cms.entity.assist.CmsVoteTopic"/>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenDiscussion" table="RISEN_DISCUSSION">
+	 	<id name="risendsId" type="integer" column="RISENDS_ID">
+			<generator class="sequence"><param name="sequence">RISENDSS_ID</param></generator>
+		</id>
+		<property name="risendsCuser" column="RISENDS_CUSER" type="string" not-null="true" length="255"/>
+		<many-to-one name="risendsUserid" class="com.jeecms.core.entity.CmsUser" column="risends_Userid" cascade="save-update"></many-to-one>
+		<property name="risendsCdate" column="RISENDS_CDATE" type="timestamp" not-null="false" />
+		<property name="risendsScore" column="RISENDS_Score" type="integer" not-null="false"/>
+		<property name="risendsRemark" column="RISENDS_Remark" type="string"/>
+		<property name="risendsExpands1" column="RISENDS_Expands1" type="string"/>
+		<property name="risendsExpands2" column="RISENDS_Expands2" type="string" />
+		<property name="risendsExpands3" column="RISENDS_Expands3" type="string" />
+		<property name="risendsExpands4" column="RISENDS_Expands4" type="string" />
+		<property name="risendsExpands5" column="RISENDS_Expands5" type="string" />
+		<property name="risendsExpands6" column="RISENDS_Expands6" type="string" />
+		<property name="risendsUserdeptId" column="risends_UserdeptId" type="integer"/>
+		<property name="risendsYear" column="RISENDS_Year" type="integer" not-null="true" />
+	</class>
+</hibernate-mapping> 

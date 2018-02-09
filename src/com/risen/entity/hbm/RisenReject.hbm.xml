@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenReject" table="RISEN_REJECT">
+	 <id name="risenrjUnid" type="integer" column="RISENRJ_UNID">
+			<generator class="sequence"><param name="sequence">SQ_REJECTID</param></generator>
+		</id>
+		<property name="risenrjCdate" column="RISENRJ_CDATE" type="date" not-null="false"/>
+		<property name="risenrjReason" column="RISENRJ_REASON" type="string" not-null="false" />
+		<property name="risenrjStatus" column="RISENRJ_STATUS" type="integer" not-null="false" />
+		<property name="risenrjExpands" column="RISENRJ_EXPANDS" type="string"  />
+		<property name="risenrjExpands1" column="RISENRJ_EXPANDS1" type="string"  />
+		<property name="risenrjExpands2" column="RISENRJ_EXPANDS2" type="string" />
+		<property name="risenrjExpands3" column="RISENRJ_EXPANDS3" type="string" />
+		<property name="risenrjExpands4" column="RISENRJ_EXPANDS4" type="string" />
+		<property name="risenrjExpands5" column="RISENRJ_EXPANDS5" type="string" />
+		<property name="risenrjDepartId" column="RISENRJ_DEPARTID" type="integer" not-null="false" />
+		<property name="risenrjbhDepartId" column="RISENRJ_BHDEPARTID" type="integer" not-null="false" />
+		<many-to-one name="risenrjContentId" class="com.jeecms.cms.entity.main.Content" column="risenrj_contentid" cascade="save-update"></many-to-one>
+	</class>
+</hibernate-mapping> 

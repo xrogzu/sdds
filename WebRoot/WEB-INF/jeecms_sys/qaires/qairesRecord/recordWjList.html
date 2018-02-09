@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		alert("<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	if(!confirm("<@s.m 'global.confirm.delete'/>")) {
+		return;
+	}
+	var f = getTableForm();
+	f.action="${base}/admin/qaires/deleteRecord.do";
+	f.submit();
+}
+function exportExcel() {
+	var f = getTableForm();
+	f.action="${base}/admin/qaires/exportExcelWj.do";
+	f.submit();
+}
+</script>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos"><@s.m "global.position"/>: 问卷调查 - 问卷记录列表</div>
+	<form class="ropt">
+	    <input name="status" value="1" type="hidden"/>
+		<input type="submit" class="return-button" value="<@s.m "global.backToList"/>" onclick="this.form.action='${base}/admin/qaires/v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<form action="v_list.do" method="post" style="padding-top:5px;float:left;">
+	日期：<input type="text" class="Wdate" value="${startDate!}" id="startDate" name="startDate" style="width:140px" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/> -
+	<input type="text" class="Wdate" value="${endDate!}" id="endDate" name="endDate" style="width:140px" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+	姓名:<input type="text" name="userName" value="${userName!}"/>
+	<input type="hidden" name="qairesId" value="${qairesId!}"/>
+	<input class="query" type="submit" value="<@s.m "global.query"/>"/>
+</form>
+<div style="margin-right:3px;float:right;margin-top:5px;">
+       <input class="del-button" type="button" value="导出" onclick="exportExcel();"/>
+         <input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/>
+</div>
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<input type="hidden" name="startDate" value="${startDate!}"/>
+<input type="hidden" name="endDate" value="${endDate!}"/>
+<input type="hidden" name="qairesId" value="${qairesId!}"/>
+<input type="hidden" name="ip" value="${ip!}"/>
+<@p.table value=pagination;record,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="20">
+		<input type='checkbox' name='ids' value='${record.id!}'/><#t/>
+	</@p.column><#t/>
+	<@p.column title="ID" align="center">${record.id!}</@p.column><#t/>
+	<@p.column code="姓名" align="center"><#if record.user??>${record.user.realname!}</#if></@p.column><#t/>
+	<@p.column code="身份证" align="center"><#if record.user??>${record.user.idNum!}</#if></@p.column><#t/>
+	<@p.column code="电话" align="center"><#if record.user??>${record.user.mobile!}</#if></@p.column><#t/>
+	<@p.column code="问卷时间" align="center">${record.recordTime!}</@p.column><#t/>
+	<@p.column code="global.operate" align="center">
+		<a href="${base}/admin/qaires/qairesDetail/v_list.do?recordId=${record.id!}&pageNo=${pageNo!}" class="pn-opt">答题详细</a>
+	</@p.column><#t/>
+</@p.table>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

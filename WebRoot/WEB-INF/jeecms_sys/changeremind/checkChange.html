@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<style type="text/css">
+ #searchresult
+ {
+  width: 141px;
+  position: absolute;
+  z-index: 1;
+  overflow: hidden;
+  left: 750px;
+  top: 71px;
+  background: #F7F7F7;
+  border-top: none;
+ }
+ .line
+ {
+  font-size: 12px;
+  background: #F7F7F7;
+  width: 141px;
+  
+ }
+ .hover
+ {
+  background: #D5D5D5;
+  width: 141px;
+  color: #fff;
+ }
+ .std
+ {
+  width: 141px;
+ }
+</style>
+<script type="text/javascript">
+	function getFilePath(orgid){
+		$.ajax({  
+	         type : "post",  
+	         url : "/admin/getFilePath.do?orgid="+orgid,  
+	         data : {},
+	         dataType:"text" ,
+	         success : function(data){
+	         	var borswer = getBrowserInfo();
+	         	var filePosition = data.lastIndexOf("/");
+				var fileName = data.substring(filePosition+1,data.length);
+	         	if(borswer.indexOf("safari".toLowerCase())>-1){
+	         		alert("暂不支持此浏览器下载请更换浏览器!");
+	         	}else if(borswer.indexOf("msie")>-1){
+	         		var fileType=fileName.substring(fileName.lastIndexOf(".")+1);
+	         		if("jpg,jepg,gif,png,bmp".indexOf(fileType.toLowerCase())>-1){
+	         			$("#downloadFile").attr("href","../../.."+data);
+	         			document.getElementById("downloadFile").click=DownLoadReportIMG("../../.."+data);
+	         		}else if("txt,html,htm,art,au,aiff,xbm".indexOf(fileType.toLowerCase())==-1){
+	         			$("#downloadFile").attr("href","../../.."+data);
+	         			document.getElementById("downloadFile").click(); 
+	         		}else{
+	         			var open = window.open("http://"+document.location.host+data,'newWindow','height=100,width=100,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
+	         			open.document.execCommand("SaveAs");   
+	         			open.window.close();
+	         			open.close();
+	         		}
+	         	}else{
+					$("#downloadFile").attr("href","../../.."+data);
+					$("#downloadFile").attr("download",fileName);
+					document.getElementById("downloadFile").click();
+	         	}
+	         }
+    	});
+	}
+	function DownLoadReportIMG(imgPathURL) {
+        //如果隐藏IFRAME不存在，则添加
+        if (!document.getElementById("IframeReportImg"))
+            $('<iframe style="display:none;" id="IframeReportImg" name="IframeReportImg" onload="DoSaveAsIMG();" width="0" height="0" src="about:blank"></iframe>').appendTo("body");
+        if (document.all.IframeReportImg.src != imgPathURL) {
+            //加载图片
+            document.all.IframeReportImg.src = imgPathURL;
+        }
+        else {
+            //图片直接另存为
+            DoSaveAsIMG();  
+        }
+    }
+    function DoSaveAsIMG() {
+        if (document.all.IframeReportImg.src != "about:blank")
+            document.frames("IframeReportImg").document.execCommand("SaveAs");        
+    }
+	function getBrowserInfo()
+ 	{
+     	var agent = navigator.userAgent.toLowerCase() ;
+     	var c = "msie";
+     	//IE
+     	if(agent.indexOf("msie") > 0)
+     	{
+         	c = "msie";
+     	} 
+     	//firefox
+     	if(agent.indexOf("firefox") > 0)
+     	{
+         	c = "firefox";
+     	} 
+     	//Chrome
+     	if(agent.indexOf("chrome") > 0)
+     	{
+         	c = "chrome";
+     	} 
+     	//Safari
+     	if(agent.indexOf("safari") > 0 && agent.indexOf("chrome") < 0)
+     	{
+         	c = "safari";
+     	}
+     	return c;
+ 	}
+</script>
+
+</head>
+<body>
+<div class="page-positon ove">
+	<div class="position-div"><@s.m "global.position"/>: 规范化党支部 - <@s.m "global.list"/></div>
+</div>
+<div class="body-box">
+<#include "wenku_upload.html"/>
+<div class=" ck">
+	<input type="submit" value="<@s.m "global.backToList"/>" onclick="javascript:history.go(-1);" class="return-button"/>
+	<div class="clear"></div>
+</div>
+<form id="tableForm" method="post">
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<@p.table value=list;dp,i,has_next><#rt/>
+	<@p.column code="机构名称" align="center">${dp.name!}</@p.column><#t/>
+	<@p.column code="上次操作日期" align="center">${(dp.sddspoChangecdate?string('yyyy-MM-dd'))!}</@p.column><#t/>
+	<@p.column code="操作" align="center">
+		<#if dp.sddspoRemark??>
+		<a href="javascript:getFilePath(${dp.id!})">下载附件</a>
+		<#else>未上传附件</#if>
+		 | <a href="../changeremind/delete.do?id=${dp.id!}">删除</a>
+	</@p.column><#t/>
+</@p.table>
+<a id="downloadFile" style="display:none;">下载</a>
+</div>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

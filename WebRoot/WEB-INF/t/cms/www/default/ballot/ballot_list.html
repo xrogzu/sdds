@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>首页 - ${site.name}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" ></meta>
+    <script src="${base}/r/cms/layer/jquery-1.12.1.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.SuperSlide.2.1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+    <style type="text/css">
+		.right{float:right; margin-right:5px;}
+		.left{text-align:left;}
+		li{height:40px;line-height: 40px;border-bottom: 1px dashed;#D8D8D8}
+	</style>
+    [#include "../include/header.html"/]
+<body>
+<div class="coen" id="container">
+<div class="content">
+	<div class="slideTxtBox" id="conter">
+		<div class="" id="ji_list">
+			<div class="list_ym">
+				<div class="ym_top">
+					<span>在线投票</span>
+				</div>
+				<ul style="width:100%;">
+					[#if pagination??]
+						[#list pagination.list as c]
+							[#assign endTimeString = (c.endTime)?string("yyyyMMdd") /]
+							[#assign nowTimeString = .now?string("yyyyMMdd") /]
+							[#assign endTimeNumber = endTimeString?number /]
+							[#assign nowTimeNumber = (nowTimeString!)?number /]
+							[#if c.endTime?? && (endTimeNumber>=nowTimeNumber)]
+								<li style="width:100%; float:left;">
+									<span class="left" ><a style="color:green;" href="${base}/ballotItem/list.jspx?ballotId=${c.ballotId!}" target="_blank">${c.title!''}(进行中)</a></span> 
+									<span class="right" style="color:green;">${c.cdate?date}</span>
+								</li>
+							[/#if]
+						[/#list]
+						[#list pagination.list as c]
+							[#assign endTimeString = (c.endTime)?string("yyyyMMdd") /]
+							[#assign nowTimeString = .now?string("yyyyMMdd") /]
+							[#assign endTimeNumber = endTimeString?number /]
+							[#assign nowTimeNumber = (nowTimeString!)?number /]
+							[#if c.endTime?? && (endTimeNumber<nowTimeNumber)]
+								<li style="width:100%; float:left;">
+									<span class="left" ><a style="color:red;" href="${base}/ballotItem/list.jspx?ballotId=${c.ballotId!}" target="_blank">${c.title!''}(已过期)</a></span> 
+									<span class="right" style="color:red;">${c.cdate?date}</span>
+								</li>
+							[/#if]
+						[/#list]
+					[/#if]
+				</ul>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	[#include "../include/footer.html"/]
+<script>
+$("#pic_list_1").cxScroll();
+$("#pic_list_2").cxScroll({direction:"left",step:1});
+</script>
+<script type="text/javascript"> 
+$(document).ready(function(){
+	$('.carousel').carousel({
+		directionNav:true,
+		speed:500, 
+		carouselWidth:421,
+		carouselHeight:373,
+		frontWidth:160,
+		frontHeight:218,
+		hAlign:'center',
+		vAlign:'center',
+		autoplay:false,
+		autoplayInterval:5000,
+		shadow:false,
+		reflection:false,
+		reflectionHeight:0.2,
+		reflectionOpacity:0.5,
+		description:false,
+		descriptionContainer:'.carousel_description'
+	});
+});
+</script>
+<script>
+$(".menu li").click(function(){
+	$(".menu li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu li").index(this);
+	$(".tab").fadeOut(0);
+    $(".menu li a").fadeOut(0);
+	$(".tab").eq(index).fadeIn(0);
+    $(".menu li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu1 li").click(function(){
+	$(".menu1 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu1 li").index(this);
+	$(".tab1").fadeOut(0);
+    $(".menu1 li a").fadeOut(0);
+	$(".tab1").eq(index).fadeIn(0);
+    $(".menu1 li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu2 li").mousemove(function(){
+	$(".menu2 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu2 li").index(this);
+	$(".tab2").hide();
+    $(".menu2 li a").hide();
+	$(".tab2").eq(index).show();
+    $(".menu2 li a").eq(index).show();
+})
+</script>
+<script>
+$(".menu3 li").click(function(){
+	$(".menu3 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu3 li").index(this);
+	$(".tab3").hide();
+    $(".menu3 li a").hide();
+	$(".tab3").eq(index).show();
+    $(".menu3 li a").eq(index).show();
+})
+</script>
+<script>
+$(".menu4 li").click(function(){
+	$(".menu4 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu4 li").index(this);
+	$(".tab4").fadeOut(0);
+    $(".menu4 li a").fadeOut(0);
+	$(".tab4").eq(index).fadeIn(0);
+    $(".menu4 li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu5 li").click(function(){
+	$(".menu5 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu5 li").index(this);
+	$(".tab5").fadeOut(0);
+    $(".menu5 li a").fadeOut(0);
+	$(".tab5").eq(index).fadeIn(0);
+    $(".menu5 li a").eq(index).fadeIn(0);
+})
+</script>
+<script>
+$(".menu6 li").click(function(){
+	$(".menu6 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu6 li").index(this);
+	$(".tab6").fadeOut();
+    $(".menu6 li a").fadeOut();
+	$(".tab6").eq(index).fadeIn();
+    $(".menu6 li a").eq(index).fadeIn();
+})
+</script>
+<script>
+$(".menu7 li").click(function(){
+	$(".menu7 li").addClass("others");
+	$(this).removeClass("others").addClass("tabs");
+	var index = $(".menu7 li").index(this);
+	$(".tab7").fadeOut();
+    $(".menu7 li a").fadeOut();
+	$(".tab7").eq(index).fadeIn();
+    $(".menu7 li a").eq(index).fadeIn();
+})
+</script>
+<script type="text/javascript"> 
+function ScrollImgLeft(){ 
+    var speed=30; 
+    var scroll_begin = document.getElementById("scroll_begin"); 
+    var scroll_end = document.getElementById("scroll_end"); 
+    var scroll_div = document.getElementById("scroll_div"); 
+    scroll_end.innerHTML=scroll_begin.innerHTML; 
+    function Marquee(){ 
+        if(scroll_end.offsetWidth-scroll_div.scrollLeft<=0) 
+            scroll_div.scrollLeft-=scroll_begin.offsetWidth; 
+        else 
+            scroll_div.scrollLeft++; 
+    } 
+    var MyMar=setInterval(Marquee,speed); 
+    scroll_div.onmouseover=function() {clearInterval(MyMar);} 
+    scroll_div.onmouseout=function() {MyMar=setInterval(Marquee,speed);} 
+}
+ScrollImgLeft();
+</script>
+<script type="text/javascript">
+		jQuery(".txtMarquee-left").slide({mainCell:".bd ul",autoPlay:true,effect:"leftMarquee",vis:5,interTime:10});
+</script>
+<script type="text/javascript">jQuery(".slideTxtBox").slide({effect:"top",trigger:"click"});</script>
+<script type="text/javascript">
+var t = n =0, count;
+$(document).ready(function(){ 
+count=$("#banner_list a").length;
+$("#banner_list a:not(:first-child)").hide();
+$("#banner_info").html($("#banner_list a:first-child").find("img").attr('alt'));
+$("#banner_info").click(function(){window.open($("#banner_list a:first-child").attr('href'), "_blank")});
+$("#banner li").click(function() {
+var i = $(this).text() -1;//获取Li元素内的值，即1，2，3，4
+n = i;
+if (i >= count) return;
+$("#banner_info").html($("#banner_list a").eq(i).find("img").attr('alt'));
+$("#banner_info").unbind().click(function(){window.open($("#banner_list a").eq(i).attr('href'), "_blank")})
+$("#banner_list a").filter(":visible").fadeOut(500).parent().children().eq(i).fadeIn(1000);
+document.getElementById("banner").style.background="";
+$(this).toggleClass("on");
+$(this).siblings().removeAttr("class");
+});
+t = setInterval("showAuto()", 4000);
+$("#banner").hover(function(){clearInterval(t)}, function(){t = setInterval("showAuto()", 4000);});
+})
+function showAuto()
+{
+n = n >=(count -1) ?0 : ++n;
+$("#banner li").eq(n).trigger('click');
+}
+</script>
+
+</body>
+</html>

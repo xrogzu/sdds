@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.jeecms.cms.entity.assist">
+	<class name="CmsAppealMail" table="jc_appeal_mail">
+		<meta attribute="sync-DAO">false</meta>
+		<id name="appealId" type="integer" column="appeal_id">
+			<generator class="sequence"><param name="sequence">APPEAL_MAIL_SD</param></generator>
+		</id>
+		<property name="title" column="title" type="string" not-null="false" length="255"/>
+		<property name="content" column="content" type="string" not-null="false"/>
+		<property name="replay" column="reply" type="string"/>
+		<property name="email" column="email" type="string" not-null="false" length="100"/>
+		<property name="phone" column="phone" type="string" not-null="false" length="100"/>
+		<property name="code" column="code" type="string" not-null="false" length="100"/>
+		<property name="type" column="type" type="string" not-null="false" length="100"/>
+		<property name="name" column="name" type="string" not-null="false" length="100"/>
+		<property name="isopen" column="isopen" type="string" not-null="false" length="10"/>
+		<property name="cdate" column="cdate" type="date" not-null="false"/>
+		<property name="departId" column="departId" type="integer" not-null="false" length="11"/>
+	</class>
+</hibernate-mapping>

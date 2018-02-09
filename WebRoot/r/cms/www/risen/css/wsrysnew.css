@@ -1,0 +1,21 @@
+body {background-color: #b01516;}
+/*banner*/
+.banner-warpper {position: relative; height: auto;  *overflow: hidden;}
+.banner-warpper .banner {width: 100%; height: auto;}
+.banner-warpper .line {position: absolute; left: 0; bottom: -20px; z-index: 99; width: 100%; height: auto;}
+/*content*/
+.content {background: url("../images/flower.png") no-repeat center top; height: 1000px;}
+.main {margin: 0 auto 40px; padding: 42px 0 45px; width: 1000px; height: auto; background-color: #fff;}
+/*title*/
+.main .title {position: relative; height: 40px; background: url("../images/title-bg1.png") repeat-x center;  color: #fff;}
+.main .title .left-text {position: absolute; left: 24px; top: -10px; width: 250px; height: 55px; line-height: 50px; background: url("../images/title-bg2.png") no-repeat center; font-size: 18px; text-align: center;}
+.main .title .pagination {padding-right: 20px; line-height: 36px; font-size: 14px;}
+.main .title .pagination a {margin: 0 10px; color: #fff;}
+/*piclist*/
+.main .piclist {position: relative; margin: 35px auto 0; padding-bottom: 20px; width: 945px; height: auto; border: 1px solid #dadada;}
+.main .piclist ul li{margin: 35px 22px 0 48px; float: left; width: 235px; height: auto;}
+.main .piclist ul li images {width: 235px; height: 175px;}
+.main .piclist ul li span {margin-top: 20px; display: block; width: 235px; line-height: 46px; font-size: 14px; color: #000; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.main .piclist .shadow {position: absolute; left: 0; bottom: -16px; width: 100%; height: 16px; background: url("../images/shadow.png") no-repeat center top;}
+.main .piclist .clearfix .pic{height:227px}
+.main .piclist .clearfix .pic a img{weight: 236px;height:168px}

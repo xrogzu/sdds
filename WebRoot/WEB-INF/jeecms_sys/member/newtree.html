@@ -1,0 +1,52 @@
+<#if isRoot>
+		<#if isJgdw>
+				[{
+					"text": "<a href='../member/getListByDepartId.do?departId=${parentdepart.id!}&sddscpIsinjob=${parentdepart.sddscpIsinjob!}&sddscpChanges=${parentdepart.sddscpChanges!}&sddscpAssess=${parentdepart.sddscpAssess!}&sddscpAll=${sddscpAll!}' target='rightFrame2'>${parentdepart.name!}</a>",
+					"classes": "folder",
+					"expanded": true,
+					"children": [
+						<#list list as depart>
+							{
+							"id": "${depart.id}",
+							"text": "<a href='../member/getListByDepartId.do?departId=${depart.id}&sddscpIsinjob=${depart.sddscpIsinjob!}&sddscpChanges=${depart.sddscpChanges!}&sddscpAssess=${depart.sddscpAssess!}&sddscpAll=${sddscpAll!}' target='rightFrame2'>${depart.name}</a>",
+							"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+							"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+							}<#if depart_has_next>,</#if>
+						</#list>
+						]
+					}]
+			<#else>
+				[{
+					"text": "<a href='../member/getListByDepartId.do?departId=${parentdepart.id!}&sddscpIsinjob=${parentdepart.sddscpIsinjob!}&sddscpChanges=${parentdepart.sddscpChanges!}&sddscpAssess=${parentdepart.sddscpAssess!}&sddscpAll=${sddscpAll!}' target='rightFrame2'>${parentdepart.name!}</a>",
+					"classes": "folder",
+					"expanded": true,
+					"children": 
+						[{
+							"text": "<a href='../member/getListByDepartId.do?departId=${self.id!}&sddscpIsinjob=${self.sddscpIsinjob!}&sddscpChanges=${self.sddscpChanges!}&sddscpAssess=${self.sddscpAssess!}&sddscpAll=${sddscpAll!}' target='rightFrame2'>${self.name!}</a>",
+							"classes": "folder",
+							"expanded": true,
+							"children": [
+								<#list list as depart>
+									{
+									"id": "${depart.id}",
+									"text": "<a href='../member/getListByDepartId.do?departId=${depart.id}&sddscpIsinjob=${depart.sddscpIsinjob!}&sddscpChanges=${depart.sddscpChanges!}&sddscpAssess=${depart.sddscpAssess!}&sddscpAll=${sddscpAll!}' target='rightFrame2'>${depart.name}</a>",
+									"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+									"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+									}<#if depart_has_next>,</#if>
+								</#list>
+							]
+						}]
+				}]
+			</#if>
+	<#else>
+	[
+	<#list list as depart>
+		{
+		"id": "${depart.id}",
+		"text": "<a href='../member/getListByDepartId.do?departId=${depart.id}&sddscpIsinjob=${self.sddscpIsinjob!}&sddscpChanges=${self.sddscpChanges!}&sddscpAssess=${self.sddscpAssess!}&sddscpAll=${sddscpAll!}' target='rightFrame2'>${depart.name}</a>",
+		"classes": "<#if depart.child?size gt 0>folder<#else>file</#if>",
+		"hasChildren": <#if depart.child?size gt 0>true<#else>false</#if>
+		}<#if depart_has_next>,</#if>
+	</#list>
+	]
+</#if>

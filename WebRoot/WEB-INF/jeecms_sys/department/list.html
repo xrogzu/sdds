@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+function optDelete() {
+	if(Pn.checkedCount('ids')<=0) {
+		$.alert("<@s.m 'global.prompt'/>","<@s.m 'error.checkRecord'/>");
+		return;
+	}
+	$.confirm(doDelete,"<@s.m 'global.confirm'/>","<@s.m 'global.confirm.delete'/>");
+}
+function doDelete(){
+	var f = getTableForm();
+	f.action="o_delete.do";
+	f.submit();
+}
+
+function checkIsOverPower(deptName,ids,parentId){
+	if(parentId==undefined || parentId == null){
+		parentId = "";
+	}
+	if(deptName!=null && deptName!=""){
+		if(deptName.indexOf("市局党组党建工作指导组")>-1 || deptName.indexOf("市局党建工作领导小组")>-1){
+			alert("不允许删除最高层级!");
+		}else{
+			var url = "o_delete.do?ids="+ids+"&parentId="+parentId;
+			window.location.href=url;
+		}
+	}else{
+		alert("请选择一个组织 或者 请给该组织设置名称!");
+	}
+}
+
+function optPriority() {
+	getTableForm().action="o_priority.do";
+}
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 党组织管理 > <@s.m "global.list"/></div>
+</div>
+<div class="box-positon">
+	<form class="ropt">
+		<#if isadmin==true>
+		<input class="add" type="submit" value="添加党组织" onclick="this.form.action='v_add.do';" style="width:110px;"/>
+		<input type="hidden" name="parentId" value="${parentId!}"/>
+		<#else></#if>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<form id="tableForm" method="post">
+<@p.table value=list;depart,i,has_next><#rt/>
+<#if isadmin>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="25" align="center">
+		<input type='checkbox' name='ids' value='${depart.id}' onclick="Pn.selectCheckBox('${depart.id}',this.checked)"/><#t/>
+	</@p.column><#t/>
+<#else></#if>
+	<@p.column title="ID" align="center">${depart.id!''}<input type="hidden" name="wids" value="${depart.id}"/></@p.column><#t/>
+	<@p.column code="组织名称" align="center">${depart.name!''}</@p.column><#t/>
+	<@p.column code="cms.department.priority" align="center"><input type="text" name="priority" value="${depart.priority!''}" style="width:70px" required="true" class="required digits" /></@p.column><#t/>
+	<@p.column code="global.operate" align="center">
+		<!--  <a href="v_edit.do?id=${depart.id}" class="pn-opt"><@s.m "department.perm.control"/></a> | <#rt/>-->
+		<a href="v_edit.do?id=${depart.id}" class="pn-opt"><@s.m "global.edit"/></a>
+		<#if isadmin>| <a onclick="checkIsOverPower('${depart.name!}',${depart.id!''},${parentId!''});" class="pn-opt"><@s.m "global.delete"/></a><#else></#if>
+	 	| <#rt/><a href="v_list_members.do?departId=${depart.id}&root=${parentId!}" class="pn-opt"><@s.m "department.member.function"/></a><#t/> 
+	</@p.column><#t/>
+</@p.table>
+<div style="margin-top:20px;">
+	<#if isadmin><input class="del-button" type="button" value="<@s.m "global.delete"/>" onclick="optDelete();"/ style="float:left; margin-right:6px;"><#else></#if>
+	<#if isZhibu><#else><input class="bcplxx-button" type="submit" value="<@s.m "global.saveOrder"/>" onclick="optPriority();"/ style="float:left;"></#if>
+</div>
+<input name="parentId" type="hidden" value="${parentId!}"/>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>

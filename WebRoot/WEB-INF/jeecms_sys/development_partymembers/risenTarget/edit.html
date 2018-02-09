@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+	$("#jvForm").submit(function(){
+		var risentgNumPercent = $("[name='risentgNumPercent']").val();
+		var risentgGualityPercent = $("[name='risentgGualityPercent']").val();
+		var risentgTotalScore = $("[name='risentgTotalScore']").val();
+		
+		var testNumber = /^\d{1,2}$/;
+		var reg =/^\d+$/;
+		if(!reg.test(risentgTotalScore)){
+			alert("目标分数为数字！");
+			return false;
+		}
+		if(!testNumber.test(risentgNumPercent)){
+			alert("数量分占比为1-99的正整数");
+			return false;
+		}
+		if(!testNumber.test(risentgGualityPercent)){
+			alert("质量分占比为1-99的正整数");
+			return false;
+		}
+		if(parseInt(risentgNumPercent)+parseInt(risentgGualityPercent) !=100){
+			alert("数量分占比和质量分占比加起来应该是100%");
+			return false;
+		}
+		return true;
+	});
+});
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 目标管理 > 制定目标</div>
+</div>
+<div class="box-positon ck">
+	<form class="ropt">
+		<input class="return-button" type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='v_list.do';"/>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_update.do">
+<@p.text label="标题" colspan="1" width="50" name="risentgTitle" value="${risenTarget.risentgTitle!}" required="true" class="required" maxlength="100"/>
+<@p.text label="目标总分" colspan="1" width="50" value="${risenTarget.risentgTotalScore!}" name="risentgTotalScore" required="true" class="required" maxlength="100"/><@p.tr/>
+<@p.text label="开始时间" id="risentgSdate" value="${risenTarget.risentgSdate?date}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:$dp.$('risentgEdate').value})" colspan="1" width="50" name="risentgSdate" required="true" class="required" />
+<@p.text label="结束时间" id="risentgEdate" value="${risenTarget.risentgEdate?date}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:$dp.$('risentgSdate').value})" colspan="1" width="50" name="risentgEdate" required="true" class="required" /><@p.tr/>
+<@p.text label="目标数量占分比" colspan="1" value="${risenTarget.risentgNumPercent!}" width="50" name="risentgNumPercent" required="true" class="required" maxlength="100"/>
+<@p.text label="目标质量占分比" colspan="1" value="${risenTarget.risentgGualityPercent!}" width="50" name="risentgGualityPercent" required="true" class="required" maxlength="100"/><@p.tr/>
+<tr><td style="width:20%;" class="pn-flabel pn-flabel-h">目标描述:</td>
+<td colspan="3"><textarea id="risentgContent" name="risentgContent" cols="200" rows="5">${risenTarget.risentgContent!}</textarea></td>
+</tr>
+<@p.td><@p.hidden name="id" value="${risenTarget.id!}"/>
+<@p.hidden name="risentgCorgName" value="${risenTarget.risentgCorgName!}"/>
+<@p.hidden name="risentgCorgId" value="${risenTarget.risentgCorgId!}"/><@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+</@p.form>
+</div>
+</body>
+</html>

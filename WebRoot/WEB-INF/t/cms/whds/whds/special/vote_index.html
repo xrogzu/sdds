@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> ${site.name}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" ></meta>
+    <script src="${base}/r/cms/layer/jquery-1.12.1.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.SuperSlide.2.1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.carousel-1.1.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.mousewheel.min.js"></script>
+    <script src="${base}/r/cms/www/risen/script/jquery.cxscroll.js"></script>
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/css.css">
+    <link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+</head>
+<body>
+[#include "../include/header_shengju.html"/]
+<div class="coen" id="container">
+<div class="content">
+    
+     
+         <div class="slideTxtBox" id="conter">
+              <div class="" id="ji_list">
+                   <div class="list_ym">
+                        <div class="ym_top"><span>在线调查</span><a href=""><img src="${base}/r/cms/www/risen/images/15.png" alt=""></a></div>
+                       <div class="ym_tu">
+                             <ul>
+                             [#if votes??]
+        					 [#list votes as vote]
+                             		<li><a href="${base}/vote.jspx?voteId=${vote.id}" target="_blank" title="${vote.title!}">${vote.title!}</a><span>[#if vote.endTime??]${vote.endTime?string("yyyy-MM-dd")}[/#if]</span></li>
+                             [/#list]
+                             [/#if]
+                             </ul>
+                        </div>
+                   </div>
+              </div>
+         </div>
+	 </div>
+</div>
+</div>
+[#include "../include/footer_shengju.html"/]
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>${title} - ${site.name}</title>
+<meta http-equiv="keywords" content="${site.keywords!}"/>
+<meta http-equiv="description" content="${site.description!}"/>
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/currency/css/css.css">
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+<script src="${base}/r/cms/currency/script/jquery1.42.min.js"></script>
+<script src="${base}/r/cms/currency/script/jquery.SuperSlide.2.1.1.js"></script>
+<script language="javascript" type="text/javascript" src="${base}/r/cms/currency/My97DatePicker/WdatePicker.js"></script>
+<head>
+<!-- 滚动条样式 -->
+<style type="text/css"> 
+#gongao{width:290px;height:50px;overflow:hidden;line-height:30px;font-size:13px;font-family:'宋体';color:#0C77CF;font-weight:bold;} 
+#gongao #scroll_begin, #gongao #scroll_end{display:inline} 
+</style> 
+<!-- 滚动条样式 -->
+<body>
+<div class="zezo"></div>
+	
+[#include "../include/header_zhibu_channel.html"/]
+    
+<div class="conter" id="container">
+    [@cms_channel_list parentId='${channel.parentId}' orderBy='4']
+		[#assign i="tag_list_index"/]
+		[#list tag_list as c]
+	        [#if c_index==1] [#assign zbdt="${c.id}"/][/#if]
+        	[#if c_index==2] [#assign tzgg="${c.id}"/][/#if]
+        [/#list]
+	[/@cms_channel_list]
+	<div class="" id="ji_list" style="background:url(${base}/r/cms/www/risen/images/bgsk_list.png); width: 100%">
+		<div class="article" style="width: 70%;margin:0; height: 99%">
+			<span class="art_tit">${content.title}</span>
+			<div class="tens">
+				<a>发布时间：${content.releaseDate}</a>
+			</div>
+			<div class="artinr">
+				${txt!}
+				<br />
+				<tr>
+					<td style="text-align:left; text-indent:2em; font-size:14px; line-height:30px;height: auto;">
+					[#if content.attachments?size gt 0]
+						[#list content.attachments as attach]
+						<span class="fujian">附件：</span>  <a id="attach${attach_index}" href="${attach.path!}"><span style="display:block;float:left;">${attach.name!}</span></a><br /><br />
+						[/#list]
+					[/#if]
+					</td>
+				</tr>
+			</div>
+		</div>
+		<div class="time1" style="width: 25%;margin:0;">
+            <div class="ti2">
+				<span><a href="${base}/zbdt/index.jhtml">支部动态</a></span>
+                <ul>
+ 				[@cms_content_list typeId='1' count='6' channelId='${zbdt}' orderBy='4' titLen='18' channelOption='1' dateFormat='yyyy-MM-dd']
+				    [#list tag_list as a]
+				    <li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+				 	[/#list]
+				[/@cms_content_list]
+ 				</ul>
+			</div>
+		</div>
+	    <div class="time1" style="width: 25%;margin:0;">
+	        <div class="ti2">
+	          	<span><a href="${base}/zbdt/index.jhtml">通知公告</a></span>
+	        	<ul>
+	         	[@cms_content_list typeId='1' count='6' channelId='${tzgg}' orderBy='4' titLen='18' channelOption='1' dateFormat='yyyy-MM-dd']
+					[#list tag_list as a]
+					<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+					[/#list]
+				[/@cms_content_list]
+	         	</ul>
+	 		</div>
+	   	</div>
+	</div>
+</div>
+    
+[#include "../include/footer_zhibu.html"/]
+
+<script type="text/javascript">
+	window.onload = function(){
+		var zto = document.getElementById("zder");
+		var zrc = zto.getElementsByTagName("li");
+		var sef = document.getElementById("sfds");
+		var zsr = sef.getElementsByTagName("div")
+		for(var i=0; i<zrc.length; i++){
+			zrc[i].sade = i;
+			zrc[i].onclick = function(){	
+			    for(var i=0; i<zrc.length; i++){
+				   zrc[i].className = "";
+				   zsr[i].className = ""; 
+				}
+				this.className = "dcn";
+				zsr[this.sade].className = "din";
+			};
+		};
+	};
+</script>
+</body>
+</html>

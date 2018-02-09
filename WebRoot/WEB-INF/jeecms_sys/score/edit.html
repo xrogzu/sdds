@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "../head.html"/>
+<style>
+	.btn_alink{
+		width:80px;
+		height:25px;
+		border:1px solid black;
+		border-radius:5px;
+		text-align:center;
+		line-height:25px;
+		display:block;
+	}
+</style>
+<script type="text/javascript">
+$(function() {
+	$("#jvForm").validate();
+	$("#jvForm").submit(function(){
+		var risenScScore  = $("#risenScScore").val();
+		var risenMaxScore = $("#risenMaxScore").val();
+		var reg =/^\d+$/;
+		if(!reg.test(risenScScore)){
+			alert("请填写数字！");
+			return false;
+		}else{
+			if(parseInt(risenScScore)>parseInt(risenMaxScore)){
+				alert("指标分数超过上限"+risenMaxScore+",请重新分配");
+				return false;
+			}else{
+				return true;
+			}
+		}
+	});
+});
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 先锋指分 - 指标管理 - 编辑</div>
+</div>
+<div class="box-positon ck">
+<form class="ropt">
+		<a href="v_listSc.do?userIds=${RisenScore.user.id!''}" class="btn_alink">返回 </a>
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="o_update.do">
+	 <tr>
+		<td style="width:100px;">党员姓名：</td>
+		<td style="width:100px;">
+			<span>${username!''}</span>
+		</td>
+		<td style="width:70px;float: right;margin-right: -100px;">评分年度：</td>
+	 	<td style="float: right;margin-right: -164px;">
+	 		<span>${RisenScore.risenscYear!''}</span>
+	 	</td>
+	 </tr>
+	 <tr>
+	 <#if RisenScore.risenScQuota.risenqtType==1>
+		<td>
+			基础分：
+		</td>
+		<#else>
+		<td>
+			附加分：
+		</td>	
+	 </#if>	
+		<td  colspan="3">
+			<label type="text" id="md" name="risenqtName">${RisenScore.risenScQuota.risenqtName!''}</label>
+		</td>
+		<td style="float: right;  margin-right: 530px;">
+			<input type="text" name="risenScScore" id="risenScScore" value="${RisenScore.risenScScore!'0'}" />
+			<span style="line-height:30px; display:inline-block;" >分值：${RisenScore.risenScQuota.risenqtScore!'0'}</span>
+			<input type="hidden"  id="risenMaxScore" value="${RisenScore.risenScQuota.risenqtScore!'0'}"/>
+		</td>
+	</tr>
+	<tr>
+		<td>备注：</td>
+		<td colspan="3">
+			<textarea cols="60" rows="5" name="risenScDescribtion">${RisenScore.risenScDescribtion!''}</textarea>
+		</td>
+	</tr>	
+<@p.td>
+<@p.hidden name="idms" value="${RisenScore.id!}"/>
+<@p.hidden name="userId" value="${RisenScore.user.id!}"/>
+<@p.submit code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td>
+</@p.form>
+</div>
+</body>
+</html>

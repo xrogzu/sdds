@@ -1,0 +1,118 @@
+package com.risen.dao.impl;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
+
+import com.jeecms.common.page.Pagination;
+import com.risen.dao.RisenDevpartyDao;
+import com.risen.entity.RisenDevparty;
+import com.risen.entity.RisenPartyChange;
+import com.jeecms.common.hibernate4.Finder;
+import com.jeecms.common.hibernate4.HibernateBaseDao;
+import com.jeecms.core.entity.CmsUser;
+import com.jeecms.core.web.util.CmsUtils;
+
+@Repository
+public class RisenDevpartyDaoImpl extends HibernateBaseDao<RisenDevparty, Integer> implements RisenDevpartyDao {
+	public Pagination getPage(int pageNo, int pageSize) {
+		Criteria crit = createCriteria();
+		Pagination page = findByCriteria(crit, pageNo, pageSize);
+		return page;
+	}
+	
+	public Pagination getPage(int pageNo, int pageSize,String departId) {
+		Finder f = Finder.create(" from RisenDevparty where 1=1");
+		if(StringUtils.hasText(departId)){
+			f.append(" and risendp_Expands3 in ("+departId+")");
+		}
+		Pagination page = find(f, pageNo, pageSize);
+		return page;
+	}
+
+	public RisenDevparty findById(Integer id) {
+		RisenDevparty entity = get(id);
+		return entity;
+	}
+
+	public RisenDevparty save(RisenDevparty bean) {
+		getSession().save(bean);
+		return bean;
+	}
+
+	public RisenDevparty deleteById(Integer id) {
+		RisenDevparty entity = super.get(id);
+		if (entity != null) {
+			getSession().delete(entity);
+		}
+		return entity;
+	}
+	
+	@Override
+	protected Class<RisenDevparty> getEntityClass() {
+		return RisenDevparty.class;
+	}
+
+	@Override
+	public RisenDevparty update(RisenDevparty bean) {
+		getSession().update(bean);
+		return bean;
+	}
+
+	@Override
+	public RisenDevparty updateWithRisenPartyChange(RisenPartyChange bean) {
+		// TODO Auto-generated method stub
+		RisenDevparty risenDevParty = findByUserId(bean.getRisenpcCuserid().getId());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+		String hql="update RisenDevparty bean set bean.risendpSex=:risendpSex,bean.risendpIdnumber=:risendpIdnumber,bean.risendpBirth=:risendpBirth,";
+		hql = hql +"bean.risendpNation=:risendpNation,";
+		hql = hql + "bean.risendpFiveEducation=:risendpFiveEducation,bean.risendpNative=:risendpNative ";
+		hql = hql + " where bean.id=:id";
+		Query query = getSession().createQuery(hql);
+		query.setParameter("risendpSex", bean.getRisenpcSex().equals("1")?"1":"0");
+		query.setParameter("risendpIdnumber", bean.getRisenpcIdnumber());
+		String birthday = format.format(bean.getRisenpcBirthday());
+		String birthdayConvert = birthday.replaceAll("-", "/");
+		query.setParameter("risendpBirth", birthdayConvert);
+    	query.setParameter("risendpNation", bean.getRisenpcNational());
+    	query.setParameter("risendpFiveEducation", bean.getRisenpcEducation());
+    	query.setParameter("risendpNative", bean.getRisenpcNative());
+    	if(risenDevParty!=null){
+    		query.setParameter("id", risenDevParty.getId());
+    		query.executeUpdate();
+    	}
+    	query.executeUpdate();
+		return risenDevParty;
+	}
+	
+	public RisenDevparty findByUserId(Integer userId){
+		String hql = " from RisenDevparty bean where 1=1 ";
+		if(userId!=null){
+			hql = hql + " and risendpExpands4 = '"+String.valueOf(userId)+"'";
+		}
+		List<RisenDevparty> risenDevpartys = getSession().createQuery(hql).list();
+		if(risenDevpartys!=null && (risenDevpartys.size()>0)){
+			return risenDevpartys.get(0);
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public Pagination getAllActives(String departIds, int pageNo, int pageSize) {
+		// TODO Auto-generated method stub
+		Finder f = Finder.create(" from RisenDevparty bean where 1=1 ");
+		if(StringUtils.hasText(departIds)){
+			if(!departIds.equals("1")){
+				f.append(" and bean.risendpExpands3 in ("+departIds+")");
+			}
+		}
+		f.append(" and bean.risendpActivetime is not null");
+		return find(f,pageNo,pageSize);
+	}
+}

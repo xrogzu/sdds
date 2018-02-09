@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="CmsAppealMailReplay" table="jc_appealmail_replay">
+		<meta attribute="sync-DAO">false</meta>
+		<id name="replayId" type="integer" column="replay_id">
+			<generator class="sequence"><param name="sequence">APPEAL_MAILREPLAY_SD</param></generator>
+		</id>
+		<property name="replay" column="replay" type="string" not-null="false" length="255"/>
+		<property name="cdate" column="cdate" type="date" not-null="false"/>
+		<property name="username" column="username" type="string" not-null="false" length="255"/>
+		<property name="appealId" column="appeal_id" type="integer" not-null="false"/>
+	</class>
+</hibernate-mapping>

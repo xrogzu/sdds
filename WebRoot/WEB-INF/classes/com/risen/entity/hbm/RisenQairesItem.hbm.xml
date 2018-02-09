@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.risen.entity">
+	<class name="RisenQairesItem" table="rs_qaires_item">
+		 <id name="id" type="integer" column="rs_id">
+			<generator class="sequence"><param name="sequence">RISEN_QAIRES_ITEM_SD</param></generator>
+		</id>
+		<property name="itemTitle" column="rs_title" type="string" not-null="true"  length="255"/>
+		<property name="itemCount" column="rs_item_count" type="integer" not-null="false" />
+		<property name="priority" column="rs_priority" type="integer" not-null="false" />
+		<property name="itemOption" column="rs_item_option" type="string" not-null="true"  length="20"/>
+		<many-to-one name="qairesTopic" column="rs_topic_id" class="com.risen.entity.RisenQairesTopic"/>
+	</class>
+</hibernate-mapping> 

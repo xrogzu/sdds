@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+$(function(){
+	$("#jvForm").validate();
+});
+</script>
+</head>
+<body>
+<div class="box-positon">
+	<div class="rpos">规范化党支部: 发展党员 - 发展党员流程管理</div>
+	<form class="ropt">
+		
+	</form>
+	<div class="clear"></div>
+</div>
+<div class="body-box">
+<@p.form id="jvForm" action="save.do" labelWidth="12">
+<@p.text width="50" colspan="1" label="父级节点ID" name="risendeDeveloppid" value="${model.risendeDeveloppid!}" />
+<@p.text width="50" colspan="1" label="父级节点名称" name="risendeDeveloppname" value="${model.risendeDeveloppname!}"/><@p.tr/>
+<@p.text width="50" colspan="1" label="节点ID" name="risendeDevelopid" value="${model.risendeDevelopid!}"/>
+<@p.text width="50" colspan="1" label="节点名称" name="risendeDevelopname" value="${model.risendeDevelopname!}"/><@p.tr/>
+<@p.text width="50" colspan="1" label="流程编号" name="risendeDevelopnumber" value="${model.risendeDevelopnumber!}"/>
+<@p.td/>
+<@p.tr/>
+<@p.td colspan="2"><a href="javascript:history.go(-1)">返回</a></@p.td>
+</@p.form>
+</div>
+</body>
+</html>

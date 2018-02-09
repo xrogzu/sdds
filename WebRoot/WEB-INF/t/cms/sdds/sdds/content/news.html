@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>${title!} - ${site.name!}</title>
+<meta http-equiv="keywords" content="${site.keywords!}"/>
+<meta http-equiv="description" content="${site.description!}"/>
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/currency/css/css.css">
+<link type="text/css" rel="stylesheet" href="${base}/r/cms/www/risen/css/list.css">
+<script type="text/javascript" src="${base}/r/cms/www/risen/script/jquery.min.js"></script>
+<script type="text/javascript" src="${base}/r/cms/www/risen/script/jquery.nicescroll.js"></script>
+<script type="text/javascript" src="${base}/r/cms/www/risen/script/jQuery.autoIMG.js"></script>
+<head>
+<!-- 滚动条样式 -->
+<style type="text/css"> 
+#gongao{width:290px;height:50px;overflow:hidden;line-height:30px;font-size:13px;font-family:'宋体';color:#0C77CF;font-weight:bold;} 
+#gongao #scroll_begin, #gongao #scroll_end{display:inline} 
+</style> 
+<!-- 滚动条样式 -->
+<body>
+<div class="zezo"></div>
+	
+[#include "../include/header_zhibu_channel.html"/]
+    
+<div class="conter" id="container">
+    [@cms_channel_list parentId='${channel.parentId}' orderBy='4']
+		[#assign i="tag_list_index"/]
+		[#list tag_list as c]
+	        [#if c_index==1] [#assign zbdt="${c.id}"/][/#if]
+        	[#if c_index==2] [#assign tzgg="${c.id}"/][/#if]
+        [/#list]
+	[/@cms_channel_list]
+	<div class="" id="ji_list" style="background:url(${base}/r/cms/www/risen/images/bgsk_list.png); width: 100%">
+		<div class="article" style="width: 70%;margin:0; height: 99%">
+			<span class="art_tit">${content.title}</span>
+			<div class="tens">
+				<a>发布时间：${content.releaseDate}</a>[#if content.origin??]<a>来源：${content.origin!}</a>[/#if]
+			</div>
+			<div class="artinr">
+				${txt!}
+				<br />
+				<tr>
+					<td style="text-align:left; text-indent:2em; font-size:14px; line-height:30px;height: auto;">
+					[#if content.attachments?size gt 0]
+						[#list content.attachments as attach]
+						<span class="fujian">附件：</span>  <a id="attach${attach_index}" href="${attach.path!}"><span style="display:block;float:left;">${attach.name!}</span></a><br /><br />
+						[/#list]
+					[/#if]
+					</td>
+				</tr>
+			</div>
+		</div>
+		<div class="time1" style="width: 25%;margin:0;">
+            <div class="ti2">
+				<span><a href="${base}/zbdt/index.jhtml">支部动态</a></span>
+               	<ul>
+ 				[@cms_content_list typeId='1' count='6' channelId='${zbdt}' orderBy='4' titLen='18' channelOption='0' dateFormat='yyyy-MM-dd']
+				   	[#list tag_list as a]
+				   	<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+				 	[/#list]
+				[/@cms_content_list]
+ 				</ul>
+			</div>
+		</div>
+	    <div class="time1" style="width: 25%;margin:0;">
+	        <div class="ti2">
+	          	<span><a href="${base}/zbdt/index.jhtml">通知公告</a></span>
+	        	<ul>
+	         	[@cms_content_list typeId='1' count='6' channelId='${tzgg}' orderBy='4' titLen='18' channelOption='0' dateFormat='yyyy-MM-dd']
+					[#list tag_list as a]
+					<li><a href="${a.url}" target="_blank">[@text_cut s=a.title len=titLen /]</a></li>
+					[/#list]
+				[/@cms_content_list]
+	         	</ul>
+	 		</div>
+	   	</div>
+	</div>
+</div>
+<script type="text/javascript">
+	//滚动条
+	$('.artinr').niceScroll({
+		cursorcolor: "#ccc",//#CC0071 光标颜色
+		cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
+		touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
+		cursorwidth: "5px", //像素光标的宽度
+		cursorheight: "5px", //像素光标的宽度
+		cursorborder: "0", // 	游标边框css定义
+		cursorborderradius: "5px",//以像素为光标边界半径
+		autohidemode: false //是否隐藏滚动条
+	});
+</script>
+<script type="text/javascript">
+    $(function(){
+        $('.artinr div').autoIMG();
+        $('.artinr span').autoIMG();
+        $('.artinr p').autoIMG();
+        $('.artinr a').autoIMG();
+        $('.artinr').autoIMG();
+    })
+
+    $(".artinr span").css("font-size","14px");
+    $(".artinr font").css("font-size","14px");
+    $(".artinr a").css("font-size","14px");
+    $(".artinr div").css("font-size","14px");
+    $(".artinr p").css("font-size","14px");
+    $(".artinr strong").css("font-size","14px");
+    $(".artinr span").css("line-height","30px");
+    $(".artinr font").css("line-height","30px");
+    $(".artinr a").css("line-height","30px");
+    $(".artinr div").css("line-height","30px");
+    $(".artinr p").css("line-height","30px");
+    $(".artinr strong").css("line-height","30px");
+    $(".artinr span").css("font-family","Microsoft YaHei");
+    $(".artinr font").css("font-family","Microsoft YaHei");
+    $(".artinr a").css("font-family","Microsoft YaHei");
+    $(".artinr div").css("font-family","Microsoft YaHei");
+    $(".artinr p").css("font-family","Microsoft YaHei");
+    $(".artinr strong").css("font-family","Microsoft YaHei");
+    $(".artinr span").css("background","");
+    $(".artinr font").css("background","");
+    $(".artinr a").css("background","");
+    $(".artinr div").css("background","");
+    $(".artinr p").css("background","");
+    $(".artinr strong").css("background","");
+</script>
+<script type="text/javascript">
+	window.onload = function(){
+		var zto = document.getElementById("zder");
+		var zrc = zto.getElementsByTagName("li");
+		var sef = document.getElementById("sfds");
+		var zsr = sef.getElementsByTagName("div")
+		for(var i=0; i<zrc.length; i++){
+			zrc[i].sade = i;
+			zrc[i].onclick = function(){	
+			    for(var i=0; i<zrc.length; i++){
+				   zrc[i].className = "";
+				   zsr[i].className = ""; 
+				}
+				this.className = "dcn";
+				zsr[this.sade].className = "din";
+			};
+		};
+	};
+</script>
+
+[#include "../include/footer_zhibu.html"/]
+
+</body>
+</html>

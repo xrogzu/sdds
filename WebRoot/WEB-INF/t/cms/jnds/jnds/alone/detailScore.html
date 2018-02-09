@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<script src="${base}/res/jeecms/js/admin.js" type="text/javascript"></script>
+<script src="${base}/res/echarts/echarts.js" type="text/javascript"></script>
+<script src="${base}/res/jeecms/js/jquery-1.4.4.min.js"></script>
+<script src="${base}/res/jeecms/layui/layui.js"></script>
+<link rel="stylesheet" href="${base}/res/jeecms/layui/css/layui.css" type="text/css">
+<link rel="stylesheet" href="${base}/res/jeecms/css/css.css" type="text/css">
+</head>
+<body>
+	<input type="hidden" id="root" value="${parentId!}"/>
+	<#if type?? && type!="支部">
+	<div class="system" id="jxtj">
+        <div id="xt"><a href="${base}/getDetail.jspx?departId=${departId!}" style="display:block;width:120px;height:40px;line-height:40px;background-color:#1E9FFF !important; text-align:center; color:#fff;float:left;">系统</a></div>
+        <div id="jg"><a href="${base}/getDetail.jspx?departId=${firstChild!}&root=1" style="display:block;width:120px;height:40px;line-height:40px;background-color:#1E9FFF !important; text-align:center; color:#fff;float:left; margin-left:20px;">机关</a>
+    </div>
+    </#if>
+	    <div class="layui-tab">
+    	<div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+             <table class="layui-table" lay-skin="line">
+                  <colgroup>
+                    <col width="100">
+                    <col width="300">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col width="120">
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                    <col>
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>序号</th>
+                      <th>组织名称</th>
+                      <th>图片新闻</th>
+                      <th>党建动态</th>
+                      <th>经验交流</th>
+                      <th>媒体视点</th>
+                      <th>理论研讨</th>
+                      <th>网上荣誉室</th>
+                      <th>本月积分</th>
+                      <th>总分</th>
+                      <th>操作</th>
+                    </tr> 
+                  </thead>
+                  <tbody>
+                  	<#if list??>
+                  		<#list list as depart>
+                  			<tr>
+		                      <td>${depart.groupid!''}</td>
+		                      <td>${(depart.name!'0')?replace("市局机关党委","")}</td>
+		                      <td>${(depart.tpxw!'0')}</td>
+		                      <td>${(depart.djdt!'0')}</td>
+		                      <td>${(depart.jyjl!'0')}</td>
+		                      <td>${(depart.mtxc!'0')}</td>
+		                      <td>${(depart.llyt!'0')}</td>
+		                      <td>${(depart.wsrys!'0')}</td>
+		                      <td>${depart.score!'0'}</td>
+		                 	  <td>${depart.pid!'0'}</td>
+		                      <td>
+		                      	<a target="_blank" href="${base}/getFrontShareContentScore.jspx?deptId=${depart.id!''}&status=1" style="display:block;width:66px;height:28px;line-height:28px;background-color:#fff; border:solid 1px #ccc;  text-align:center; color:#333; float:left;">得分记录</a>
+		                      </td>
+		                    </tr>
+                  		</#list>
+                  	</#if>
+                  </tbody>
+            </table>   
+        </div>
+      </div>
+    </div>
+</body>
+</html>

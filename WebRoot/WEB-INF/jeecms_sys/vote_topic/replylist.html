@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>replylist.html</title>
+	<#include "/jeecms_sys/head.html"/>
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<style type="text/css">
+	#fanhui{
+	    display: inline-block;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    background: url(../img/theme/publish-content.png) 8px center no-repeat #3694d7;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -o-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    height: 28px;
+    line-height: 28px;
+    text-indent: 18px;
+    cursor: pointer;
+    width: 60px;
+    outline: none;
+	}
+	</style>
+	<script type="text/javascript">
+function getTableForm() {
+	return document.getElementById('tableForm');
+}
+
+</script>
+  </head>
+  
+  <body>
+	<div class="page-positon ove">
+		<div class="position-div"><@s.m "global.position"/>: 在线调查 >留言</div>
+	</div>
+	<div class="box-positon">
+		<form class="ropt">
+			<input id="fanhui" type="submit" value="返回" onclick="history.back();"/>
+		</form>
+		<div class="clear"></div>
+	</div>
+	<div class="body-box">
+	<form id="tableForm" method="post">
+		<input type="hidden" name="pageNo" value="${pageNo!}"/>
+		<@p.table value=pagination listAction="../vote_topic/vote_reply.do?voteId=${voteId!}";RisenVoteReply,i,has_next><#rt/>
+			<@p.column title="ID" align="center">${RisenVoteReply.risenUuid}</@p.column><#t/>
+			<@p.column title="内容" align="center">${RisenVoteReply.risenContent?html}</@p.column><#t/>
+			<@p.column title="时间" align="center">${RisenVoteReply.risenCdate}</@p.column><#t/>
+		</@p.table>
+	</form>	
+	<div>
+  <#include "/common/alert_message.html"/>
+  </body>
+  
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+	<#include "/jeecms_sys/head.html"/>
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  <script type="text/javascript">
+	$(function(){
+		 $("#submit").click(function(){
+			var zzxs=/^\d+$/;
+			
+			var passingscore = $("#passingscore").val();
+			var excellentscore = $("#excellentscore").val();
+			if(!zzxs.test(passingscore)){
+				alert("合格分数：请填写正确的正整数！");
+				return false;
+			}
+			if(!zzxs.test(excellentscore)){
+				alert("优秀分数：请填写正确的正整数！");
+				return false;
+			}
+			
+			var channlname=$("#channelname").val();
+			var flag=null;
+			$.ajax({
+			        type: "POST",
+			        url: "jxjfpgyz.do",
+			        data: {channelname:channlname},
+			        dataType: "text",
+			        async : false,
+			        success: function(data){
+			        	flag=data;
+			        }
+			    });
+			    if(flag=="true"){
+			    }else{
+			    alert("该栏目已经设置评估规则！");
+			        return false;
+			    }
+		}); 
+		
+	});
+  </script>
+  <body>
+	<div class="page-positon ove">
+	  <div class="position-div"><@s.m "global.position"/>: 绩效评估 > 制定评估规则</div>
+	</div>
+	<div class="box-positon ck">
+		<form class="ropt">
+			<input class="return-button" type="submit" value="<@s.m "global.backToList"/>" onclick="this.form.action='../partyBuild/jxjfassess.do';"/>
+		</form>
+		<div class="clear"></div>
+	</div>
+   <div class="body-box">
+		<@p.form id="jvForm" action="jxpgSave.do">
+		<@p.select width="50" colspan="2" required="true" label="栏目名称" id="channelname"  name="channelname" class="required" list={"tpxw":"图片新闻","djdt":"党建动态","jyjl":"经验交流","mtsd":"媒体视点","llyt":"理论研讨","wsrys":"网上荣誉室","zbdt":"支部动态","dfjl":"党费缴纳","dwgk":"党务公开","tsgz":"特殊工作","score":"月度评估","Pid":"年度评估"}/><@p.tr/>
+		<@p.text label="合格分数界点" id="passingscore" style="width:70%;" colspan="1" width="50" name="passingscore" required="true" class="required" />
+		<@p.text label="优秀分数界点" id="excellentscore" style="width:70%;" colspan="1" width="50" name="excellentscore" required="true" class="required" /><@p.tr/>
+		<@p.text label="合格评估" colspan="2" width="50" name="passingevaluate" required="true" class="required" maxlength="100" style="width:90%;"/> <@p.tr/>
+		<@p.text label="优秀评估" colspan="2" width="50" name="excellentevaluate" required="true" class="required" maxlength="100" style="width:90%;"/><@p.tr/>
+		<@p.text label="不合格评估" colspan="2" width="50" name="disqualificationevalua" required="true" class="required" maxlength="100" style="width:90%;"/><@p.tr/>
+  		<@p.td colspan="2" ><@p.submit id="submit" code="global.submit"/> &nbsp; <@p.reset code="global.reset"/></@p.td><@p.tr/>
+		</@p.form>
+   </div>
+  </body>
+</html>

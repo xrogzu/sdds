@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title></title>
+<#include "/jeecms_sys/head.html"/>
+<script type="text/javascript">
+</script>
+</head>
+<body>
+<div class="page-positon ove">
+  <div class="position-div"><@s.m "global.position"/>: 签收记录 > <@s.m "global.list"/></div>
+</div>
+<#if "${ischildren?string('true', 'false')}" == "false">
+<div style="height: 50px; margin-top: 10px; margin-left: 20px;">
+	<a href="../department/v_list_qc.do?contentid=${contentid}" style="width: 120px; height: 40px; background:#ddd; text-align: center; line-height: 40px; font-size: 16px; display: block; float: left;">系统</a>
+	<a href="../department/v_list_qc.do?root=1&contentid=${contentid}" style="width: 120px; height: 40px; background: #ddd; text-align: center; line-height: 40px; font-size: 16px; display: block; float: left; margin-left: 20px;">机关</a>
+</div>
+</#if>
+<div class="body-box" style="margin-top: 0px;">
+<form id="tableForm" method="post">
+
+<input type="hidden" name="pageNo" value="${pageNo!}"/>
+<@p.table value=list;depart,i,has_next><#rt/>
+	<@p.column title="<input type='checkbox' onclick='Pn.checkbox(\"ids\",this.checked)'/>" width="25" align="center">
+		<input type='checkbox' name='ids' value='${depart.id}' onclick="Pn.selectCheckBox('${depart.id}',this.checked)"/><#t/>
+	</@p.column><#t/>
+	<@p.column align="center" title="ID">${depart.id}</@p.column><#t/>
+	<@p.column code="组织名称" align="center">${depart.name!''}</@p.column><#t/>
+	<@p.column align="center" code="签收文章名">${depart.tempContentname!''}</@p.column><#t/>
+	<@p.column align="center" code="是否签收">${depart.tempQd!'未签收'}</@p.column><#t/>
+	</@p.table>
+</form>
+</div>
+<#include "/common/alert_message.html"/>
+</body>
+</html>
